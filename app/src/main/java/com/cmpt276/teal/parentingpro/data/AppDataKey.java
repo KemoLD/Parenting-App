@@ -9,6 +9,6 @@ public class AppDataKey
 {
     public static final String LAST_COIN_WIN = "last_coin_win";
 
-    public static final String COPIN_HISTORY = "coin_history";
+    public static final String COIN_HISTORY = "coin_history";
 
 }
