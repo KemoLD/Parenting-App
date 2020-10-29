@@ -23,8 +23,7 @@ public class DataUtil
      * @param context can be any subclass for the context like Activity
      * @return  SharedPreferences for the app
      */
-    public static SharedPreferences getSharedPreferences(Context context)
-    {
+    public static SharedPreferences getSharedPreferences(Context context) {
         if(context == null)
             return null;
         return context.getSharedPreferences(APP_SHARE, Context.MODE_PRIVATE);
@@ -37,8 +36,7 @@ public class DataUtil
      * @param context can be any subclass for the context like Activity
      * @return an editor for SharePreference
      */
-    public static SharedPreferences.Editor getSharedEditor(Context context)
-    {
+    public static SharedPreferences.Editor getSharedEditor(Context context) {
         if(context == null)
             return null;
         SharedPreferences sp = getSharedPreferences(context);
@@ -53,8 +51,7 @@ public class DataUtil
      * @param key a Stirng as key too loop in for the data
      * @param value data to store into the app
      */
-    public static void writeOneStringData(Context context, String key, String value)
-    {
+    public static void writeOneStringData(Context context, String key, String value) {
         if(context == null)
             throw new IllegalArgumentException("context can not be null");
 
@@ -70,8 +67,7 @@ public class DataUtil
      * @param key use as index for getting the data
      * @return  String format of data
      */
-    public static String getStringData(Context context, String key)
-    {
+    public static String getStringData(Context context, String key) {
         if(context == null)
             throw new IllegalArgumentException("context can not be null");
 
