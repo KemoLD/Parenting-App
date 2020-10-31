@@ -25,20 +25,23 @@ import java.util.Date;
 
 public class HistoryPage extends AppCompatActivity
 {
+    private final int HISTORY_LIST_VIEW = R.id.history_listview;
     private History history = History.getInstance();
 
-    private final int HISTORY_LIST_VIEW = R.id.history_listview;
+
 
     public static Intent getIntent(Context context){
         return new Intent(context, HistoryPage.class);
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_page);
 
-        addSomeData(5);
+        //addSomeData(5);
 
         ListView historyListView = findViewById(HISTORY_LIST_VIEW);
 
@@ -49,8 +52,6 @@ public class HistoryPage extends AppCompatActivity
         // pass with a child
         // historyListView.setAdapter(new HistoryListAdapter(history.getHistoryListWithChild(new Child("Ben0"))));
     }
-
-
 
 
 
@@ -72,6 +73,7 @@ public class HistoryPage extends AppCompatActivity
     }
 
 
+
     /**
      * the inner class is for creating a UI view in listVew for history
      */
@@ -83,6 +85,8 @@ public class HistoryPage extends AppCompatActivity
         public HistoryListAdapter(ArrayList<HistoryData> dataList){
             super(HistoryPage.this, R.layout.history_listview_content, dataList);
         }
+
+
 
         @NonNull
         @Override

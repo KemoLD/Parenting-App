@@ -22,21 +22,25 @@ public class FlipCoinPage extends AppCompatActivity
     private final int FLIP_BTN_ID = R.id.flip_btn;
     private final int HISTORY_BTN_ID = R.id.history_btn;
     private final int FLIP_COIN_IMAGE_ID = R.id.flip_coin_iimage;
+    private final int LAST_CHILD_ID = R.id.flip_coin_last_play;
 
-    Button flipBtn;     // button to flip coin
-    Button historyBtn;  // button to goto history page
-    TextView lastChildText; // text view to display last child flipping the coin
+    private Button flipBtn;     // button to flip coin
+    private Button historyBtn;  // button to goto history page
+    private TextView lastChildText; // text view to display last child flipping the coin
 
     private CoinUI coin;
     private Child currentChild;     // the current child that is fliping the coin
     private Child lastChild;    // the last child who flip the coin
     private Coin.CoinState choosedState;    // the state the child currently choosing
-
     private History historyList;    // the history record contain history data
+
+
 
     public static Intent getIntent(Context context){
         return new Intent(context, FlipCoinPage.class);
     }
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -48,10 +52,12 @@ public class FlipCoinPage extends AppCompatActivity
     }
 
 
+
     private void setupVariable()
     {
         flipBtn = findViewById(FLIP_BTN_ID);
         historyBtn = findViewById(HISTORY_BTN_ID);
+        lastChildText = findViewById(LAST_CHILD_ID);
         coin = new CoinUI(FlipCoinPage.this, FLIP_COIN_IMAGE_ID);
         historyList = History.getInstance();
 
@@ -62,7 +68,6 @@ public class FlipCoinPage extends AppCompatActivity
 
         historyList.loadFromLocal(FlipCoinPage.this);
         flipBtn.setOnClickListener(new FlipCoinClickListener());
-
 
         historyBtn.setOnClickListener(new View.OnClickListener()
         {
@@ -78,15 +83,20 @@ public class FlipCoinPage extends AppCompatActivity
     }
 
 
+
     private void displayLastChildFlip(){
         int numOfHistory = historyList.numOfHistory();
-        if(numOfHistory == 0){
-            lastChildText.setText(getString(R.string.no_play));
-        }
 
+        // no history is stored
+        if(numOfHistory <= 0){
+            lastChildText.setText(getString(R.string.no_play));
+            return;
+        }
         updateLastChildPlay();
         lastChildText.setText(lastChild.getName());
     }
+
+
 
     private void updateLastChildPlay(){
         int numOfHistory = historyList.numOfHistory();
@@ -96,8 +106,9 @@ public class FlipCoinPage extends AppCompatActivity
     }
 
 
-    //
-
+    /**
+     * this inner class is for action that when click the flip coin button
+     */
     class FlipCoinClickListener implements View.OnClickListener
     {
         public void onClick(View view){
