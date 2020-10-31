@@ -1,12 +1,16 @@
 package com.cmpt276.teal.parentingpro.data;
 
+import android.content.Context;
+
 import com.cmpt276.teal.parentingpro.model.Child;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
 public class History
 {
     private ArrayList<HistoryData> historyArray;
+    private Gson gson;
 
     private static History history;
 
@@ -20,6 +24,7 @@ public class History
 
     private History(){
         this.historyArray = new ArrayList<>();
+        this.gson = new Gson();
     }
 
 
@@ -27,6 +32,10 @@ public class History
         if(data == null)
             return;
         historyArray.add(data);
+    }
+
+    public int numOfHistory(){
+        return historyArray.size();
     }
 
     public HistoryData getHistoryData(int index){
@@ -48,6 +57,26 @@ public class History
         }
         return output;
     }
+
+
+
+    public void saveToLocal(Context context){
+        String savedDataStr = gson.toJson(historyArray);
+        DataUtil.writeOneStringData(context, AppDataKey.COIN_HISTORY, savedDataStr);
+    }
+
+    public void loadFromLocal(Context context){
+        String savedDataStr = DataUtil.getStringData(context, AppDataKey.COIN_HISTORY);
+
+        // do not have any history yet
+        if(savedDataStr.equals(DataUtil.DEFAULT_STRING_VALUE))
+           return;
+
+        ArrayList<HistoryData> localHistoryArray = (ArrayList<HistoryData>)gson.fromJson(savedDataStr, ArrayList.class);
+
+        this.historyArray = localHistoryArray;
+    }
+
 
 
     private ArrayList copyList(ArrayList<HistoryData> dataList){

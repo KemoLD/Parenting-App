@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                Intent intent = new Intent(MainActivity.this, FlipCoin.class);
+                Intent intent = new Intent(MainActivity.this, FlipCoinPage.class);
                 startActivity(intent);
             }
         });

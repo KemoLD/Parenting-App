@@ -5,7 +5,7 @@
 
 
     <!--    flip coin-->
-
+    <string name="no_play">No Play</string>
     <!--    History-->
     <string name="history_title">History</string>
     <string name="date">Date</string>

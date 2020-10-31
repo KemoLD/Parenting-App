@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,9 @@ public class HistoryPage extends AppCompatActivity
 
     private final int HISTORY_LIST_VIEW = R.id.history_listview;
 
+    public static Intent getIntent(Context context){
+        return new Intent(context, HistoryPage.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

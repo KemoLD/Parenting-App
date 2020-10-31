@@ -11,7 +11,7 @@ import com.cmpt276.teal.parentingpro.model.Coin;
 public class CoinUI extends Coin
 {
     private Context context;
-    private int id;
+    private int id;     // the image view id or other container view id
 
     public CoinUI(Context context, int id){
         super();
