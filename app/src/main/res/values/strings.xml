@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">ParentingPro</string>
+
+    <string name="flip_coin">Flip Coin</string>
+
+
+    <!--    flip coin-->
+
+    <!--    History-->
+    <string name="history_title">History</string>
+    <string name="date">Date</string>
+    <string name="name">Name</string>
+    <string name="choose">Choose</string>
+    <string name="result">Result</string>
+
+
 </resources>

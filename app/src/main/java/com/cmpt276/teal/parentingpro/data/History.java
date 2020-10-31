@@ -1,5 +1,7 @@
 package com.cmpt276.teal.parentingpro.data;
 
+import com.cmpt276.teal.parentingpro.model.Child;
+
 import java.util.ArrayList;
 
 public class History
@@ -25,6 +27,10 @@ public class History
         if(data == null)
             return;
         historyArray.add(data);
+    }
+
+    public HistoryData getHistoryData(int index){
+        return historyArray.get(index);
     }
 
     public ArrayList getAllHistoryList(){

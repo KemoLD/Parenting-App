@@ -44,7 +44,7 @@ public class Coin
      * @return random state for the coin
      */
     public CoinState getRandomState(){
-        int random = (int)Math.random() * 10;   // get random number from 0 - 9
+        int random = (int)(Math.random() * 10);   // get random number from 0 - 9
 
         CoinState output;
         if(random < 5)
