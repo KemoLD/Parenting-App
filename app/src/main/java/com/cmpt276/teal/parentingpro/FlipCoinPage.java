@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
@@ -117,6 +118,9 @@ public class FlipCoinPage extends AppCompatActivity
             historyList.addHistory(data);
             historyList.saveToLocal(FlipCoinPage.this);
             displayLastChildFlip();
+
+            // !!!! testing what state is flip
+            Toast.makeText(FlipCoinPage.this, "" + coin.getState(), Toast.LENGTH_SHORT).show();
         }
     }
 
