@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,6 +43,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
         findViewById(R.id.min1).setOnClickListener(this);
         findViewById(R.id.min2).setOnClickListener(this);
         findViewById(R.id.min3).setOnClickListener(this);
@@ -66,6 +70,15 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             int importance = NotificationManager.IMPORTANCE_HIGH;
             createNotificationChannel(channelId, channelName, importance);
         }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -91,7 +104,6 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         if(countDownTimer != null){
             countDownTimer.cancel();
         }
-        currentTime=1;
         countDownTimer  = new CountDownTimer(currentTime * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {

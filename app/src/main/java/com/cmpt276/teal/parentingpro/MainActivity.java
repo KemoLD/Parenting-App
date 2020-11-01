@@ -22,8 +22,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btn_config:
+            case R.id.btn_config: {
+                Intent integer = new Intent(MainActivity.this, ConfigActivity.class);
+                startActivity(integer);
                 break;
+            }
             case R.id.btn_flip:
                 break;
             case R.id.btn_timer: {
