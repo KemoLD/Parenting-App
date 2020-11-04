@@ -54,7 +54,7 @@ public class ChildrenAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder = null;
 
 
@@ -70,7 +70,7 @@ public class ChildrenAdapter extends BaseAdapter {
             viewHolder.itemTv.setText(names.get(position));
 
             convertView.setTag(viewHolder);
-
+            final int pos = position;
             final ViewHolder finalViewHolder = viewHolder;
             viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,25 +88,28 @@ public class ChildrenAdapter extends BaseAdapter {
                         //finalViewHolder.itemTv.setText(finalViewHolder.itemEv.getText().toString());
                         Log.e("TAG", finalViewHolder.itemEv.getText().toString());
                         finalViewHolder.editBtn.setText("EDIT");
-                        names.set(position, finalViewHolder.itemEv.getText().toString());
+                        names.set(pos, finalViewHolder.itemEv.getText().toString());
                         ChildrenAdapter.this.notifyDataSetChanged();
                     }
                 }
             });
 
-            viewHolder.delBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    names.remove(position);
-                    ChildrenAdapter.this.notifyDataSetChanged();
-                }
-            });
+
 
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
             viewHolder.itemEv.setText(names.get(position));
             viewHolder.itemTv.setText(names.get(position));
         }
+
+        final int pos = position;
+        viewHolder.delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                names.remove(pos);
+                ChildrenAdapter.this.notifyDataSetChanged();
+            }
+        });
 
         return convertView;
     }
