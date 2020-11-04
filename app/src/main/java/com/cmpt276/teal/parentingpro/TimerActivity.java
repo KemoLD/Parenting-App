@@ -107,16 +107,12 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         countDownTimer  = new CountDownTimer(currentTime * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                //单位天
                 long day = millisUntilFinished / (1000 * 24 * 60 * 60);
-                //单位时
                 long hour = (millisUntilFinished - day * (1000 * 24 * 60 * 60)) / (1000 * 60 * 60);
-                //单位分
                 long minute = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60)) / (1000 * 60);
-                //单位秒
                 long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;
 
-                // 倒计时间隔回调
+                // cal time
                 Log.d("TAG", String.format("剩余时间：%d时%d分%d秒", hour, minute, second));
 
                 if(hour != 0){
@@ -129,7 +125,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFinish() {
-                // 倒计时结束时的回调
+                // callback
                 mVibrator.vibrate(new long[]{1000, 10000, 1000, 10000}, -1);
                 r.play();
                 sendChatMsg(TimerActivity.this.getCurrentFocus());
