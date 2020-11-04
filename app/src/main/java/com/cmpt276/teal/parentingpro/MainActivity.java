@@ -5,10 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity
-{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -16,16 +14,30 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button flipCoinButton = findViewById(R.id.munu_flip_coin);
-        flipCoinButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = new Intent(MainActivity.this, FlipCoinPage.class);
-                startActivity(intent);
-            }
-        });
+        findViewById(R.id.btn_config).setOnClickListener(this);
+        findViewById(R.id.btn_flip).setOnClickListener(this);
+        findViewById(R.id.btn_timer).setOnClickListener(this);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_config: {
+                Intent integer = new Intent(MainActivity.this, ConfigActivity.class);
+                startActivity(integer);
+                break;
+            }
+            case R.id.btn_flip:
+                break;
+            case R.id.btn_timer: {
+                Intent integer = new Intent(MainActivity.this, TimerActivity.class);
+                startActivity(integer);
+                break;
+            }
+        }
+    }
+
+    // TEST GIT PUSH AND PULL
+    // test2
+    //test3
 }
