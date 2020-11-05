@@ -2,12 +2,14 @@ package com.cmpt276.teal.parentingpro;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -22,8 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.Locale;
 
 public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -64,17 +64,21 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
         mVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
 
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
         r = RingtoneManager.getRingtone(TimerActivity.this, notification);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "chat";
             String channelName = "hint";
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            createNotificationChannel(channelId, channelName, importance);
+            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+            channel.setDescription("Your timeout timer has expired");
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
         }
 
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -84,21 +88,18 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         return super.onOptionsItemSelected(item);
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
-    private void createNotificationChannel(String channelId, String channelName, int importance) {
-        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(
-                NOTIFICATION_SERVICE);
-        notificationManager.createNotificationChannel(channel);
-    }
 
     public void sendChatMsg(View view) {
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationManagerCompat manager = NotificationManagerCompat.from(this);
         Notification notification = new NotificationCompat.Builder(this, "chat")
-                .setContentTitle("Alarm Notification")
-                .setContentText("Timer Expires")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setAutoCancel(true)
+                .setContentTitle("Timeout Timer Notification")
+                .setContentText("Timer Expired")
+                .setSmallIcon(R.drawable.alarm_icon)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.alarm_icon))
+                .setVibrate(new long[]{100, 1000, 100, 1000})
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .build();
         manager.notify(1, notification);
     }
@@ -143,7 +144,10 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFinish() {
                 // 倒计时结束时的回调
-                mVibrator.vibrate(new long[]{1000, 10000, 1000, 10000}, -1);
+                isRun = false;
+                time = 0;
+                timeTv.setText("00:00");
+                pauseImg.setImageResource(R.mipmap.ic_resume);
                 r.play();
                 sendChatMsg(TimerActivity.this.getCurrentFocus());
             }
