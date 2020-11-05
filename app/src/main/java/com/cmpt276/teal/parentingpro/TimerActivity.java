@@ -88,6 +88,13 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         return super.onOptionsItemSelected(item);
     }
 
+    @TargetApi(Build.VERSION_CODES.O)
+    private void createNotificationChannel(String channelId, String channelName, int importance) {
+        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(
+                NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(channel);
+    }
 
     public void sendChatMsg(View view) {
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
@@ -120,7 +127,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 //单位秒
                 long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;
 
-                // 倒计时间隔回调
+                // cal time
                 Log.d("TAG", String.format("剩余时间：%d时%d分%d秒", hour, minute, second));
 
                 String days = String.format("%02d", day);
@@ -143,7 +150,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFinish() {
-                // 倒计时结束时的回调
+                // call back
                 isRun = false;
                 time = 0;
                 timeTv.setText("00:00");
@@ -166,7 +173,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 });
 
                 stopRaning.start();
-               
+
             }
         };
         countDownTimer.start();

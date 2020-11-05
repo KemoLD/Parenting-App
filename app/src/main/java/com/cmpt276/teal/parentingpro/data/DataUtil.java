@@ -11,7 +11,7 @@ import android.content.SharedPreferences;
 public class DataUtil
 {
     private final static String APP_SHARE = "parenting_pro";
-    private final static String DEFAULT_STRING_VALUE = "NaN";
+    public final static String DEFAULT_STRING_VALUE = "NaN";
 
 
 
