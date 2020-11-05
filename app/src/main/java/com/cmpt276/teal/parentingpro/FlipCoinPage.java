@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +33,12 @@ public class FlipCoinPage extends AppCompatActivity
     private TextView lastChildText; // text view to display last child flipping the coin
 
     private CoinUI coin;
-    private Child currentChild;     // the current child that is fliping the coin
+    private Child currentChild;     // the current child that is flipping the coin
     private Child lastChild;    // the last child who flip the coin
-    private Coin.CoinState choosedState;    // the state the child currently choosing
+    private Coin.CoinState flipChoice;    // the state the child currently choosing
+    private Coin.CoinState[] headsOrTails = {Coin.CoinState.HEAD, Coin.CoinState.TAIL};
     private History historyList;    // the history record contain history data
+
 
 
 
@@ -50,6 +55,7 @@ public class FlipCoinPage extends AppCompatActivity
         setContentView(R.layout.activity_flip_coin2);
 
         setupVariable();
+        createFlipChoice();
     }
 
 
@@ -64,7 +70,6 @@ public class FlipCoinPage extends AppCompatActivity
 
         // !!!!!!!! this is just for testing
         currentChild = new Child("Ben");    // the current child set for now first
-        choosedState = Coin.CoinState.HEAD;
         // !!!!!!!!!!
 
         historyList.loadFromLocal(FlipCoinPage.this);
@@ -94,7 +99,7 @@ public class FlipCoinPage extends AppCompatActivity
             return;
         }
         updateLastChildPlay();
-        lastChildText.setText(lastChild.getName());
+        lastChildText.setText(lastChild.getName() + "?");
     }
 
 
@@ -114,13 +119,34 @@ public class FlipCoinPage extends AppCompatActivity
     {
         public void onClick(View view){
             coin.flipCoin();    // play animation and sound and get randomCoin state
-            HistoryData data = new HistoryData(currentChild, new Date(), choosedState, coin.getState());
+            HistoryData data = new HistoryData(currentChild, new Date(), flipChoice, coin.getState());
             historyList.addHistory(data);
             historyList.saveToLocal(FlipCoinPage.this);
             displayLastChildFlip();
 
             // !!!! testing what state is flip
             Toast.makeText(FlipCoinPage.this, "" + coin.getState(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void createFlipChoice() {
+        RadioGroup group = findViewById(R.id.radio_group_flip_choice);
+        String[] flipChoices = getResources().getStringArray(R.array.flip_choices);
+
+        for (int i = 0; i < flipChoices.length; i++) {
+            final int finalI = i;
+            RadioButton button = new RadioButton(this);
+            button.setText(flipChoices[i]);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    flipChoice = headsOrTails[finalI];
+                }
+            });
+
+            group.addView(button);
+
         }
     }
 

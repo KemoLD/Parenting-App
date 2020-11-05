@@ -79,7 +79,7 @@ public class HistoryPage extends AppCompatActivity
      */
     private class HistoryListAdapter extends ArrayAdapter<HistoryData>
     {
-        // for formating the Date in History daate
+        // for formatting the Date in History date
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         public HistoryListAdapter(ArrayList<HistoryData> dataList){
