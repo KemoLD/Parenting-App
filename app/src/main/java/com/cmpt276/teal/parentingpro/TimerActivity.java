@@ -32,12 +32,15 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     private EditText editText;
 
     private int currentTime;
-    private boolean isRun;
+    private boolean isRun = false;
     private boolean isPause;
     CountDownTimer countDownTimer;
 
     private Vibrator mVibrator;
     private Ringtone r;
+    private int time = 0;
+    private String t;
+    private String s;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,10 +122,20 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 // 倒计时间隔回调
                 Log.d("TAG", String.format("剩余时间：%d时%d分%d秒", hour, minute, second));
 
-                if(hour != 0){
-                    timeTv.setText(String.format("%d %d:%d", hour, minute, second));
-                }else{
-                    timeTv.setText(String.format("%d:%d", minute, second));
+                String days = String.format("%02d", day);
+                String hours = String.format("%02d", hour);
+                String minutes = String.format("%02d", minute);
+                String seconds = String.format("%02d", second);
+
+                if (day != 0){
+                    timeTv.setText(days +":" + hours + ":" + minutes + ":" + seconds);
+                }
+                else {
+                    if (hour != 0) {
+                        timeTv.setText(hours + ":" + minutes + ":" + seconds);
+                    } else {
+                        timeTv.setText(minutes + ":" + seconds);
+                    }
                 }
                 currentTime--;
             }
@@ -143,71 +156,148 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()){
             case R.id.min1:
                 if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 1 * 60;
-                startTimer();
+                time = 1;
+                t = String.format("%02d", time);
+                s = (t+":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.min2:
                 if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 2* 60;
-                startTimer();
+                time = 2;
+                t = String.format("%02d", time);
+                s = (t+":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.min3:
                 if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 3* 60;
-                startTimer();
+                time = 3;
+                t = String.format("%02d", time);
+                s = (t+":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.min5:
                 if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 5* 60;
-                startTimer();
+                time = 5;
+                t = String.format("%02d", time);
+                s = (t+":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.min10:
                 if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 10* 60;
-                startTimer();
+                time = 10;
+                t = String.format("%02d", time);
+                s = (t+":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.start:
-                if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
-                }
                 if(editText.getText().length() != 0 && Integer.parseInt(editText.getText().toString()) > 0){
-                    currentTime = Integer.parseInt(editText.getText().toString()) * 60;
-                    startTimer();
+                    if(isRun){
+                        isRun = false;
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                        pauseImg.setImageResource(R.mipmap.ic_resume);
+                    }
+                    time = Integer.parseInt(editText.getText().toString());
+                    currentTime = time * 60;
+
+                    int days = time / 1440;
+                    int hours = (time % 1440 ) / 60 ;
+                    int minutes = ((time % 1440 ) % 60 ) ;
+                    int seconds = ((time % 1440 ) % 60 ) / 60  ;
+
+                    String day = String.format("%02d", days);
+                    String hour = String.format("%02d", hours);
+                    String minute = String.format("%02d", minutes);
+                    String second = String.format("%02d", seconds);
+
+                    if (days != 0){
+                        s = (day +":" + hour + ":" + minute + ":" + second);
+                        timeTv.setText(s);
+                    }
+                    else {
+                        if (hours != 0) {
+                            s = (hour + ":" + minute + ":" + second);
+                            timeTv.setText(s);
+                        } else {
+                            s = (minute + ":" + second);
+                            timeTv.setText(s);
+                        }
+                    }
+
                 }else{
-                    Toast.makeText(this, "Edit Text is InValid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Time is InValid", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.reset:
-                isRun = false;
-                countDownTimer.cancel();
-                countDownTimer = null;
-                timeTv.setText("0:0");
+                if(isRun) {
+                    isRun = false;
+                    if(countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
+                    currentTime = time * 60;
+                    timeTv.setText(s);
+                    pauseImg.setImageResource(R.mipmap.ic_resume);
+                }
+                else{
+                    return;
+                }
                 break;
             case R.id.pause:
-                if(!isPause){
-                    countDownTimer.cancel();
-                    countDownTimer = null;
-                    pauseImg.setImageResource(R.mipmap.ic_resume);
-                    isPause = true;
-                }else{
+                if(isRun) {
+                    if (!isPause) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                        pauseImg.setImageResource(R.mipmap.ic_resume);
+                        isPause = true;
+                    } else {
+                        startTimer();
+                        isPause = false;
+                        pauseImg.setImageResource(R.mipmap.ic_pause);
+                    }
+                }
+                else if(time == 0){
+                    return;
+                }
+                else{
                     startTimer();
                     isPause = false;
+                    isRun = true;
                     pauseImg.setImageResource(R.mipmap.ic_pause);
                 }
                 break;
