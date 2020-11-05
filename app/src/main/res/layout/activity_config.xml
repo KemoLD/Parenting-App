@@ -17,6 +17,8 @@
         android:gravity="center"
         android:textSize="30dp"
         android:text="Config Children" />
+        
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,18 +30,30 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="8"/>
-        <EditText
-            android:id="@+id/edit_name"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:hint="Input Child Name"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-        <Button
-            android:id="@+id/btn_add"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:text="ADD"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/edit_name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:hint="Input Child Name"
+                />
+
+            <Button
+                android:id="@+id/btn_add"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="ADD" />
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 
