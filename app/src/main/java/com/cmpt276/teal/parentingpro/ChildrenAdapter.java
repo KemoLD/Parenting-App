@@ -88,7 +88,7 @@ public class ChildrenAdapter extends BaseAdapter {
 
         final int pos = position;
         final ViewHolder finalViewHolder = viewHolder;
-        
+
         viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -21,25 +21,7 @@ public class ConfigActivity extends AppCompatActivity {
 
      // private List<String> childs = new ArrayList<>();
      private ChildManager manager = ChildManager.getInstance();
-
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus)
-//    {
-//        super.onWindowFocusChanged(hasFocus);
-//
-//        EditText editText = findViewById(R.id.edit_name);
-//        int editHeight = editText.getHeight();
-//        System.out.println("editText height = " + editHeight);
-//        editText.setMinHeight(editHeight);
-//        editText.setMaxHeight(editHeight);
-//
-//        Button button = findViewById(R.id.btn_add);
-//        int buttonHeight = button.getHeight();
-//        System.out.println("button height = " + buttonHeight);
-//        button.setMinHeight(buttonHeight);
-//        button.setMaxHeight(buttonHeight);
-//    }
-
+     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
