@@ -150,6 +150,23 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 r.play();
                 sendChatMsg(TimerActivity.this.getCurrentFocus());
+                Thread stopRaning = new Thread(new Runnable()
+                {
+                    @Override
+                    public void run() {
+                        System.out.println("on stop ranging");
+                        try{
+                            Thread.sleep(5000);
+                        }catch (InterruptedException e){
+
+                        }
+                        r.stop();
+                    }
+
+                });
+
+                stopRaning.start();
+               
             }
         };
         countDownTimer.start();
