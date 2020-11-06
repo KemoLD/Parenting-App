@@ -20,6 +20,7 @@ import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.Coin;
 import com.cmpt276.teal.parentingpro.ui.CoinUI;
 import com.cmpt276.teal.parentingpro.ui.FlipListener;
+import com.cmpt276.teal.parentingpro.ui.FlipResult;
 
 import java.util.Date;
 
@@ -35,7 +36,7 @@ public class FlipCoinPage extends AppCompatActivity
     private Button historyBtn;  // button to goto history page
     private TextView lastChildText; // text view to display last child flipping the coin
 
-    private CoinUI coin;
+    private Coin coin;
     private Child currentChild;     // the current child that is flipping the coin
     private Child lastChild;    // the last child who flip the coin
     private Coin.CoinState flipChoice;    // the state the child currently choosing
@@ -61,6 +62,8 @@ public class FlipCoinPage extends AppCompatActivity
         ImageView imageViewHeads = findViewById(COIN_HEAD_IMAGE_ID);
         ImageView imageViewTails = findViewById(COIN_TAIL_IMAGE_ID);
         mFlipAnimator.addUpdateListener(new FlipListener(imageViewHeads, imageViewTails));
+        mFlipAnimator.addListener(new FlipResult(imageViewHeads, imageViewTails));
+        mFlipAnimator.setRepeatCount(8);
         setupVariable();
         createFlipChoice();
     }
@@ -72,7 +75,7 @@ public class FlipCoinPage extends AppCompatActivity
         flipBtn = findViewById(FLIP_BTN_ID);
         historyBtn = findViewById(HISTORY_BTN_ID);
         lastChildText = findViewById(LAST_CHILD_ID);
-        coin = new CoinUI(FlipCoinPage.this, COIN_HEAD_IMAGE_ID);
+        coin = new Coin();
         historyList = History.getInstance();
 
         // !!!!!!!! this is just for testing
@@ -125,11 +128,11 @@ public class FlipCoinPage extends AppCompatActivity
     class FlipCoinClickListener implements View.OnClickListener
     {
         public void onClick(View view){
-            mFlipAnimator.start();
             coin.flipCoin();    // play animation and sound and get randomCoin state
             HistoryData data = new HistoryData(currentChild, new Date(), flipChoice, coin.getState());
             historyList.addHistory(data);
             historyList.saveToLocal(FlipCoinPage.this);
+            mFlipAnimator.start();
             displayLastChildFlip();
 
             // !!!! testing what state is flip
