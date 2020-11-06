@@ -18,9 +18,8 @@ import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.Coin;
-import com.cmpt276.teal.parentingpro.ui.CoinUI;
 import com.cmpt276.teal.parentingpro.ui.FlipListener;
-import com.cmpt276.teal.parentingpro.ui.FlipResult;
+import com.cmpt276.teal.parentingpro.ui.FlipResultListener;
 
 import java.util.Date;
 
@@ -28,47 +27,43 @@ public class FlipCoinPage extends AppCompatActivity
 {
     private final int FLIP_BTN_ID = R.id.flip_btn;
     private final int HISTORY_BTN_ID = R.id.history_btn;
-    private final int COIN_HEAD_IMAGE_ID = R.id.coin_head_image;
-    private final int COIN_TAIL_IMAGE_ID = R.id.coin_tail_image;
+    private final int COIN_IMAGE_ID = R.id.image_view_coin;
     private final int LAST_CHILD_ID = R.id.flip_coin_last_play;
 
     private Button flipBtn;     // button to flip coin
     private Button historyBtn;  // button to goto history page
     private TextView lastChildText; // text view to display last child flipping the coin
-
     private Coin coin;
     private Child currentChild;     // the current child that is flipping the coin
     private Child lastChild;    // the last child who flip the coin
     private Coin.CoinState flipChoice;    // the state the child currently choosing
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEAD, Coin.CoinState.TAIL};
     private History historyList;    // the history record contain history data
-
     private ValueAnimator mFlipAnimator;
-
 
     public static Intent getIntent(Context context){
         return new Intent(context, FlipCoinPage.class);
     }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_flip_coin2);
+        setContentView(R.layout.activity_flip_coin);
 
-        mFlipAnimator = ValueAnimator.ofFloat(0f, 1f);
-        ImageView imageViewHeads = findViewById(COIN_HEAD_IMAGE_ID);
-        ImageView imageViewTails = findViewById(COIN_TAIL_IMAGE_ID);
-        mFlipAnimator.addUpdateListener(new FlipListener(imageViewHeads, imageViewTails));
-        mFlipAnimator.addListener(new FlipResult(imageViewHeads, imageViewTails));
-        mFlipAnimator.setRepeatCount(8);
+        setUpFlipAnimation();
         setupVariable();
         createFlipChoice();
     }
 
-
+    private void setUpFlipAnimation() {
+        final ImageView imageViewCoin = findViewById(COIN_IMAGE_ID);
+        int repeatCount = 8;
+        mFlipAnimator = ValueAnimator.ofFloat(0f, 1f);
+        mFlipAnimator.addUpdateListener(new FlipListener(imageViewCoin));
+        mFlipAnimator.addListener(new FlipResultListener(imageViewCoin));
+        mFlipAnimator.setRepeatCount(repeatCount);
+    }
 
     private void setupVariable()
     {
@@ -98,8 +93,6 @@ public class FlipCoinPage extends AppCompatActivity
         displayLastChildFlip();
     }
 
-
-
     private void displayLastChildFlip(){
         int numOfHistory = historyList.numOfHistory();
 
@@ -112,9 +105,7 @@ public class FlipCoinPage extends AppCompatActivity
         lastChildText.setText(lastChild.getName() + "?");
     }
 
-
-
-    private void updateLastChildPlay(){
+    private void updateLastChildPlay() {
         int numOfHistory = historyList.numOfHistory();
         int lastHistoryIndex = numOfHistory - 1;
         HistoryData lastHistoryData = historyList.getHistoryData(lastHistoryIndex);
@@ -136,7 +127,7 @@ public class FlipCoinPage extends AppCompatActivity
             displayLastChildFlip();
 
             // !!!! testing what state is flip
-            Toast.makeText(FlipCoinPage.this, "" + coin.getState(), Toast.LENGTH_SHORT).show();
+             Toast.makeText(FlipCoinPage.this, "" + coin.getState(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -157,8 +148,6 @@ public class FlipCoinPage extends AppCompatActivity
             });
 
             group.addView(button);
-
         }
     }
-
 }

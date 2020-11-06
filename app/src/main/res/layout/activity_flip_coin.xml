@@ -35,7 +35,7 @@
         app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
     <ImageView
-        android:id="@+id/coin_head_image"
+        android:id="@+id/image_view_coin"
         android:layout_width="155dp"
         android:layout_height="133dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
@@ -122,15 +122,5 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline5" />
-
-    <ImageView
-        android:id="@+id/coin_tail_image"
-        android:layout_width="155dp"
-        android:layout_height="133dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:srcCompat="@drawable/coin_tails" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
