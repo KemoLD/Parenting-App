@@ -35,15 +35,14 @@
         app:layout_constraintTop_toTopOf="@+id/guideline4" />
 
     <ImageView
-        android:id="@+id/flip_coin_iimage"
+        android:id="@+id/coin_head_image"
         android:layout_width="155dp"
         android:layout_height="133dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.17000002"
-        app:srcCompat="@drawable/coin_proto" />
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:srcCompat="@drawable/coin_heads" />
 
     <TextView
         android:id="@+id/textView"
@@ -113,7 +112,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.23" />
+        app:layout_constraintGuide_percent="0.29" />
 
     <RadioGroup
         android:id="@+id/radio_group_flip_choice"
@@ -121,7 +120,17 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/guideline6"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline7"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline5" />
+
+    <ImageView
+        android:id="@+id/coin_tail_image"
+        android:layout_width="155dp"
+        android:layout_height="133dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline3"
+        app:layout_constraintTop_toTopOf="@+id/guideline"
+        app:srcCompat="@drawable/coin_tails" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

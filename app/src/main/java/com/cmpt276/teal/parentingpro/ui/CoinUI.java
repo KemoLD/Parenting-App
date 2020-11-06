@@ -1,6 +1,8 @@
 package com.cmpt276.teal.parentingpro.ui;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
+import android.widget.ImageView;
 
 import com.cmpt276.teal.parentingpro.model.Coin;
 
@@ -29,5 +31,6 @@ public class CoinUI extends Coin
         super.flipCoin();
 
         // some code for playing animation empty for now
+
     }
 }
