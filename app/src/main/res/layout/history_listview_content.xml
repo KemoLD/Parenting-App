@@ -24,7 +24,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="TextView"
             android:textSize="15sp" />
 
         <TextView
@@ -33,25 +32,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="TextView"
             android:textSize="15sp" />
 
         <TextView
-            android:id="@+id/history_content_choose"
+            android:id="@+id/history_content_chose"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="TextView"
             android:textSize="15sp" />
 
-        <TextView
+        <ImageView
             android:id="@+id/history_content_result"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="TextView"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

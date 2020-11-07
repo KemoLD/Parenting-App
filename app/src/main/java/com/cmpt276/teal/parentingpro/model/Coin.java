@@ -7,7 +7,7 @@ public class Coin
 {
     public enum CoinState
     {
-        HEAD, TAIL
+        HEADS, TAILS
     }
 
     private CoinState state;
@@ -48,9 +48,9 @@ public class Coin
 
         CoinState output;
         if(random < 5)
-            output = CoinState.HEAD;
+            output = CoinState.HEADS;
         else
-            output = CoinState.TAIL;
+            output = CoinState.TAILS;
 
         return output;
     }

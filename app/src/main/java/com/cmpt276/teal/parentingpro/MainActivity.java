@@ -3,8 +3,11 @@ package com.cmpt276.teal.parentingpro;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+
+import com.cmpt276.teal.parentingpro.data.DataUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -28,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.btn_flip: {
-                Intent integer = new Intent(MainActivity.this, FlipActivity.class);
+                Intent integer = new Intent(MainActivity.this, FlipCoinActivity.class);
                 startActivity(integer);
                 break;
             }
@@ -39,8 +42,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
-    // TEST GIT PUSH AND PULL
-    // test2
-    //test3
 }
