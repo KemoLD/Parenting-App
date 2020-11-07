@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="flip_choices">
+        <item>Heads</item>
+        <item>Tails</item>
+    </string-array>
+</resources>
