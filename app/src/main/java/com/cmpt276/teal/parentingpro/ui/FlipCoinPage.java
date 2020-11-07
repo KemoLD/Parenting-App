@@ -3,7 +3,6 @@ package com.cmpt276.teal.parentingpro.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.data.History;
@@ -27,41 +25,37 @@ import java.util.Date;
 
 public class FlipCoinPage extends AppCompatActivity
 {
-    private final int FLIP_BTN_ID = R.id.flip_btn;
-    private final int HISTORY_BTN_ID = R.id.history_btn;
-    private final int COIN_IMAGE_ID = R.id.image_view_coin;
-    private final int LAST_CHILD_ID = R.id.flip_coin_last_play;
-
-    private Button flipBtn;     // button to flip coin
-    private Button historyBtn;  // button to goto history page
-    private TextView lastChildText; // text view to display last child flipping the coin
     private Coin coin;
-    private Child currentChild;     // the current child that is flipping the coin
-    private Child lastChild;    // the last child who flip the coin
-    private Coin.CoinState flipChoice;    // the state the child currently choosing
+    private Coin.CoinState flipChoice;    
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
-    private History historyList;    // the history record contain history data
-    private ValueAnimator mFlipAnimator;
-    private SoundPool soundPool;
-    private int flipCoinSoundID;
 
-    public static Intent getIntent(Context context){
-        return new Intent(context, FlipCoinPage.class);
-    }
+    private History historyList;    
+    private Child currentChildFlipping;     
+    private Child nextChildFlipping;    
+
+    private ValueAnimator flipAnimator;
+    private SoundPool soundPool;
+    private int flipSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flip_coin);
-
-        setUpFlipSound();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        setUpFlipAnimation();
-        setupVariable();
-        createFlipChoice();
-    }
 
+        setUpParameters();
+        setUpHistoryButton();
+
+        setUpFlipButton();
+        setUpFlipSound();
+        setUpFlipAnimation();
+        setUpFlipChoice();
+
+        // *********ONLY DISPLAY FLIP CHOICE IF LIST OF CHILDREN IS NON-EMPTY***********
+        // if list not empty:
+        displayFlipChoice();
+    }
 
     @Override
     protected void onDestroy() {
@@ -69,6 +63,47 @@ public class FlipCoinPage extends AppCompatActivity
         soundPool.release();
     }
 
+    private void setUpParameters()
+    {
+        // Coin object which the animation will be modelled on
+        coin = new Coin();
+
+        // History to keep a record of coin flips
+        historyList = History.getInstance();
+        historyList.loadFromLocal(FlipCoinPage.this);
+
+        // *************NEED TO GET LIST OF CHILDREN IN ORDER TO KEEP TRACK OF CURRENT CHILD FLIPPING AND NEXT CHILD WHO WILL GET FLIP CHOICE*************
+        // if list not empty:
+        currentChildFlipping = nextChildFlipping = new Child("Ben");    // set to first child in the list initially
+    }
+
+    private void setUpHistoryButton() {
+        Button historyButton = findViewById(R.id.history_button);
+        historyButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                Intent intent = HistoryPage.getIntent(FlipCoinPage.this);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setUpFlipButton() {
+        Button flipButton = findViewById(R.id.flip_button);
+        flipButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                coin.flipCoin();
+                HistoryData data = new HistoryData(currentChildFlipping, new Date(), flipChoice, coin.getState());
+                historyList.addHistory(data);
+                historyList.saveToLocal(FlipCoinPage.this);
+                flipAnimator.start();
+                displayFlipChoice();
+            }
+        });
+    }
 
     private void setUpFlipSound() {
         AudioAttributes attrs = new AudioAttributes.Builder()
@@ -79,87 +114,25 @@ public class FlipCoinPage extends AppCompatActivity
         soundPool = new SoundPool.Builder()
                 .setAudioAttributes(attrs)
                 .build();
-
-        flipCoinSoundID = soundPool.load(FlipCoinPage.this, R.raw.coin_flip_sound, 1);
+        
+        //   Sound source: https://freesound.org/people/bone666138/sounds/198877/
+        // & license link: https://creativecommons.org/licenses/by/3.0/
+        flipSound = soundPool.load(FlipCoinPage.this, R.raw.coin_flip_sound, 1);
     }
 
     private void setUpFlipAnimation() {
-        final ImageView imageViewCoin = findViewById(COIN_IMAGE_ID);
+        ImageView imageViewCoin = findViewById(R.id.image_view_coin);
         int repeatCount = 4;
-        mFlipAnimator = ValueAnimator.ofFloat(0f, 1f);
-        mFlipAnimator.addUpdateListener(new FlipListener(imageViewCoin));
-        mFlipAnimator.addListener(new FlipResultListener(FlipCoinPage.this, imageViewCoin));
-        mFlipAnimator.addListener(new FlipSoundListener(FlipCoinPage.this, soundPool, flipCoinSoundID));
-        mFlipAnimator.setDuration(200);
-        mFlipAnimator.setRepeatCount(repeatCount);
+        
+        flipAnimator = ValueAnimator.ofFloat(0f, 1f);
+        flipAnimator.addUpdateListener(new FlipListener(imageViewCoin));
+        flipAnimator.addListener(new FlipResultListener(FlipCoinPage.this, imageViewCoin));
+        flipAnimator.addListener(new FlipSoundListener(soundPool, flipSound));
+        flipAnimator.setDuration(200);
+        flipAnimator.setRepeatCount(repeatCount);
     }
 
-    private void setupVariable()
-    {
-        flipBtn = findViewById(FLIP_BTN_ID);
-        historyBtn = findViewById(HISTORY_BTN_ID);
-        lastChildText = findViewById(LAST_CHILD_ID);
-        coin = new Coin();
-        historyList = History.getInstance();
-
-        // !!!!!!!! this is just for testing
-        currentChild = new Child("Ben");    // the current child set for now first
-        // !!!!!!!!!!
-
-        historyList.loadFromLocal(FlipCoinPage.this);
-        flipBtn.setOnClickListener(new FlipCoinClickListener());
-
-        historyBtn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View view)
-            {
-                Intent intent = HistoryPage.getIntent(FlipCoinPage.this);
-                startActivity(intent);
-            }
-        });
-
-        displayLastChildFlip();
-    }
-
-    private void displayLastChildFlip(){
-        int numOfHistory = historyList.numOfHistory();
-
-        // no history is stored
-        if(numOfHistory <= 0){
-            lastChildText.setText(getString(R.string.no_play));
-            return;
-        }
-        updateLastChildPlay();
-        lastChildText.setText(lastChild.getName() + "?");
-    }
-
-    private void updateLastChildPlay() {
-        int numOfHistory = historyList.numOfHistory();
-        int lastHistoryIndex = numOfHistory - 1;
-        HistoryData lastHistoryData = historyList.getHistoryData(lastHistoryIndex);
-        lastChild = lastHistoryData.getChild();
-    }
-
-
-    /**
-     * this inner class is for action that when click the flip coin button
-     */
-    class FlipCoinClickListener implements View.OnClickListener
-    {
-        public void onClick(View view){
-            coin.flipCoin();    // play animation and sound and get randomCoin state
-            HistoryData data = new HistoryData(currentChild, new Date(), flipChoice, coin.getState());
-            historyList.addHistory(data);
-            historyList.saveToLocal(FlipCoinPage.this);
-            mFlipAnimator.start();
-            displayLastChildFlip();
-
-
-        }
-    }
-
-    private void createFlipChoice() {
+    private void setUpFlipChoice() {
         RadioGroup group = findViewById(R.id.radio_group_flip_choice);
         String[] flipChoices = getResources().getStringArray(R.array.flip_choices);
 
@@ -177,5 +150,19 @@ public class FlipCoinPage extends AppCompatActivity
 
             group.addView(button);
         }
+    }
+    
+    private void displayFlipChoice(){
+        TextView lastChildText = findViewById(R.id.text_view_flip_choice);
+        updateLastChildPlay(); // ************ NOT NEEDED WHEN LIST OF CHILDREN READY (JUST HAVE TO CYCLE THROUGH THE LIST)
+        lastChildText.setText(getString(R.string.flip_choice_text, nextChildFlipping.getName()));
+    }
+
+    // ************* NEED TO CHANGE THIS METHOD AFTER GETTING LIST OF CHILDREN **********************
+    private void updateLastChildPlay() {
+        int numOfHistory = historyList.numOfHistory();
+        int lastHistoryIndex = numOfHistory - 1;
+        HistoryData lastHistoryData = historyList.getHistoryData(lastHistoryIndex);
+        nextChildFlipping = lastHistoryData.getChild();
     }
 }

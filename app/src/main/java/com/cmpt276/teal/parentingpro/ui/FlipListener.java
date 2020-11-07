@@ -6,8 +6,8 @@ import android.widget.ImageView;
 import com.cmpt276.teal.parentingpro.R;
 
 // Adapted from: https://stackoverflow.com/a/28430661
-public class FlipListener implements ValueAnimator.AnimatorUpdateListener {
-
+public class FlipListener implements ValueAnimator.AnimatorUpdateListener
+{
     private final ImageView imageViewCoin;
     private boolean flipped;
 

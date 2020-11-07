@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/date"
+            android:text="@string/history_date"
             android:textAlignment="center"
             android:textSize="18sp" />
 
@@ -42,16 +42,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/name"
+            android:text="@string/history_name"
             android:textAlignment="center"
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/history_label_choose"
+            android:id="@+id/history_label_chose"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/choose"
+            android:text="@string/history_chose"
             android:textAlignment="center"
             android:textSize="18sp" />
 
@@ -60,7 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/result"
+            android:text="@string/history_result"
             android:textAlignment="center"
             android:textSize="18sp" />
     </LinearLayout>

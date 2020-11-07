@@ -10,7 +10,8 @@ import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.model.Coin;
 
-public class FlipResultListener extends AnimatorListenerAdapter {
+public class FlipResultListener extends AnimatorListenerAdapter
+{
     private final Context context;
     private final ImageView imageViewCoin;
     private History historyList;

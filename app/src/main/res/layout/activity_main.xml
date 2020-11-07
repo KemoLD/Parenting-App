@@ -19,7 +19,7 @@
         android:id="@+id/munu_flip_coin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/flip_coin"
+        android:text="@string/flip_button_text"
         tools:layout_editor_absoluteX="44dp"
         tools:layout_editor_absoluteY="288dp" />
 

@@ -2,24 +2,19 @@ package com.cmpt276.teal.parentingpro.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.Context;
 import android.media.SoundPool;
-import android.widget.Toast;
 
-public class FlipSoundListener extends AnimatorListenerAdapter {
-    private final Context context;
-    private SoundPool soundPool;
+public class FlipSoundListener extends AnimatorListenerAdapter
+{
+    private final SoundPool soundPool;
     private int flipSound;
     private int flipCoinStreamID;
 
-    public FlipSoundListener(final Context context, SoundPool soundPool, int flipSound) {
-        this.context = context;
+    public FlipSoundListener(final SoundPool soundPool, int flipSound) {
         this.soundPool = soundPool;
         this.flipSound= flipSound;
     }
 
-    // Sound source: https://freesound.org/people/bone666138/sounds/198877/
-    // license link: https://creativecommons.org/licenses/by/3.0/
     @Override
     public void onAnimationStart(Animator animation) {
         flipCoinStreamID = soundPool.play(flipSound, 1, 1, 1, 0, 1);

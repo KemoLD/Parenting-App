@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -25,16 +26,11 @@ import java.util.Date;
 
 public class HistoryPage extends AppCompatActivity
 {
-    private final int HISTORY_LIST_VIEW = R.id.history_listview;
-    private History history = History.getInstance();
-
-
+    private History historyList;
 
     public static Intent getIntent(Context context){
         return new Intent(context, HistoryPage.class);
     }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +38,16 @@ public class HistoryPage extends AppCompatActivity
         setContentView(R.layout.activity_history_page);
 
         //addSomeData(5);
-
-        ListView historyListView = findViewById(HISTORY_LIST_VIEW);
+        historyList = History.getInstance();
+        ListView historyListView = findViewById(R.id.history_listview);
 
         // for historyList adapter pass a list we need to show
         // pass all history
-        historyListView.setAdapter(new HistoryListAdapter(history.getAllHistoryList()));
+        historyListView.setAdapter(new HistoryListAdapter(historyList.getAllHistoryList()));
 
         // pass with a child
         // historyListView.setAdapter(new HistoryListAdapter(history.getHistoryListWithChild(new Child("Ben0"))));
     }
-
-
 
     // a function just for test for now
     public void addSomeData(int dataSize)
@@ -67,12 +61,10 @@ public class HistoryPage extends AppCompatActivity
            Coin coin = new Coin();
            System.out.println(coin.getState());
 
-           history.addHistory(new HistoryData(child, date, coin.getRandomState(), coin.getRandomState()));
+           historyList.addHistory(new HistoryData(child, date, coin.getRandomState(), coin.getRandomState()));
 
        }
     }
-
-
 
     /**
      * the inner class is for creating a UI view in listVew for history
@@ -86,8 +78,6 @@ public class HistoryPage extends AppCompatActivity
             super(HistoryPage.this, R.layout.history_listview_content, dataList);
         }
 
-
-
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
@@ -99,22 +89,25 @@ public class HistoryPage extends AppCompatActivity
 
             TextView dateText = itemView.findViewById(R.id.history_content_date);
             TextView nameText = itemView.findViewById(R.id.history_content_name);
-            TextView chooseText = itemView.findViewById(R.id.history_content_choose);
-            TextView resultText = itemView.findViewById(R.id.history_content_result);
+            TextView chooseText = itemView.findViewById(R.id.history_content_chose);
+            ImageView resultImage = itemView.findViewById(R.id.history_content_result);
 
-            HistoryData data = history.getHistoryData(position);
+            HistoryData data = historyList.getHistoryData(position);
             String paredDate = dateFormat.format(data.getDate());
             String childName = data.getChild().getName();
             Coin.CoinState chosenState = data.getChosenState();
             Coin.CoinState resultState = data.getResultState();
 
-            String state = chosenState == Coin.CoinState.HEADS ? "HEADS" : "TAILS";
-            String result = chosenState == resultState ? "Yes" : "No";
+            String state = (chosenState == Coin.CoinState.HEADS ? "HEADS" : "TAILS");
+
+            // Check mark source: https://freeiconshop.com/icon/checkmark-icon-flat/
+            // Cross source: https://freeiconshop.com/icon/cross-icon-flat/
+            int resultImageID = (chosenState == resultState ? R.drawable.check_mark : R.drawable.cross);
 
             dateText.setText(paredDate);
             nameText.setText(childName);
             chooseText.setText(state);
-            resultText.setText(result);
+            resultImage.setImageResource(resultImageID);
 
             return itemView;
         }

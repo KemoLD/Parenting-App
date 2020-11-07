@@ -7,29 +7,29 @@
     tools:context=".ui.FlipCoinPage">
 
     <TextView
-        android:id="@+id/flip_coin_title"
+        android:id="@+id/text_view_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/flip_coin"
+        android:text="@string/flip_coin_title"
         android:textSize="30sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
     <Button
-        android:id="@+id/flip_btn"
+        android:id="@+id/flip_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="flip"
+        android:text="@string/flip_button_text"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
     <Button
-        android:id="@+id/history_btn"
+        android:id="@+id/history_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="view history"
+        android:text="@string/history_button_text"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline4" />
@@ -42,28 +42,26 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
         app:layout_constraintTop_toTopOf="@+id/guideline"
-        app:srcCompat="@drawable/coin_heads" />
+        app:srcCompat="@drawable/coin_heads"
+        tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/text_view_flip_choice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Heads or tails, "
+        android:text="@string/flip_choice_text"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="@+id/guideline5" />
 
-    <TextView
+    <!--<TextView
         android:id="@+id/flip_coin_last_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        app:layout_constraintBottom_toBottomOf="@+id/text_view_flip_choice"
+        app:layout_constraintStart_toEndOf="@+id/text_view_flip_choice"
+        app:layout_constraintTop_toTopOf="@+id/text_view_flip_choice" />-->
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
