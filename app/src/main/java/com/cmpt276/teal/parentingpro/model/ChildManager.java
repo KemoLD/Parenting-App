@@ -47,6 +47,7 @@ public class ChildManager
     }
 
     public void loadFromLocal(Context context){
+        childrenList.removeAll(childrenList);
         String val = DataUtil.getStringData(context, AppDataKey.CHILDREN_NAMES);
         if (!val.equals("NaN")) {
             String[] names = val.split("###");
