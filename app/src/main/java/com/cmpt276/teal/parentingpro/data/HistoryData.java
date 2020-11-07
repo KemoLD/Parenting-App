@@ -9,15 +9,15 @@ public class HistoryData
 {
     private Child child;
     private Date date;
-    private Coin.CoinState choosedState;
+    private Coin.CoinState chosenState;
     private Coin.CoinState resultState;
 
 
 
-    public HistoryData(Child child, Date date, Coin.CoinState choosedState, Coin.CoinState resultState){
+    public HistoryData(Child child, Date date, Coin.CoinState chosenState, Coin.CoinState resultState){
         this.child = child;
         this.date = date;
-        this.choosedState = choosedState;
+        this.chosenState = chosenState;
         this.resultState = resultState;
     }
 
@@ -47,14 +47,14 @@ public class HistoryData
 
 
 
-    public Coin.CoinState getChoosedState() {
-        return choosedState;
+    public Coin.CoinState getChosenState() {
+        return chosenState;
     }
 
 
 
-    public void setChoosedState(Coin.CoinState choosedState) {
-        this.choosedState = choosedState;
+    public void setChosenState(Coin.CoinState chosenState) {
+        this.chosenState = chosenState;
     }
 
 
@@ -72,13 +72,13 @@ public class HistoryData
 
 
     public HistoryData clone(){
-        HistoryData data = new HistoryData(this.child, this.date, this.choosedState, this.resultState);
+        HistoryData data = new HistoryData(this.child, this.date, this.chosenState, this.resultState);
         return data;
     }
 
 
 
     public String toString(){
-        return child.toString() + date.toString() + choosedState + resultState;
+        return child.toString() + date.toString() + chosenState + resultState;
     }
 }

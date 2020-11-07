@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.cmpt276.teal.parentingpro.ui.FlipCoinPage;
+
 public class MainActivity extends AppCompatActivity
 {
 

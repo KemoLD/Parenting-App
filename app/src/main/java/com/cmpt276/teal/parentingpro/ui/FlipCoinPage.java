@@ -1,10 +1,13 @@
-package com.cmpt276.teal.parentingpro;
+package com.cmpt276.teal.parentingpro.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,12 +17,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.Coin;
-import com.cmpt276.teal.parentingpro.ui.FlipListener;
-import com.cmpt276.teal.parentingpro.ui.FlipResultListener;
 
 import java.util.Date;
 
@@ -37,9 +39,11 @@ public class FlipCoinPage extends AppCompatActivity
     private Child currentChild;     // the current child that is flipping the coin
     private Child lastChild;    // the last child who flip the coin
     private Coin.CoinState flipChoice;    // the state the child currently choosing
-    private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEAD, Coin.CoinState.TAIL};
+    private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
     private History historyList;    // the history record contain history data
     private ValueAnimator mFlipAnimator;
+    private SoundPool soundPool;
+    private int flipCoinSoundID;
 
     public static Intent getIntent(Context context){
         return new Intent(context, FlipCoinPage.class);
@@ -51,17 +55,42 @@ public class FlipCoinPage extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flip_coin);
 
+        setUpFlipSound();
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         setUpFlipAnimation();
         setupVariable();
         createFlipChoice();
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        soundPool.release();
+    }
+
+
+    private void setUpFlipSound() {
+        AudioAttributes attrs = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+
+        soundPool = new SoundPool.Builder()
+                .setAudioAttributes(attrs)
+                .build();
+
+        flipCoinSoundID = soundPool.load(FlipCoinPage.this, R.raw.coin_flip_sound, 1);
+    }
+
     private void setUpFlipAnimation() {
         final ImageView imageViewCoin = findViewById(COIN_IMAGE_ID);
-        int repeatCount = 8;
+        int repeatCount = 4;
         mFlipAnimator = ValueAnimator.ofFloat(0f, 1f);
         mFlipAnimator.addUpdateListener(new FlipListener(imageViewCoin));
-        mFlipAnimator.addListener(new FlipResultListener(imageViewCoin));
+        mFlipAnimator.addListener(new FlipResultListener(FlipCoinPage.this, imageViewCoin));
+        mFlipAnimator.addListener(new FlipSoundListener(FlipCoinPage.this, soundPool, flipCoinSoundID));
+        mFlipAnimator.setDuration(200);
         mFlipAnimator.setRepeatCount(repeatCount);
     }
 
@@ -126,8 +155,7 @@ public class FlipCoinPage extends AppCompatActivity
             mFlipAnimator.start();
             displayLastChildFlip();
 
-            // !!!! testing what state is flip
-             Toast.makeText(FlipCoinPage.this, "" + coin.getState(), Toast.LENGTH_SHORT).show();
+
         }
     }
 

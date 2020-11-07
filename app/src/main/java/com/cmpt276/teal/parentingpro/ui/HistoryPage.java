@@ -1,4 +1,4 @@
-package com.cmpt276.teal.parentingpro;
+package com.cmpt276.teal.parentingpro.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,12 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.Coin;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -105,11 +105,11 @@ public class HistoryPage extends AppCompatActivity
             HistoryData data = history.getHistoryData(position);
             String paredDate = dateFormat.format(data.getDate());
             String childName = data.getChild().getName();
-            Coin.CoinState choosedState = data.getChoosedState();
+            Coin.CoinState chosenState = data.getChosenState();
             Coin.CoinState resultState = data.getResultState();
 
-            String state = choosedState == Coin.CoinState.HEAD ? "HEAD" : "TAIL";
-            String result = choosedState == resultState ? "Yes" : "No";
+            String state = chosenState == Coin.CoinState.HEADS ? "HEADS" : "TAILS";
+            String result = chosenState == resultState ? "Yes" : "No";
 
             dateText.setText(paredDate);
             nameText.setText(childName);
