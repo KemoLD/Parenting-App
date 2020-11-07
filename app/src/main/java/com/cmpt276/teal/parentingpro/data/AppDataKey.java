@@ -11,4 +11,7 @@ public class AppDataKey
 
     public static final String COIN_HISTORY = "coin_history";
 
+
+    public static final String CHILDREN_NAMES = "child_names";
+
 }
