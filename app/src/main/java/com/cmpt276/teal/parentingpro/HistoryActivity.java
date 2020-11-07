@@ -1,4 +1,4 @@
-package com.cmpt276.teal.parentingpro.ui;
+package com.cmpt276.teal.parentingpro;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
@@ -24,12 +23,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class HistoryPage extends AppCompatActivity
+public class HistoryActivity extends AppCompatActivity
 {
     private History historyList;
 
     public static Intent getIntent(Context context){
-        return new Intent(context, HistoryPage.class);
+        return new Intent(context, HistoryActivity.class);
     }
 
     @Override
@@ -75,7 +74,7 @@ public class HistoryPage extends AppCompatActivity
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         public HistoryListAdapter(ArrayList<HistoryData> dataList){
-            super(HistoryPage.this, R.layout.history_listview_content, dataList);
+            super(HistoryActivity.this, R.layout.history_listview_content, dataList);
         }
 
         @NonNull

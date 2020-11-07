@@ -27,10 +27,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(integer);
                 break;
             }
-            case R.id.btn_flip:
-                Intent integer = new Intent(MainActivity.this, FlipCoinPage.class);
+            case R.id.btn_flip: {
+                Intent integer = new Intent(MainActivity.this, FlipCoinActivity.class);
                 startActivity(integer);
                 break;
+            }
             case R.id.btn_timer: {
                 Intent integer = new Intent(MainActivity.this, TimerActivity.class);
                 startActivity(integer);

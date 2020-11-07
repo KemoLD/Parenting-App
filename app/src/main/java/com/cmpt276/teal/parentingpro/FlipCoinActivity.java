@@ -1,4 +1,4 @@
-package com.cmpt276.teal.parentingpro.ui;
+package com.cmpt276.teal.parentingpro;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,15 +15,17 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.Coin;
+import com.cmpt276.teal.parentingpro.ui.FlipListener;
+import com.cmpt276.teal.parentingpro.ui.FlipResultListener;
+import com.cmpt276.teal.parentingpro.ui.FlipSoundListener;
 
 import java.util.Date;
 
-public class FlipCoinPage extends AppCompatActivity
+public class FlipCoinActivity extends AppCompatActivity
 {
     private Coin coin;
     private Coin.CoinState flipChoice;    
@@ -70,7 +72,7 @@ public class FlipCoinPage extends AppCompatActivity
 
         // History to keep a record of coin flips
         historyList = History.getInstance();
-        historyList.loadFromLocal(FlipCoinPage.this);
+        historyList.loadFromLocal(FlipCoinActivity.this);
 
         // *************NEED TO GET LIST OF CHILDREN IN ORDER TO KEEP TRACK OF CURRENT CHILD FLIPPING AND NEXT CHILD WHO WILL GET FLIP CHOICE*************
         // if list not empty:
@@ -84,7 +86,7 @@ public class FlipCoinPage extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
-                Intent intent = HistoryPage.getIntent(FlipCoinPage.this);
+                Intent intent = HistoryActivity.getIntent(FlipCoinActivity.this);
                 startActivity(intent);
             }
         });
@@ -98,7 +100,7 @@ public class FlipCoinPage extends AppCompatActivity
                 coin.flipCoin();
                 HistoryData data = new HistoryData(currentChildFlipping, new Date(), flipChoice, coin.getState());
                 historyList.addHistory(data);
-                historyList.saveToLocal(FlipCoinPage.this);
+                historyList.saveToLocal(FlipCoinActivity.this);
                 flipAnimator.start();
                 displayFlipChoice();
             }
@@ -117,7 +119,7 @@ public class FlipCoinPage extends AppCompatActivity
         
         //   Sound source: https://freesound.org/people/bone666138/sounds/198877/
         // & license link: https://creativecommons.org/licenses/by/3.0/
-        flipSound = soundPool.load(FlipCoinPage.this, R.raw.coin_flip_sound, 1);
+        flipSound = soundPool.load(FlipCoinActivity.this, R.raw.coin_flip_sound, 1);
     }
 
     private void setUpFlipAnimation() {
@@ -126,7 +128,7 @@ public class FlipCoinPage extends AppCompatActivity
         
         flipAnimator = ValueAnimator.ofFloat(0f, 1f);
         flipAnimator.addUpdateListener(new FlipListener(imageViewCoin));
-        flipAnimator.addListener(new FlipResultListener(FlipCoinPage.this, imageViewCoin));
+        flipAnimator.addListener(new FlipResultListener(FlipCoinActivity.this, imageViewCoin));
         flipAnimator.addListener(new FlipSoundListener(soundPool, flipSound));
         flipAnimator.setDuration(200);
         flipAnimator.setRepeatCount(repeatCount);
