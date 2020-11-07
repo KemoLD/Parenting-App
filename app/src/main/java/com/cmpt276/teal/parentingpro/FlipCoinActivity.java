@@ -156,15 +156,15 @@ public class FlipCoinActivity extends AppCompatActivity
     
     private void displayFlipChoice(){
         TextView lastChildText = findViewById(R.id.text_view_flip_choice);
-        updateLastChildPlay(); // ************ NOT NEEDED WHEN LIST OF CHILDREN READY (JUST HAVE TO CYCLE THROUGH THE LIST)
+        //updateLastChildPlay(); // ************ NOT NEEDED WHEN LIST OF CHILDREN READY (JUST HAVE TO CYCLE THROUGH THE LIST)
         lastChildText.setText(getString(R.string.flip_choice_text, nextChildFlipping.getName()));
     }
 
     // ************* NEED TO CHANGE THIS METHOD AFTER GETTING LIST OF CHILDREN **********************
-    private void updateLastChildPlay() {
-        int numOfHistory = historyList.numOfHistory();
-        int lastHistoryIndex = numOfHistory - 1;
-        HistoryData lastHistoryData = historyList.getHistoryData(lastHistoryIndex);
-        nextChildFlipping = lastHistoryData.getChild();
-    }
+//    private void updateLastChildPlay() {
+//        int numOfHistory = historyList.numOfHistory();
+//        int lastHistoryIndex = numOfHistory - 1;
+//        HistoryData lastHistoryData = historyList.getHistoryData(lastHistoryIndex);
+//        nextChildFlipping = lastHistoryData.getChild();
+//    }
 }
