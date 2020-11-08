@@ -9,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#ffe66b">
 
     <TextView
         android:layout_width="match_parent"
@@ -34,6 +35,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="#000000"
             android:orientation="vertical">
 
             <EditText
@@ -41,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:textColor="#000000"
                 android:hint="@string/input_name"
                 />
 
@@ -49,6 +52,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:textColor="#ffffff"
+                android:background="#52c067"
+                android:typeface="monospace"
                 android:text="@string/add" />
 
         </LinearLayout>

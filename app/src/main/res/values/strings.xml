@@ -26,7 +26,7 @@
     <string name="flip_coin_title">Flip Coin</string>
     <string name="flip_button_text">flip</string>
     <string name="flip_choice_text">Heads or tails, %1s?</string>
-    <string name="history_button_text">view history</string>
+    <string name="history_button_text">history</string>
     <string name="no_play">No Play</string>
     <string name="next_child_text">%1s?</string>
 

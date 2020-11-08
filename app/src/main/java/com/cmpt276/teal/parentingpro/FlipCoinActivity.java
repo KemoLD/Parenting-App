@@ -142,6 +142,7 @@ public class FlipCoinActivity extends AppCompatActivity
             final int finalI = i;
             RadioButton button = new RadioButton(this);
             button.setText(flipChoices[i]);
+            button.setTextSize(20);
 
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
