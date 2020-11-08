@@ -1,6 +1,27 @@
 <resources>
     <string name="app_name">ParentingPro</string>
 
+    <!--    main mune    -->
+    <string name="main_menu">Main Menu</string>
+
+    <!--    Config Child-->
+    <string name="config_child">Config Children</string>
+    <string name="add">ADD</string>
+    <string name="edit">EDIT</string>
+    <string name="delete">DELETE</string>
+    <string name="input_name">Input Child Name</string>
+
+    <!--    Timer-->
+    <string name="timer">Timer</string>
+    <string name="timeout_timer">Timeout Timer</string>
+    <string name="one_min">1min</string>
+    <string name="two_min">2min</string>
+    <string name="three_min">3min</string>
+    <string name="five_min">5min</string>
+    <string name="ten_min">10min</string>
+    <string name="cus_time">Custom Minutes:</string>
+    <string name="set">SET</string>
+
     <!--    Flip Coin-->
     <string name="flip_coin_title">Flip Coin</string>
     <string name="flip_button_text">flip</string>
