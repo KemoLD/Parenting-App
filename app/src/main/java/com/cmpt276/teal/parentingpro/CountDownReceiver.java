@@ -10,7 +10,7 @@ import static com.cmpt276.teal.parentingpro.TimerActivity.COUNTDOWN_TIME;
 
 public class CountDownReceiver extends BroadcastReceiver {
 
-    private TimerActivity activity;
+    public static TimerActivity activity;
 
     public CountDownReceiver() {
     }
@@ -21,6 +21,7 @@ public class CountDownReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        if(activity == null)return;
         String action = intent.getAction();
         if (COUNTDOWN_INNER.equals(action)) {
             activity.trickTime(intent.getIntExtra(COUNTDOWN_TIME, 0));

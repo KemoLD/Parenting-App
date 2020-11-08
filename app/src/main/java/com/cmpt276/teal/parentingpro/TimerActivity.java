@@ -83,6 +83,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             createNotificationChannel(channelId, channelName, importance);
         }
 
+        CountDownReceiver.activity = this;
         mReceiver = new CountDownReceiver();
         mReceiver.add(this);
         IntentFilter intentFilter = new IntentFilter();
