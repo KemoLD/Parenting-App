@@ -12,6 +12,7 @@ public class DataUtil
 {
     private final static String APP_SHARE = "parenting_pro";
     public final static String DEFAULT_STRING_VALUE = "NaN";
+    public final static int DEFAULT_INT_VALUE = -1;
 
 
 
@@ -48,12 +49,12 @@ public class DataUtil
      * writing one stored data in the app
      * data type is String
      * @param context can be any subclass for the context like Activity
-     * @param key a Stirng as key too loop in for the data
+     * @param key a String as key too loop in for the data
      * @param value data to store into the app
      */
     public static void writeOneStringData(Context context, String key, String value) {
         if(context == null)
-            throw new IllegalArgumentException("context can not be null");
+            throw new IllegalArgumentException("context cannot be null");
 
         SharedPreferences.Editor editor = getSharedEditor(context);
         editor.putString(key, value);
@@ -69,9 +70,41 @@ public class DataUtil
      */
     public static String getStringData(Context context, String key) {
         if(context == null)
-            throw new IllegalArgumentException("context can not be null");
+            throw new IllegalArgumentException("context cannot be null");
 
         SharedPreferences sp = getSharedPreferences(context);
         return sp.getString(key, DEFAULT_STRING_VALUE);
+    }
+
+
+    /**
+     * writing one stored data in the app
+     * data type is int
+     * @param context can be any subclass for the context like Activity
+     * @param key a String as key too loop in for the data
+     * @param value data to store into the app
+     */
+    public static void writeOneIntData(Context context, String key, int value) {
+        if (context == null)
+            throw new IllegalArgumentException("context cannot be null");
+        
+        SharedPreferences.Editor editor = getSharedEditor(context);
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
+
+    /**
+     * get a stored data from app
+     * @param context can be any subclass for the context like Activity
+     * @param key use as index for getting the data
+     * @return  int format of data
+     */
+    public static int getIntData(Context context, String key) {
+        if(context == null)
+            throw new IllegalArgumentException("context cannot be null");
+
+        SharedPreferences sp = getSharedPreferences(context);
+        return sp.getInt(key, DEFAULT_INT_VALUE);
     }
 }

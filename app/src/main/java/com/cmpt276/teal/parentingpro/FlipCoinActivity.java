@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
+import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.Coin;
 import com.cmpt276.teal.parentingpro.ui.FlipListener;
 import com.cmpt276.teal.parentingpro.ui.FlipResultListener;
@@ -31,17 +33,17 @@ public class FlipCoinActivity extends AppCompatActivity
     private Coin.CoinState flipChoice;    
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
-    private History historyList;    
+    private History historyList;
+    private ChildManager childManager;
+    private int lastChildFlippedIndex;
     private Child currentChildFlipping;     
-    private Child nextChildFlipping;    
 
     private ValueAnimator flipAnimator;
     private SoundPool soundPool;
     private int flipSound;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_flip_coin);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -54,9 +56,9 @@ public class FlipCoinActivity extends AppCompatActivity
         setUpFlipAnimation();
         setUpFlipChoice();
 
-        // *********ONLY DISPLAY FLIP CHOICE IF LIST OF CHILDREN IS NON-EMPTY***********
-        // if list not empty:
-        displayFlipChoice();
+        if (!childManager.isEmpty()) {
+            displayFlipChoice();
+        }
     }
 
     @Override
@@ -65,10 +67,12 @@ public class FlipCoinActivity extends AppCompatActivity
         soundPool.release();
     }
 
-    private void setUpParameters()
-    {
+    private void setUpParameters() {
         // Coin object which the animation will be modelled on
         coin = new Coin();
+
+        // Child manager containing the list of children (if any)
+        childManager = ChildManager.getInstance();
 
         // History to keep a record of coin flips
         historyList = History.getInstance();
@@ -76,7 +80,11 @@ public class FlipCoinActivity extends AppCompatActivity
 
         // *************NEED TO GET LIST OF CHILDREN IN ORDER TO KEEP TRACK OF CURRENT CHILD FLIPPING AND NEXT CHILD WHO WILL GET FLIP CHOICE*************
         // if list not empty:
-        currentChildFlipping = nextChildFlipping = new Child("Ben");    // set to first child in the list initially
+        if (!childManager.isEmpty()) {
+//            SharedPreferences.Editor editor
+//            lastChildFlippedIndex =
+            currentChildFlipping = new Child("Ben");    // set to first child in the list initially
+        }
     }
 
     private void setUpHistoryButton() {
@@ -157,7 +165,7 @@ public class FlipCoinActivity extends AppCompatActivity
     private void displayFlipChoice(){
         TextView lastChildText = findViewById(R.id.text_view_flip_choice);
         //updateLastChildPlay(); // ************ NOT NEEDED WHEN LIST OF CHILDREN READY (JUST HAVE TO CYCLE THROUGH THE LIST)
-        lastChildText.setText(getString(R.string.flip_choice_text, nextChildFlipping.getName()));
+        lastChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
     }
 
     // ************* NEED TO CHANGE THIS METHOD AFTER GETTING LIST OF CHILDREN **********************
