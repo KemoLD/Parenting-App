@@ -32,6 +32,8 @@ import com.cmpt276.teal.parentingpro.data.DataUtil;
 
 import java.util.Locale;
 
+import static com.cmpt276.teal.parentingpro.data.AppDataKey.TIMER_TIME;
+
 public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static final String COUNTDOWN_TIME = "COUNTDOWN_TIME";
@@ -90,6 +92,16 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         intentFilter.addAction(COUNTDOWN_INNER);
         intentFilter.addAction(COUNTDOWN_END);
         registerReceiver(mReceiver, intentFilter);
+
+
+        String v = DataUtil.getStringData(this, TIMER_TIME);
+        if(!v.equals("NaN")){
+            int c = Integer.parseInt(v);
+            if(c > 0){
+                currentTime = c;
+                startTimer();
+            }
+        }
     }
 
     @Override
@@ -132,7 +144,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     public void trickTime(int left) {
         timeTv.setText(String.format("%d:%d", left/60, left%60));
-        currentTime--;
+        currentTime = left;
+        DataUtil.writeOneStringData(this, TIMER_TIME, String.valueOf(currentTime));
         if(left <= 0) {
             // callback
             mVibrator.vibrate(new long[]{1000, 10000, 1000, 10000}, -1);

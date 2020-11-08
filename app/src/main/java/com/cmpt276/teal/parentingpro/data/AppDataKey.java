@@ -14,4 +14,7 @@ public class AppDataKey
 
     public static final String CHILDREN_NAMES = "child_names";
 
+
+    public static final String TIMER_TIME = "timer_time";
+
 }
