@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="#ffe66b">
+        android:background="@drawable/background2">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,9 +24,9 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="@string/app_name"
-                android:textColor="#222222"
-                android:typeface="monospace"
-                android:textSize="40sp" />
+                android:textColor="#F4F4F4"
+                android:textSize="40sp"
+                android:typeface="monospace" />
         </LinearLayout>
 
 
@@ -42,6 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <Button
@@ -49,15 +50,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:background="#52c067"
                     android:paddingTop="20dp"
                     android:paddingBottom="20dp"
                     android:text="@string/config_child"
                     android:textAllCaps="false"
                     android:textColor="#ffffff"
-                    android:background="#52c067"
-                    android:typeface="monospace"
                     android:textSize="20sp"
-                     />
+                    android:typeface="monospace" />
 <!--                <ImageView-->
 <!--                    android:layout_width="wrap_content"-->
 <!--                    android:layout_height="wrap_content"-->
