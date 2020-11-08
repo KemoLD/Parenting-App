@@ -32,6 +32,7 @@ import com.cmpt276.teal.parentingpro.data.DataUtil;
 
 import java.util.Locale;
 
+import static com.cmpt276.teal.parentingpro.data.AppDataKey.TIMER_PAUSE;
 import static com.cmpt276.teal.parentingpro.data.AppDataKey.TIMER_TIME;
 
 public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
@@ -95,11 +96,24 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
 
         String v = DataUtil.getStringData(this, TIMER_TIME);
-        if(!v.equals("NaN")){
-            int c = Integer.parseInt(v);
-            if(c > 0){
-                currentTime = c;
-                startTimer();
+        String pause = DataUtil.getStringData(this, TIMER_PAUSE);
+        if(pause.equals("YES")){
+            isPause = true;
+            pauseImg.setImageResource(R.mipmap.ic_resume);
+            if (!v.equals("NaN")) {
+                int c = Integer.parseInt(v);
+                if (c > 0) {
+                    currentTime = c;
+                    timeTv.setText(String.format("%d:%d", currentTime/60, currentTime%60));
+                }
+            }
+        }else {
+            if (!v.equals("NaN")) {
+                int c = Integer.parseInt(v);
+                if (c > 0) {
+                    currentTime = c;
+                    startTimer();
+                }
             }
         }
     }
@@ -231,17 +245,21 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.reset:
                 isRun = false;
                 stopTimer();
+                currentTime = 0;
+                DataUtil.writeOneStringData(this, TIMER_TIME, String.valueOf(currentTime));
                 timeTv.setText("0:0");
                 break;
             case R.id.pause:
                 if(!isPause){
                     stopTimer();
                     pauseImg.setImageResource(R.mipmap.ic_resume);
+                    DataUtil.writeOneStringData(this, TIMER_PAUSE, "YES");
                     isPause = true;
                 }else{
                     startTimer();
                     isPause = false;
                     pauseImg.setImageResource(R.mipmap.ic_pause);
+                    DataUtil.writeOneStringData(this, TIMER_PAUSE, "NO");
                 }
                 break;
         }
