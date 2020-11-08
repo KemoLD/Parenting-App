@@ -12,6 +12,20 @@
         <item name="android:typeface">monospace</item>
     </style>
 
+    <style name="history_text_listhead">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <style name="history_text_listitem">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
     <style name="button_general">
         <item name="android:textColor">#ffffff</item>
         <item name="android:background">#52c067</item>
@@ -35,6 +49,14 @@
         <item name="android:typeface">monospace</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="timer_button">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">#52c067</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:layout_marginLeft">2dp</item>
+        <item name="android:layout_marginRight">2dp</item>
     </style>
 
 </resources>
