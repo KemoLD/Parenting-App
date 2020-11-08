@@ -7,4 +7,34 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="text_general">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+
+    <style name="button_general">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">#52c067</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+
+    <style name="main_page_button">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">#52c067</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:paddingTop">20dp</item>
+        <item name="android:paddingBottom">20dp</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="flip_page_button">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">#52c067</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textSize">30sp</item>
+    </style>
+
 </resources>
