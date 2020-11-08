@@ -126,7 +126,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     private void stopTimer() {
         Intent intent = new Intent(TimerActivity.this, TimeService.class);
-        startService(intent);
+        stopService(intent);
     }
 
     public void trickTime(int left) {
