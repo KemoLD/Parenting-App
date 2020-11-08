@@ -32,7 +32,7 @@ import java.util.Date;
 
 public class FlipCoinActivity extends AppCompatActivity
 {
-    private Coin coin;
+    public static Coin coin;
     private Coin.CoinState flipChoice;
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
@@ -79,10 +79,8 @@ public class FlipCoinActivity extends AppCompatActivity
 
         // History to keep a record of coin flips
         historyList = History.getInstance();
-        historyList.loadFromLocal(FlipCoinActivity.this);
 
-        // *************NEED TO GET LIST OF CHILDREN IN ORDER TO KEEP TRACK OF CURRENT CHILD FLIPPING AND NEXT CHILD WHO WILL GET FLIP CHOICE*************
-        // if list not empty:
+        // If there are children, use the index of the child who flipped last in order to get the current child flipping
         if (!childManager.isEmpty()) {
             lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
 
@@ -116,11 +114,24 @@ public class FlipCoinActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 coin.flipCoin();
-                HistoryData data = new HistoryData(currentChildFlipping, new Date(), flipChoice, coin.getState());
-                historyList.addHistory(data);
-                historyList.saveToLocal(FlipCoinActivity.this);
                 flipAnimator.start();
-                displayFlipChoice();
+
+                if (!childManager.isEmpty()) {
+                    HistoryData data = new HistoryData(currentChildFlipping, new Date(), flipChoice, coin.getState());
+                    historyList.addHistory(data);
+                    historyList.saveToLocal(FlipCoinActivity.this);
+
+                    lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+                    if (lastChildFlippedIndex != -1 && lastChildFlippedIndex != childManager.length() - 1) {
+                        lastChildFlippedIndex++;
+                    } else {
+                        lastChildFlippedIndex = 0;
+                    }
+                    currentChildFlipping = childManager.getChild(lastChildFlippedIndex);
+                    DataUtil.writeOneIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
+
+                    displayFlipChoice();
+                }
             }
         });
     }
@@ -173,16 +184,7 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void displayFlipChoice(){
-        TextView lastChildText = findViewById(R.id.text_view_flip_choice);
-        //updateLastChildPlay(); // ************ NOT NEEDED WHEN LIST OF CHILDREN READY (JUST HAVE TO CYCLE THROUGH THE LIST)
-        lastChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
+        TextView currentChildText = findViewById(R.id.text_view_flip_choice);
+        currentChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
     }
-
-    // ************* NEED TO CHANGE THIS METHOD AFTER GETTING LIST OF CHILDREN **********************
-//    private void updateLastChildPlay() {
-//        int numOfHistory = historyList.numOfHistory();
-//        int lastHistoryIndex = numOfHistory - 1;
-//        HistoryData lastHistoryData = historyList.getHistoryData(lastHistoryIndex);
-//        nextChildFlipping = lastHistoryData.getChild();
-//    }
 }

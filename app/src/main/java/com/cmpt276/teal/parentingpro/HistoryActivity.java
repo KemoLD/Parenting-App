@@ -36,33 +36,12 @@ public class HistoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_page);
 
-        //addSomeData(5);
         historyList = History.getInstance();
         ListView historyListView = findViewById(R.id.history_listview);
 
         // for historyList adapter pass a list we need to show
         // pass all history
         historyListView.setAdapter(new HistoryListAdapter(historyList.getAllHistoryList()));
-
-        // pass with a child
-        // historyListView.setAdapter(new HistoryListAdapter(history.getHistoryListWithChild(new Child("Ben0"))));
-    }
-
-    // a function just for test for now
-    public void addSomeData(int dataSize)
-    {
-        Date currentDate = new Date();
-       for(int i = 0; i < dataSize; i++){
-           String name = "Ben" + i;
-
-           Child child = new Child(name);
-           Date date = new Date(currentDate.getTime() - i * 99999999999l);
-           Coin coin = new Coin();
-           System.out.println(coin.getState());
-
-           historyList.addHistory(new HistoryData(child, date, coin.getRandomState(), coin.getRandomState()));
-
-       }
     }
 
     /**
