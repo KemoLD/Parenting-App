@@ -22,11 +22,9 @@ import com.cmpt276.teal.parentingpro.model.Coin;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class HistoryActivity extends AppCompatActivity
 {
-    private History historyList;
     private ArrayList<HistoryData> historyArray;
     private int currentChildIndex;
     private static final String EXTRA_CURRENT_CHILD_INDEX = "Index of the child currently flipping";
@@ -53,17 +51,17 @@ public class HistoryActivity extends AppCompatActivity
 
         ChildManager childManager = ChildManager.getInstance();
         extractIntentData();
-        historyList = History.getInstance();
+
+        History historyList = History.getInstance();
         ListView historyListView = findViewById(R.id.history_listview);
 
         if (currentChildIndex == -1) {
             historyArray = historyList.getAllHistoryList();
-            historyListView.setAdapter(new HistoryListAdapter(historyArray));
         } else {
             Child currentChild = childManager.getChild(currentChildIndex);
             historyArray = historyList.getHistoryListWithChild(currentChild);
-            historyListView.setAdapter(new HistoryListAdapter(historyArray));
         }
+        historyListView.setAdapter(new HistoryListAdapter(historyArray));
     }
 
     /**

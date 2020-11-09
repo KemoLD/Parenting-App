@@ -49,8 +49,7 @@ public class FlipCoinActivity extends AppCompatActivity
         setContentView(R.layout.activity_flip_coin);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        setUpParameters();
-
+        setParameters();
         setUpFlipButton();
         setUpFlipSound();
         setUpFlipAnimation();
@@ -71,7 +70,7 @@ public class FlipCoinActivity extends AppCompatActivity
         DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, --lastChildFlippedIndex);
     }
 
-    private void setUpParameters() {
+    private void setParameters() {
         // Coin object which the animation will be modelled on
         coin = new Coin();
         flipChoice = Coin.CoinState.HEADS;
@@ -86,6 +85,11 @@ public class FlipCoinActivity extends AppCompatActivity
 
         // If there are children, use the index of the child who flipped last in order to get the current child flipping
         if (!childManager.isEmpty()) {
+            setCurrentChildFlipping();
+        }
+    }
+
+    private void setCurrentChildFlipping() {
             lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
 
             if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
@@ -96,7 +100,6 @@ public class FlipCoinActivity extends AppCompatActivity
 
             currentChildFlipping = childManager.getChild(lastChildFlippedIndex);
             DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
-        }
     }
 
     private void setUpHistoryButton() {
@@ -149,17 +152,11 @@ public class FlipCoinActivity extends AppCompatActivity
                     historyList.addHistory(data);
                     historyList.saveToLocal(FlipCoinActivity.this);
 
-                    lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
-                    if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
-                        lastChildFlippedIndex++;
-                    } else {
-                        lastChildFlippedIndex = 0;
-                    }
-                    currentChildFlipping = childManager.getChild(lastChildFlippedIndex);
-                    DataUtil.writeOneIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
+                    setCurrentChildFlipping();
 
                     Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
                     currentChildHistoryButton.setText(getString(R.string.current_child_history_text, currentChildFlipping.getName()));
+
                     displayFlipChoice();
                 }
             }
