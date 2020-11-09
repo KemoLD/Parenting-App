@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
+import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.Coin;
 
 import java.text.SimpleDateFormat;
@@ -26,9 +27,23 @@ import java.util.Date;
 public class HistoryActivity extends AppCompatActivity
 {
     private History historyList;
+    private ChildManager childManager;
+    private int currentChildIndex;
+    private static final String EXTRA_CURRENT_CHILD_INDEX = "Index of the child currently flipping";
 
-    public static Intent getIntent(Context context){
+    public static Intent makeLaunchIntent(Context context){
         return new Intent(context, HistoryActivity.class);
+    }
+
+    public static Intent makeLaunchIntent(Context context, int currentChildIndex){
+        Intent intent = new Intent(context, HistoryActivity.class);
+        intent.putExtra(EXTRA_CURRENT_CHILD_INDEX, currentChildIndex);
+        return intent;
+    }
+
+    private void extractIntentData() {
+        Intent intent = getIntent();
+        currentChildIndex = intent.getIntExtra(EXTRA_CURRENT_CHILD_INDEX, -1);
     }
 
     @Override
@@ -36,12 +51,17 @@ public class HistoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_page);
 
+        childManager = ChildManager.getInstance();
+        extractIntentData();
         historyList = History.getInstance();
         ListView historyListView = findViewById(R.id.history_listview);
 
-        // for historyList adapter pass a list we need to show
-        // pass all history
-        historyListView.setAdapter(new HistoryListAdapter(historyList.getAllHistoryList()));
+        if (currentChildIndex == -1) {
+            historyListView.setAdapter(new HistoryListAdapter(historyList.getAllHistoryList()));
+        } else {
+            Child currentChild = childManager.getChild(currentChildIndex);
+            historyListView.setAdapter(new HistoryListAdapter(historyList.getHistoryListWithChild(currentChild)));
+        }
     }
 
     /**

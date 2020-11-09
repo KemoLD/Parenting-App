@@ -4,12 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -52,7 +50,6 @@ public class FlipCoinActivity extends AppCompatActivity
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
         setUpParameters();
-        setUpHistoryButton();
 
         setUpFlipButton();
         setUpFlipSound();
@@ -61,6 +58,9 @@ public class FlipCoinActivity extends AppCompatActivity
 
         if (!childManager.isEmpty()) {
             displayFlipChoice();
+            setUpHistoryButtons();
+        } else {
+            setUpHistoryButton();
         }
     }
 
@@ -68,23 +68,27 @@ public class FlipCoinActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         soundPool.release();
+        DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, --lastChildFlippedIndex);
     }
 
     private void setUpParameters() {
         // Coin object which the animation will be modelled on
         coin = new Coin();
+        flipChoice = Coin.CoinState.HEADS;
 
         // Child manager containing the list of children (if any)
         childManager = ChildManager.getInstance();
+        childManager.loadFromLocal(this);
 
         // History to keep a record of coin flips
         historyList = History.getInstance();
+        historyList.loadFromLocal(this);
 
         // If there are children, use the index of the child who flipped last in order to get the current child flipping
         if (!childManager.isEmpty()) {
             lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
 
-            if (lastChildFlippedIndex != -1 && lastChildFlippedIndex != childManager.length() - 1) {
+            if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
                 lastChildFlippedIndex++;
             } else {
                 lastChildFlippedIndex = 0;
@@ -96,13 +100,37 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void setUpHistoryButton() {
-        Button historyButton = findViewById(R.id.history_button);
+        Button historyButton = findViewById(R.id.history_button_no_children);
+        historyButton.setVisibility(View.VISIBLE);
         historyButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Intent intent = HistoryActivity.getIntent(FlipCoinActivity.this);
+                Intent intent = HistoryActivity.makeLaunchIntent(FlipCoinActivity.this);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void setUpHistoryButtons() {
+        Button historyButton = findViewById(R.id.full_history_button);
+        historyButton.setVisibility(View.VISIBLE);
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = HistoryActivity.makeLaunchIntent(FlipCoinActivity.this);
+                startActivity(intent);
+            }
+        });
+
+        Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
+        currentChildHistoryButton.setText(getString(R.string.current_child_history_text, currentChildFlipping.getName()));
+        currentChildHistoryButton.setVisibility(View.VISIBLE);
+        currentChildHistoryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = HistoryActivity.makeLaunchIntent(FlipCoinActivity.this, lastChildFlippedIndex);
                 startActivity(intent);
             }
         });
@@ -122,7 +150,7 @@ public class FlipCoinActivity extends AppCompatActivity
                     historyList.saveToLocal(FlipCoinActivity.this);
 
                     lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
-                    if (lastChildFlippedIndex != -1 && lastChildFlippedIndex != childManager.length() - 1) {
+                    if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
                         lastChildFlippedIndex++;
                     } else {
                         lastChildFlippedIndex = 0;
@@ -130,6 +158,8 @@ public class FlipCoinActivity extends AppCompatActivity
                     currentChildFlipping = childManager.getChild(lastChildFlippedIndex);
                     DataUtil.writeOneIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
 
+                    Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
+                    currentChildHistoryButton.setText(getString(R.string.current_child_history_text, currentChildFlipping.getName()));
                     displayFlipChoice();
                 }
             }
@@ -164,7 +194,7 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void setUpFlipChoice() {
-        RadioGroup group = findViewById(R.id.radio_group_flip_choice);
+        RadioGroup radioGroup = findViewById(R.id.radio_group_flip_choice);
         String[] flipChoices = getResources().getStringArray(R.array.flip_choices);
 
         for (int i = 0; i < flipChoices.length; i++) {
@@ -179,7 +209,11 @@ public class FlipCoinActivity extends AppCompatActivity
                 }
             });
 
-            group.addView(button);
+            radioGroup.addView(button);
+
+            if (finalI == 0) {
+                button.setChecked(true);
+            }
         }
     }
 
