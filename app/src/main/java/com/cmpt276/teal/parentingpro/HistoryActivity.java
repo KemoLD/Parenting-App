@@ -27,7 +27,7 @@ import java.util.Date;
 public class HistoryActivity extends AppCompatActivity
 {
     private History historyList;
-    private ChildManager childManager;
+    private ArrayList<HistoryData> historyArray;
     private int currentChildIndex;
     private static final String EXTRA_CURRENT_CHILD_INDEX = "Index of the child currently flipping";
 
@@ -51,16 +51,18 @@ public class HistoryActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_page);
 
-        childManager = ChildManager.getInstance();
+        ChildManager childManager = ChildManager.getInstance();
         extractIntentData();
         historyList = History.getInstance();
         ListView historyListView = findViewById(R.id.history_listview);
 
         if (currentChildIndex == -1) {
-            historyListView.setAdapter(new HistoryListAdapter(historyList.getAllHistoryList()));
+            historyArray = historyList.getAllHistoryList();
+            historyListView.setAdapter(new HistoryListAdapter(historyArray));
         } else {
             Child currentChild = childManager.getChild(currentChildIndex);
-            historyListView.setAdapter(new HistoryListAdapter(historyList.getHistoryListWithChild(currentChild)));
+            historyArray = historyList.getHistoryListWithChild(currentChild);
+            historyListView.setAdapter(new HistoryListAdapter(historyArray));
         }
     }
 
@@ -90,7 +92,7 @@ public class HistoryActivity extends AppCompatActivity
             TextView chooseText = itemView.findViewById(R.id.history_content_chose);
             ImageView resultImage = itemView.findViewById(R.id.history_content_result);
 
-            HistoryData data = historyList.getHistoryData(position);
+            HistoryData data = historyArray.get(position);
             String paredDate = dateFormat.format(data.getDate());
             String childName = data.getChild().getName();
             Coin.CoinState chosenState = data.getChosenState();
