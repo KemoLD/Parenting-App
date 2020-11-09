@@ -20,13 +20,12 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
 
-        <ImageView
-            android:id="@+id/history_content_result"
+        <TextView
+            android:id="@+id/history_content_date"
+            style="@style/history_text_listitem"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            tools:ignore="ContentDescription" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/history_content_name"
@@ -42,11 +41,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 
-        <TextView
-            android:id="@+id/history_content_date"
-            style="@style/history_text_listitem"
+
+
+        <ImageView
+            android:id="@+id/history_content_result"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:gravity="center"
+            tools:ignore="ContentDescription" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
