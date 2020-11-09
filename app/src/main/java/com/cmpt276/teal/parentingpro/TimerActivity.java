@@ -8,7 +8,10 @@ import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -44,6 +47,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -57,6 +61,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.start).setOnClickListener(this);
         findViewById(R.id.pause).setOnClickListener(this);
         findViewById(R.id.reset).setOnClickListener(this);
+        findViewById(R.id.sound).setOnClickListener(this);
 
         pauseImg = findViewById(R.id.pause);
         timeTv = findViewById(R.id.tv_timer);
@@ -92,11 +97,15 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     private void createNotificationChannel(String channelId, String channelName, int importance) {
         NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
         NotificationManager notificationManager = (NotificationManager) getSystemService(
-                NOTIFICATION_SERVICE);
+                Context.NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(channel);
     }
 
     public void sendChatMsg(View view) {
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
         Notification notification = new NotificationCompat.Builder(this, "chat")
                 .setContentTitle("Timeout Timer Notification")
@@ -105,6 +114,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.alarm_icon))
                 .setVibrate(new long[]{100, 1000, 100, 1000})
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .build();
@@ -163,7 +174,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                     public void run() {
                         System.out.println("on stop ranging");
                         try{
-                            Thread.sleep(5000);
+                            Thread.sleep(13000);
                         }catch (InterruptedException e){
 
                         }
@@ -329,6 +340,13 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                     pauseImg.setImageResource(R.mipmap.ic_pause);
                 }
                 break;
+            case R.id.sound:
+                if(r.isPlaying()){
+                    r.stop();
+                }
+                else{
+                    return;
+                }
         }
     }
 
