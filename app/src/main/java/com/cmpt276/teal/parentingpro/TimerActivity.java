@@ -4,16 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import android.annotation.TargetApi;
-import android.app.Notification;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.TaskStackBuilder;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -28,6 +26,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -45,6 +45,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     private int time = 0;
     private String t;
     private String s;
+    private final String newintent = "notification";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         mVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
 
         Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        r = RingtoneManager.getRingtone(TimerActivity.this, notification);
+        r = RingtoneManager.getRingtone (this, notification);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "chat";
@@ -85,26 +87,32 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+        if(intent.getStringExtra("type").equals(newintent))
+        {
+            if(r.isPlaying()){
+                r.stop();
+            }
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
-    private void createNotificationChannel(String channelId, String channelName, int importance) {
-        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(
-                Context.NOTIFICATION_SERVICE);
-        notificationManager.createNotificationChannel(channel);
-    }
 
     public void sendChatMsg(View view) {
 
         Intent resultIntent = new Intent(this, TimerActivity.class);
+        resultIntent.putExtra("type", newintent);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent resultPendingIntent = PendingIntent.getActivity(
@@ -127,34 +135,33 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         manager.notify(1, notification.build());
     }
 
-    private void startTimer(){
-        if(countDownTimer != null){
+    private void startTimer() {
+        if (countDownTimer != null) {
             countDownTimer.cancel();
         }
-        countDownTimer  = new CountDownTimer(currentTime * 1000, 1000) {
+        countDownTimer = new CountDownTimer(currentTime * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                //单位天
+
                 long day = millisUntilFinished / (1000 * 24 * 60 * 60);
-                //单位时
+
                 long hour = (millisUntilFinished - day * (1000 * 24 * 60 * 60)) / (1000 * 60 * 60);
-                //单位分
+
                 long minute = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60)) / (1000 * 60);
-                //单位秒
+
                 long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;
 
-                // cal time
-                Log.d("TAG", String.format("剩余时间：%d时%d分%d秒", hour, minute, second));
+                // calls the time
+                Log.d("TAG", String.format("count：%d hours %d minutes %d seconds", hour, minute, second));
 
                 String days = String.format("%02d", day);
                 String hours = String.format("%02d", hour);
                 String minutes = String.format("%02d", minute);
                 String seconds = String.format("%02d", second);
 
-                if (day != 0){
-                    timeTv.setText(days +":" + hours + ":" + minutes + ":" + seconds);
-                }
-                else {
+                if (day != 0) {
+                    timeTv.setText(days + ":" + hours + ":" + minutes + ":" + seconds);
+                } else {
                     if (hour != 0) {
                         timeTv.setText(hours + ":" + minutes + ":" + seconds);
                     } else {
@@ -167,28 +174,15 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFinish() {
                 // call back
+                timeTv.setText("00:00");
                 isRun = false;
                 time = 0;
-                timeTv.setText("00:00");
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 r.play();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    r.setLooping(true);
+                }
                 sendChatMsg(TimerActivity.this.getCurrentFocus());
-                Thread stopRaning = new Thread(new Runnable()
-                {
-                    @Override
-                    public void run() {
-                        System.out.println("on stop ranging");
-                        try{
-                            Thread.sleep(20000);
-                        }catch (InterruptedException e){
-
-                        }
-                        r.stop();
-                    }
-
-                });
-
-                stopRaning.start();
 
             }
         };
@@ -197,80 +191,80 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.min1:
-                if(isRun){
+                if (isRun) {
                     isRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
                 time = 1;
                 t = String.format("%02d", time);
-                s = (t+":00");
+                s = (t + ":00");
                 timeTv.setText(s);
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
                 break;
             case R.id.min2:
-                if(isRun){
+                if (isRun) {
                     isRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
                 time = 2;
                 t = String.format("%02d", time);
-                s = (t+":00");
+                s = (t + ":00");
                 timeTv.setText(s);
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
                 break;
             case R.id.min3:
-                if(isRun){
+                if (isRun) {
                     isRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
                 time = 3;
                 t = String.format("%02d", time);
-                s = (t+":00");
+                s = (t + ":00");
                 timeTv.setText(s);
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
                 break;
             case R.id.min5:
-                if(isRun){
+                if (isRun) {
                     isRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
                 time = 5;
                 t = String.format("%02d", time);
-                s = (t+":00");
+                s = (t + ":00");
                 timeTv.setText(s);
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
                 break;
             case R.id.min10:
-                if(isRun){
+                if (isRun) {
                     isRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
                 time = 10;
                 t = String.format("%02d", time);
-                s = (t+":00");
+                s = (t + ":00");
                 timeTv.setText(s);
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
                 break;
             case R.id.start:
-                if(editText.getText().length() != 0 && Integer.parseInt(editText.getText().toString()) > 0){
-                    if(isRun){
+                if (editText.getText().length() != 0 && Integer.parseInt(editText.getText().toString()) > 0) {
+                    if (isRun) {
                         isRun = false;
                         countDownTimer.cancel();
                         countDownTimer = null;
@@ -280,20 +274,19 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                     currentTime = time * 60;
 
                     int days = time / 1440;
-                    int hours = (time % 1440 ) / 60 ;
-                    int minutes = ((time % 1440 ) % 60 ) ;
-                    int seconds = ((time % 1440 ) % 60 ) / 60  ;
+                    int hours = (time % 1440) / 60;
+                    int minutes = ((time % 1440) % 60);
+                    int seconds = ((time % 1440) % 60) / 60;
 
                     String day = String.format("%02d", days);
                     String hour = String.format("%02d", hours);
                     String minute = String.format("%02d", minutes);
                     String second = String.format("%02d", seconds);
 
-                    if (days != 0){
-                        s = (day +":" + hour + ":" + minute + ":" + second);
+                    if (days != 0) {
+                        s = (day + ":" + hour + ":" + minute + ":" + second);
                         timeTv.setText(s);
-                    }
-                    else {
+                    } else {
                         if (hours != 0) {
                             s = (hour + ":" + minute + ":" + second);
                             timeTv.setText(s);
@@ -303,27 +296,26 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }
 
-                }else{
+                } else {
                     Toast.makeText(this, "Time is InValid", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.reset:
-                if(isRun) {
+                if (isRun) {
                     isRun = false;
-                    if(countDownTimer != null) {
+                    if (countDownTimer != null) {
                         countDownTimer.cancel();
                         countDownTimer = null;
                     }
                     currentTime = time * 60;
                     timeTv.setText(s);
                     pauseImg.setImageResource(R.mipmap.ic_resume);
-                }
-                else{
+                } else {
                     return;
                 }
                 break;
             case R.id.pause:
-                if(isRun) {
+                if (isRun) {
                     if (!isPause) {
                         countDownTimer.cancel();
                         countDownTimer = null;
@@ -334,11 +326,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                         isPause = false;
                         pauseImg.setImageResource(R.mipmap.ic_pause);
                     }
-                }
-                else if(time == 0){
+                } else if (time == 0) {
                     return;
-                }
-                else{
+                } else {
                     startTimer();
                     isPause = false;
                     isRun = true;
@@ -346,10 +336,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.sound:
-                if(r.isPlaying()){
+                if (r.isPlaying()) {
                     r.stop();
-                }
-                else{
+                } else {
                     return;
                 }
         }
@@ -358,8 +347,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStop() {
         super.onStop();
-        if(mVibrator!=null) {
+        if (mVibrator != null) {
             mVibrator.cancel();
         }
     }
+
 }
