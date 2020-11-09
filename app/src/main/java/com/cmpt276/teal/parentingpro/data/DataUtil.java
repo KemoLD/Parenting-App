@@ -54,7 +54,7 @@ public class DataUtil
      */
     public static void writeOneStringData(Context context, String key, String value) {
         if(context == null)
-            throw new IllegalArgumentException("context can not be null");
+            throw new IllegalArgumentException("context cannot be null");
 
         SharedPreferences.Editor editor = getSharedEditor(context);
         editor.putString(key, value);
@@ -70,11 +70,12 @@ public class DataUtil
      */
     public static String getStringData(Context context, String key) {
         if(context == null)
-            throw new IllegalArgumentException("context can not be null");
+            throw new IllegalArgumentException("context cannot be null");
 
         SharedPreferences sp = getSharedPreferences(context);
         return sp.getString(key, DEFAULT_STRING_VALUE);
     }
+
 
     /**
      * writing one stored data in the app
@@ -84,8 +85,8 @@ public class DataUtil
      * @param value data to store into the app
      */
     public static void writeOneIntData(Context context, String key, int value) {
-        if(context == null)
-            throw new IllegalArgumentException("context can not be null");
+        if (context == null)
+            throw new IllegalArgumentException("context cannot be null");
 
         SharedPreferences.Editor editor = getSharedEditor(context);
         editor.putInt(key, value);
@@ -101,7 +102,7 @@ public class DataUtil
      */
     public static int getIntData(Context context, String key) {
         if(context == null)
-            throw new IllegalArgumentException("context can not be null");
+            throw new IllegalArgumentException("context cannot be null");
 
         SharedPreferences sp = getSharedPreferences(context);
         return sp.getInt(key, DEFAULT_INT_VALUE);
