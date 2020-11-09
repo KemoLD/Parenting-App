@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HistoryActivity">
+    tools:context=".HistoryActivity"
+    android:background="@drawable/background2">
 
     <TextView
         android:id="@+id/History_title"
@@ -12,18 +13,20 @@
         android:layout_height="wrap_content"
         android:text="@string/history_title"
         android:textSize="30sp"
+        style="@style/text_general"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.07999998" />
+        app:layout_constraintVertical_bias="0.01999998" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="416dp"
-        android:layout_height="81dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/History_title">
@@ -34,8 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/history_date"
-            android:textAlignment="center"
-            android:textSize="18sp" />
+            style="@style/history_text_listhead" />
 
         <TextView
             android:id="@+id/history_label_name"
@@ -43,8 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/history_name"
-            android:textAlignment="center"
-            android:textSize="18sp" />
+            style="@style/history_text_listhead" />
 
         <TextView
             android:id="@+id/history_label_chose"
@@ -52,8 +53,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/history_chose"
-            android:textAlignment="center"
-            android:textSize="18sp" />
+            style="@style/history_text_listhead" />
 
         <TextView
             android:id="@+id/history_label_result"
@@ -61,16 +61,16 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/history_result"
-            android:textAlignment="center"
-            android:textSize="18sp" />
+            style="@style/history_text_listhead" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/history_listview"
         android:layout_width="match_parent"
-        android:layout_height="477dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintVertical_bias="0.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

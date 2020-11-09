@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ParentingPro</string>
+    <string name="app_name">Parenting Pro</string>
 
     <!--    main mune    -->
     <string name="main_menu">Main Menu</string>
@@ -14,11 +14,11 @@
     <!--    Timer-->
     <string name="timer">Timer</string>
     <string name="timeout_timer">Timeout Timer</string>
-    <string name="one_min">1min</string>
-    <string name="two_min">2min</string>
-    <string name="three_min">3min</string>
-    <string name="five_min">5min</string>
-    <string name="ten_min">10min</string>
+    <string name="one_min">1 min</string>
+    <string name="two_min">2 min</string>
+    <string name="three_min">3 min</string>
+    <string name="five_min">5 min</string>
+    <string name="ten_min">10 min</string>
     <string name="cus_time">Custom Minutes:</string>
     <string name="set">SET</string>
 
@@ -26,7 +26,7 @@
     <string name="flip_coin_title">Flip Coin</string>
     <string name="flip_button_text">flip</string>
     <string name="flip_choice_text">Heads or tails, %1s?</string>
-    <string name="history_button_text">view history</string>
+    <string name="history_button_text">history</string>
     <string name="no_play">No Play</string>
     <string name="next_child_text">%1s?</string>
 
