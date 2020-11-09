@@ -10,6 +10,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -103,23 +104,27 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     public void sendChatMsg(View view) {
 
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
+        Intent resultIntent = new Intent(this, TimerActivity.class);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
-        Notification notification = new NotificationCompat.Builder(this, "chat")
-                .setContentTitle("Timeout Timer Notification")
-                .setContentText("Timer Expired")
-                .setSmallIcon(R.drawable.alarm_icon)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.alarm_icon))
-                .setVibrate(new long[]{100, 1000, 100, 1000})
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(contentIntent)
-                .setAutoCancel(true)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .build();
-        manager.notify(1, notification);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "chat");
+        notification.setContentTitle("Timeout Timer Notification");
+        notification.setContentText("Timer Expired");
+        notification.setSmallIcon(R.drawable.alarm_icon);
+        notification.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.alarm_icon));
+        notification.setVibrate(new long[]{100, 1000, 100, 1000});
+        notification.setPriority(NotificationCompat.PRIORITY_HIGH);
+        notification.setContentIntent(resultPendingIntent);
+        notification.setAutoCancel(true);
+        notification.setCategory(NotificationCompat.CATEGORY_ALARM);
+        notification.setDefaults(NotificationCompat.DEFAULT_ALL);
+        manager.notify(1, notification.build());
     }
 
     private void startTimer(){
@@ -174,7 +179,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                     public void run() {
                         System.out.println("on stop ranging");
                         try{
-                            Thread.sleep(13000);
+                            Thread.sleep(20000);
                         }catch (InterruptedException e){
 
                         }
