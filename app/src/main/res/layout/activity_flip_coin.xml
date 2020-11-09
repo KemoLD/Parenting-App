@@ -140,7 +140,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:visibility="gone"
-        android:text="@string/view_full_history"
+        android:text="@string/history_button_text"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/guideline9"
         app:layout_constraintEnd_toStartOf="@+id/guideline8"
