@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TimerActivity">
+    tools:context=".TimerActivity"
+    android:background="@drawable/background2">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,8 +17,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textSize="30dp"
-            android:text="Timeout Timer" />
+            android:textSize="35sp"
+            style="@style/text_general"
+            android:layout_marginVertical="10sp"
+            android:text="@string/timeout_timer" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,25 +37,29 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="1min"/>
+                    style="@style/timer_button"
+                    android:text="@string/one_min"/>
                 <Button
                     android:id="@+id/min2"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="2min"/>
+                    style="@style/timer_button"
+                    android:text="@string/two_min"/>
                 <Button
                     android:id="@+id/min3"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="3min"/>
+                    style="@style/timer_button"
+                    android:text="@string/three_min"/>
                 <Button
                     android:id="@+id/min5"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="5min"/>
+                    style="@style/timer_button"
+                    android:text="@string/five_min"/>
             </LinearLayout>
 
             <LinearLayout
@@ -64,13 +71,15 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="10min"/>
+                    style="@style/timer_button"
+                    android:text="@string/ten_min"/>
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Custom Minutes:"
+                    android:text="@string/cus_time"
+                    style="@style/text_general"
                     android:textAlignment="center" />
 
                 <EditText
@@ -79,6 +88,7 @@
                     android:layout_weight="1"
                     android:maxLength="4"
                     android:layout_height="wrap_content"
+                    style="@style/text_general"
                     android:inputType="number"/>
 
                 <Button
@@ -86,7 +96,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Set" />
+                    style="@style/timer_button"
+                    android:text="@string/set" />
             </LinearLayout>
 
             <LinearLayout

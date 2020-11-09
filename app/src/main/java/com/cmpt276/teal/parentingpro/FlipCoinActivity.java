@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -199,6 +201,7 @@ public class FlipCoinActivity extends AppCompatActivity
             final int finalI = i;
             RadioButton button = new RadioButton(this);
             button.setText(flipChoices[i]);
+            setupRadioButtonLayout(button);
 
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -213,6 +216,25 @@ public class FlipCoinActivity extends AppCompatActivity
                 button.setChecked(true);
             }
         }
+    }
+
+    private void setupRadioButtonLayout(RadioButton button)
+    {
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+
+                        Color.WHITE,
+                        Color.WHITE
+                }
+        );
+
+        button.setButtonTintList(colorStateList);
+        button.setTextSize(20);
+        button.setTextColor(Color.WHITE);
     }
 
     private void displayFlipChoice(){

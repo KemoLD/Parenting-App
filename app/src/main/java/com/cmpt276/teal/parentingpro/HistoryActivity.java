@@ -70,7 +70,7 @@ public class HistoryActivity extends AppCompatActivity
     private class HistoryListAdapter extends ArrayAdapter<HistoryData>
     {
         // for formatting the Date in History date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d");
 
         public HistoryListAdapter(ArrayList<HistoryData> dataList){
             super(HistoryActivity.this, R.layout.history_listview_content, dataList);

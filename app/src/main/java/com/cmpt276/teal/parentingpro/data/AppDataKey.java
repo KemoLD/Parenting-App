@@ -9,7 +9,14 @@ public class AppDataKey
 {
     public static final String LAST_CHILD_FLIPPED_INDEX = "last_child_flipped_index";
 
+    public static final String LAST_COIN_WIN = "last_coin_win";
+
     public static final String COIN_HISTORY = "coin_history";
 
     public static final String CHILDREN_NAMES = "child_names";
+
+    public static final String TIMER_TIME = "timer_time";
+
+    public static final String TIMER_PAUSE = "timer_pause";
+
 }
