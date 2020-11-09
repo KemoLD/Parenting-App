@@ -21,6 +21,8 @@ public class FlipResultListener extends AnimatorListenerAdapter
         this.imageViewCoin = imageViewCoin;
     }
 
+    // Coin heads image source: https://imgbin.com/png/V0sKs9P6/150th-anniversary-of-canada-toonie-royal-canadian-mint-canadian-dollar-png
+    // Coin tails image source: https://imgbin.com/png/Bu9vSHhb/150th-anniversary-of-canada-toonie-loonie-coin-png
     @Override
     public void onAnimationEnd(Animator animation)
     {
