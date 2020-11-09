@@ -37,5 +37,6 @@
     <string name="history_name">Name</string>
     <string name="history_chose">Chose</string>
     <string name="history_result">Result</string>
+    <string name="view_full_history">view full history</string>
 
 </resources>
