@@ -8,7 +8,7 @@ package com.cmpt276.teal.parentingpro.data;
 public class AppDataKey
 {
     public static final String LAST_CHILD_FLIPPED_INDEX = "last_child_flipped_index";
-    
+
     public static final String COIN_HISTORY = "coin_history";
 
     public static final String CHILDREN_NAMES = "child_names";
