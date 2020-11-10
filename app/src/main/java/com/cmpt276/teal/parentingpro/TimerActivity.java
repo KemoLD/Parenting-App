@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+//timer activity that rings once it expires
 public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView pauseImg;
@@ -193,7 +194,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 time = 0;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 r.play();
-                Thread stopRange = new Thread(new Runnable() {
+                Thread stopRing = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -204,7 +205,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                         r.stop();
                     }
                 });
-                stopRange.start();
+                stopRing.start();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     r.setLooping(true);
                 }
