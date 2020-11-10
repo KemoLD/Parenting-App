@@ -83,7 +83,6 @@ public class History
         // do not have any history yet
         if(savedDataStr.equals(DataUtil.DEFAULT_STRING_VALUE))
            return;
-        System.out.println(savedDataStr);
         ArrayList<HistoryData> localHistoryArray = (ArrayList<HistoryData>)gson.fromJson(savedDataStr, new TypeToken<ArrayList<HistoryData>>(){}.getType());
 
         this.historyArray = localHistoryArray;

@@ -4,41 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/background2">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
             android:gravity="center"
-            android:textSize="30dp"
-            android:text="Main Menu" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="#F4F4F4"
+                android:textSize="40sp"
+                android:typeface="monospace" />
+        </LinearLayout>
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp"
+            android:layout_weight="1"
             android:orientation="vertical">
-            
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
+                android:gravity="center"
                 android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/btn_config"
-                    android:layout_width="150dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Config Child"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/im_child"/>
+                    android:text="@string/config_child"
+                    style="@style/main_page_button"
+                     />
+
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,14 +63,14 @@
                 android:orientation="horizontal">
                 <Button
                     android:id="@+id/btn_flip"
-                    android:layout_width="150dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Flip Coin"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/im_flip"/>
+                    android:text="@string/flip_coin_title"
+                    style="@style/main_page_button"/>
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:src="@mipmap/im_flip"/>-->
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -63,14 +79,11 @@
                 android:orientation="horizontal">
                 <Button
                     android:id="@+id/btn_timer"
-                    android:layout_width="150dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Timer"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/im_timer"/>
+                    android:text="@string/timer"
+                    style="@style/main_page_button"/>
+
             </LinearLayout>
 
         </LinearLayout>

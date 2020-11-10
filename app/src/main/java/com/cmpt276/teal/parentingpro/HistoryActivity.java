@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -17,52 +18,61 @@ import android.widget.TextView;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
+import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.Coin;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class HistoryActivity extends AppCompatActivity
 {
-    private History historyList;
+    private ArrayList<HistoryData> historyArray;
+    private int currentChildIndex;
+    private static final String EXTRA_CURRENT_CHILD_INDEX = "Index of the child currently flipping";
 
-    public static Intent getIntent(Context context){
+    public static Intent makeLaunchIntent(Context context){
         return new Intent(context, HistoryActivity.class);
+    }
+
+    public static Intent makeLaunchIntent(Context context, int currentChildIndex){
+        Intent intent = new Intent(context, HistoryActivity.class);
+        intent.putExtra(EXTRA_CURRENT_CHILD_INDEX, currentChildIndex);
+        return intent;
+    }
+
+    private void extractIntentData() {
+        Intent intent = getIntent();
+        currentChildIndex = intent.getIntExtra(EXTRA_CURRENT_CHILD_INDEX, -1);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history_page);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
-        //addSomeData(5);
-        historyList = History.getInstance();
+        ChildManager childManager = ChildManager.getInstance();
+        extractIntentData();
+
+        History historyList = History.getInstance();
         ListView historyListView = findViewById(R.id.history_listview);
 
-        // for historyList adapter pass a list we need to show
-        // pass all history
-        historyListView.setAdapter(new HistoryListAdapter(historyList.getAllHistoryList()));
-
-        // pass with a child
-        // historyListView.setAdapter(new HistoryListAdapter(history.getHistoryListWithChild(new Child("Ben0"))));
+        if (currentChildIndex == -1) {
+            historyArray = historyList.getAllHistoryList();
+        } else {
+            Child currentChild = childManager.getChild(currentChildIndex);
+            historyArray = historyList.getHistoryListWithChild(currentChild);
+        }
+        historyListView.setAdapter(new HistoryListAdapter(historyArray));
     }
 
-    // a function just for test for now
-    public void addSomeData(int dataSize)
-    {
-        Date currentDate = new Date();
-       for(int i = 0; i < dataSize; i++){
-           String name = "Ben" + i;
-
-           Child child = new Child(name);
-           Date date = new Date(currentDate.getTime() - i * 99999999999l);
-           Coin coin = new Coin();
-           System.out.println(coin.getState());
-
-           historyList.addHistory(new HistoryData(child, date, coin.getRandomState(), coin.getRandomState()));
-
-       }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==android.R.id.home){
+            finish();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -71,7 +81,7 @@ public class HistoryActivity extends AppCompatActivity
     private class HistoryListAdapter extends ArrayAdapter<HistoryData>
     {
         // for formatting the Date in History date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d");
 
         public HistoryListAdapter(ArrayList<HistoryData> dataList){
             super(HistoryActivity.this, R.layout.history_listview_content, dataList);
@@ -91,7 +101,7 @@ public class HistoryActivity extends AppCompatActivity
             TextView chooseText = itemView.findViewById(R.id.history_content_chose);
             ImageView resultImage = itemView.findViewById(R.id.history_content_result);
 
-            HistoryData data = historyList.getHistoryData(position);
+            HistoryData data = historyArray.get(position);
             String paredDate = dateFormat.format(data.getDate());
             String childName = data.getChild().getName();
             Coin.CoinState chosenState = data.getChosenState();

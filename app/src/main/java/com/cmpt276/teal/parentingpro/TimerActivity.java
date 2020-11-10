@@ -2,7 +2,6 @@ package com.cmpt276.teal.parentingpro;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 
 import android.app.NotificationChannel;
@@ -17,7 +16,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -32,14 +30,17 @@ import java.io.IOException;
 
 public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static final String COUNTDOWN_TIME = "COUNTDOWN_TIME";
+    public static final String COUNTDOWN_INNER = "com.cmpt276.teal.parentingpro.COUNTDOWN_INNER";
+    public static final String COUNTDOWN_END = "com.cmpt276.teal.parentingpro.COUNTDOWN_END";
+
     private ImageView pauseImg;
     private TextView timeTv;
     private EditText editText;
 
     private int currentTime;
-    private boolean isRun = false;
+    private boolean isRun;
     private boolean isPause;
-    CountDownTimer countDownTimer;
 
     private Vibrator mVibrator;
     private static Ringtone r;
@@ -92,12 +93,39 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             String channelId = "chat";
             String channelName = "hint";
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-            channel.setDescription("Your timeout timer has expired");
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            createNotificationChannel(channelId, channelName, importance);
         }
 
+        CountDownReceiver.activity = this;
+        mReceiver = new CountDownReceiver();
+        mReceiver.add(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(COUNTDOWN_INNER);
+        intentFilter.addAction(COUNTDOWN_END);
+        registerReceiver(mReceiver, intentFilter);
+
+
+        String v = DataUtil.getStringData(this, TIMER_TIME);
+        String pause = DataUtil.getStringData(this, TIMER_PAUSE);
+        if(pause.equals("YES")){
+            isPause = true;
+            pauseImg.setImageResource(R.mipmap.ic_resume);
+            if (!v.equals("NaN")) {
+                int c = Integer.parseInt(v);
+                if (c > 0) {
+                    currentTime = c;
+                    timeTv.setText(String.format("%d:%d", currentTime/60, currentTime%60));
+                }
+            }
+        }else {
+            if (!v.equals("NaN")) {
+                int c = Integer.parseInt(v);
+                if (c > 0) {
+                    currentTime = c;
+                    startTimer();
+                }
+            }
+        }
     }
 
     @Override
@@ -201,9 +229,18 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 }
                 sendChatMsg(TimerActivity.this.getCurrentFocus());
 
-            }
-        };
-        countDownTimer.start();
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if (mReceiver != null) {
+            unregisterReceiver(mReceiver);
+        }
     }
 
     @Override
@@ -348,8 +385,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     startTimer();
                     isPause = false;
-                    isRun = true;
                     pauseImg.setImageResource(R.mipmap.ic_pause);
+                    DataUtil.writeOneStringData(this, TIMER_PAUSE, "NO");
                 }
                 break;
             case R.id.sound:

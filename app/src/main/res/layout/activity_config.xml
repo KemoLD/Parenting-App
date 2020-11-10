@@ -9,14 +9,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@drawable/background2">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textSize="30dp"
-        android:text="Config Children" />
+        android:textColor="#ffffff"
+        android:text="@string/config_child" />
         
 
 
@@ -34,6 +36,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:divider="#000000"
             android:orientation="vertical">
 
             <EditText
@@ -41,15 +44,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:hint="Input Child Name"
-                />
+                android:background="#83D5CFCF"
+                android:ems="10"
+                android:hint="@string/input_name"
+                android:paddingStart="15dp"
+                android:singleLine="true"
+                android:textColor="#000000" />
 
             <Button
                 android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="ADD" />
+                android:text="@string/add"
+                android:textSize="20sp"
+                android:layout_marginTop="3dp"
+                style="@style/button_general"/>
 
         </LinearLayout>
 

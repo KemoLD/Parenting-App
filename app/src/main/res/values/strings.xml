@@ -1,13 +1,35 @@
 <resources>
-    <string name="app_name">ParentingPro</string>
+    <string name="app_name">Parenting Pro</string>
+
+    <!--    main mune    -->
+    <string name="main_menu">Main Menu</string>
+
+    <!--    Config Child-->
+    <string name="config_child">Config Children</string>
+    <string name="add">ADD</string>
+    <string name="edit">EDIT</string>
+    <string name="delete">DELETE</string>
+    <string name="input_name">Input Child Name</string>
+
+    <!--    Timer-->
+    <string name="timer">Timer</string>
+    <string name="timeout_timer">Timeout Timer</string>
+    <string name="one_min">1 min</string>
+    <string name="two_min">2 min</string>
+    <string name="three_min">3 min</string>
+    <string name="five_min">5 min</string>
+    <string name="ten_min">10 min</string>
+    <string name="cus_time">Custom Minutes:</string>
+    <string name="set">SET</string>
 
     <!--    Flip Coin-->
     <string name="flip_coin_title">Flip Coin</string>
-    <string name="flip_button_text">flip</string>
+    <string name="flip_button_text">FLIP</string>
     <string name="flip_choice_text">Heads or tails, %1s?</string>
-    <string name="history_button_text">view history</string>
+    <string name="history_button_text">View Full History</string>
     <string name="no_play">No Play</string>
     <string name="next_child_text">%1s?</string>
+    <string name="current_child_history_text">View %1s\'s History</string>
 
     <!--    History-->
     <string name="history_title">History</string>
@@ -15,4 +37,7 @@
     <string name="history_name">Name</string>
     <string name="history_chose">Chose</string>
     <string name="history_result">Result</string>
+    <string name="save_button_text">SAVE</string>
+    <string name="edit_button_text">EDIT</string>
+
 </resources>
