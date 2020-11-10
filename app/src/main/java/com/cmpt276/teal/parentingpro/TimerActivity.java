@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -41,13 +42,25 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     CountDownTimer countDownTimer;
 
     private Vibrator mVibrator;
-    private Ringtone r;
+    private static Ringtone r;
     private int time = 0;
     private String t;
     private String s;
     private final String newintent = "notification";
 
+
+
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            moveTaskToBack(true);
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
@@ -88,13 +101,17 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    protected void onNewIntent(Intent intent)
-    {
+    protected void onNewIntent(Intent intent) {
+        if(intent == null)
+            return;
         super.onNewIntent(intent);
-        if(intent.getStringExtra("type").equals(newintent))
-        {
+        String intentType = intent.getStringExtra("type");
+        Log.i("teg", "in new intent");
+        if(intentType != null && intentType.equals(newintent)) {
+            Log.i("teg", "stop ranging");
             if(r.isPlaying()){
                 r.stop();
+                Log.i("teg", "stoping");
             }
         }
     }
@@ -103,7 +120,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            moveTaskToBack(true);
         }
         return super.onOptionsItemSelected(item);
     }
