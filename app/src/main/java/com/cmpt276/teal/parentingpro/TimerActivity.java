@@ -193,6 +193,18 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 time = 0;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 r.play();
+                Thread stopRange = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Thread.sleep(5000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        r.stop();
+                    }
+                });
+                stopRange.start();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     r.setLooping(true);
                 }
