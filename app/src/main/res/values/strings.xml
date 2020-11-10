@@ -24,11 +24,12 @@
 
     <!--    Flip Coin-->
     <string name="flip_coin_title">Flip Coin</string>
-    <string name="flip_button_text">flip</string>
+    <string name="flip_button_text">FLIP</string>
     <string name="flip_choice_text">Heads or tails, %1s?</string>
-    <string name="history_button_text">history</string>
+    <string name="history_button_text">View Full History</string>
     <string name="no_play">No Play</string>
     <string name="next_child_text">%1s?</string>
+    <string name="current_child_history_text">View %1s\'s History</string>
 
     <!--    History-->
     <string name="history_title">History</string>
@@ -36,4 +37,7 @@
     <string name="history_name">Name</string>
     <string name="history_chose">Chose</string>
     <string name="history_result">Result</string>
+    <string name="save_button_text">SAVE</string>
+    <string name="edit_button_text">EDIT</string>
+
 </resources>

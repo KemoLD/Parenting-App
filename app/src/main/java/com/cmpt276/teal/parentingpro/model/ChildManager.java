@@ -38,6 +38,8 @@ public class ChildManager
         return childrenList.size();
     }
 
+    public boolean isEmpty() { return childrenList.size() == 0; }
+
     public void remove(Child child){
         childrenList.remove(child);
     }
