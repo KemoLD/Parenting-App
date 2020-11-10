@@ -106,12 +106,12 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             return;
         super.onNewIntent(intent);
         String intentType = intent.getStringExtra("type");
-        Log.i("teg", "in new intent");
+        Log.i("teg", "accessed new intent");
         if(intentType != null && intentType.equals(newintent)) {
-            Log.i("teg", "stop ranging");
+            Log.i("teg", "stoping ringing");
             if(r.isPlaying()){
                 r.stop();
-                Log.i("teg", "stoping");
+                Log.i("teg", "stoped");
             }
         }
     }
