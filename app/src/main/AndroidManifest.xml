@@ -19,7 +19,6 @@
             android:launchMode="singleTask"
             android:taskAffinity=""
             android:excludeFromRecents="true" />
->>>>>>>>> Temporary merge branch 2
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,13 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".TimeService"/>
-        <receiver android:name=".CountDownReceiver">
-            <intent-filter>
-                <action android:name="com.cmpt276.teal.parentingpro.COUNTDOWN_INNER" />
-                <action android:name="com.cmpt276.teal.parentingpro.COUNTDOWN_END" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
