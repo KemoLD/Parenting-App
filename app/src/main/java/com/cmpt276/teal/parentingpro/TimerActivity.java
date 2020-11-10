@@ -3,19 +3,22 @@ package com.cmpt276.teal.parentingpro;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
-import android.annotation.TargetApi;
-import android.app.Notification;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -23,11 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.cmpt276.teal.parentingpro.data.DataUtil;
-
-
-import static com.cmpt276.teal.parentingpro.data.AppDataKey.TIMER_PAUSE;
-import static com.cmpt276.teal.parentingpro.data.AppDataKey.TIMER_TIME;
+import java.io.IOException;
 
 public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,12 +43,27 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     private boolean isPause;
 
     private Vibrator mVibrator;
-    private Ringtone r;
+    private static Ringtone r;
+    private int time = 0;
+    private String t;
+    private String s;
+    private final String newintent = "notification";
 
-    private CountDownReceiver mReceiver;
+
 
     @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK)
+        {
+            moveTaskToBack(true);
+            return false;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+        @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timer);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -63,6 +77,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.start).setOnClickListener(this);
         findViewById(R.id.pause).setOnClickListener(this);
         findViewById(R.id.reset).setOnClickListener(this);
+        findViewById(R.id.sound).setOnClickListener(this);
 
         pauseImg = findViewById(R.id.pause);
         timeTv = findViewById(R.id.tv_timer);
@@ -70,8 +85,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
         mVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
 
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        r = RingtoneManager.getRingtone(TimerActivity.this, notification);
+        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        r = RingtoneManager.getRingtone (this, notification);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = "chat";
@@ -113,59 +129,105 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        if(intent == null)
+            return;
+        super.onNewIntent(intent);
+        String intentType = intent.getStringExtra("type");
+        Log.i("teg", "accessed new intent");
+        if(intentType != null && intentType.equals(newintent)) {
+            Log.i("teg", "stoping ringing");
+            if(r.isPlaying()){
+                r.stop();
+                Log.i("teg", "stoped");
+            }
+        }
+    }
+
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            moveTaskToBack(true);
         }
         return super.onOptionsItemSelected(item);
     }
 
-    @TargetApi(Build.VERSION_CODES.O)
-    private void createNotificationChannel(String channelId, String channelName, int importance) {
-        NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-        NotificationManager notificationManager = (NotificationManager) getSystemService(
-                NOTIFICATION_SERVICE);
-        notificationManager.createNotificationChannel(channel);
-    }
 
     public void sendChatMsg(View view) {
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Notification notification = new NotificationCompat.Builder(this, "chat")
-                .setContentTitle("Alarm Notification")
-                .setContentText("Timer Expires")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setAutoCancel(true)
-                .build();
-        manager.notify(1, notification);
+
+        Intent resultIntent = new Intent(this, TimerActivity.class);
+        resultIntent.putExtra("type", newintent);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(
+                this, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT
+        );
+
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "chat");
+        notification.setContentTitle("Timeout Timer Notification");
+        notification.setContentText("Timer Expired");
+        notification.setSmallIcon(R.drawable.alarm_icon);
+        notification.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.alarm_icon));
+        notification.setVibrate(new long[]{100, 1000, 100, 1000});
+        notification.setPriority(NotificationCompat.PRIORITY_HIGH);
+        notification.setContentIntent(resultPendingIntent);
+        notification.setAutoCancel(true);
+        notification.setCategory(NotificationCompat.CATEGORY_ALARM);
+        notification.setDefaults(NotificationCompat.DEFAULT_ALL);
+        manager.notify(1, notification.build());
     }
 
     private void startTimer() {
-        TimeService.TIMELOOP = currentTime;
-        Intent intent = new Intent(TimerActivity.this, TimeService.class);
-        startService(intent);
-    }
-
-    private void stopTimer() {
-        Intent intent = new Intent(TimerActivity.this, TimeService.class);
-        stopService(intent);
-    }
-
-    public void trickTime(int left) {
-        timeTv.setText(String.format("%d:%d", left/60, left%60));
-        currentTime = left;
-        DataUtil.writeOneStringData(this, TIMER_TIME, String.valueOf(currentTime));
-        if(left <= 0) {
-            // callback
-            mVibrator.vibrate(new long[]{1000, 10000, 1000, 10000}, -1);
-            r.play();
-            sendChatMsg(TimerActivity.this.getCurrentFocus());
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
         }
-    }
+        countDownTimer = new CountDownTimer(currentTime * 1000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
+                long day = millisUntilFinished / (1000 * 24 * 60 * 60);
+
+                long hour = (millisUntilFinished - day * (1000 * 24 * 60 * 60)) / (1000 * 60 * 60);
+
+                long minute = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60)) / (1000 * 60);
+
+                long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;
+
+                // calls the time
+                Log.d("TAG", String.format("count：%d hours %d minutes %d seconds", hour, minute, second));
+
+                String days = String.format("%02d", day);
+                String hours = String.format("%02d", hour);
+                String minutes = String.format("%02d", minute);
+                String seconds = String.format("%02d", second);
+
+                if (day != 0) {
+                    timeTv.setText(days + ":" + hours + ":" + minutes + ":" + seconds);
+                } else {
+                    if (hour != 0) {
+                        timeTv.setText(hours + ":" + minutes + ":" + seconds);
+                    } else {
+                        timeTv.setText(minutes + ":" + seconds);
+                    }
+                }
+                currentTime--;
+            }
+
+            @Override
+            public void onFinish() {
+                // call back
+                timeTv.setText("00:00");
+                isRun = false;
+                time = 0;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                r.play();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    r.setLooping(true);
+                }
+                sendChatMsg(TimerActivity.this.getCurrentFocus());
 
     @Override
     protected void onResume() {
@@ -183,87 +245,165 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.min1:
-                if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                if (isRun) {
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 1 * 60;
-                startTimer();
+                time = 1;
+                t = String.format("%02d", time);
+                s = (t + ":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.min2:
-                if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                if (isRun) {
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 2* 60;
-                startTimer();
+                time = 2;
+                t = String.format("%02d", time);
+                s = (t + ":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.min3:
-                if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                if (isRun) {
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 3* 60;
-                startTimer();
+                time = 3;
+                t = String.format("%02d", time);
+                s = (t + ":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.min5:
-                if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                if (isRun) {
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 5* 60;
-                startTimer();
+                time = 5;
+                t = String.format("%02d", time);
+                s = (t + ":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.min10:
-                if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
+                if (isRun) {
+                    isRun = false;
+                    countDownTimer.cancel();
+                    countDownTimer = null;
                 }
-                currentTime = 10* 60;
-                startTimer();
+                time = 10;
+                t = String.format("%02d", time);
+                s = (t + ":00");
+                timeTv.setText(s);
+                currentTime = time * 60;
+                pauseImg.setImageResource(R.mipmap.ic_resume);
+                isPause = false;
                 break;
             case R.id.start:
-                if(isRun){
-                    Toast.makeText(this, "Timer Is Running", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                if(editText.getText().length() != 0 && Integer.parseInt(editText.getText().toString()) > 0){
-                    currentTime = Integer.parseInt(editText.getText().toString()) * 60;
-                    startTimer();
-                }else{
-                    Toast.makeText(this, "Edit Text is InValid", Toast.LENGTH_SHORT).show();
+                if (editText.getText().length() != 0 && Integer.parseInt(editText.getText().toString()) > 0) {
+                    if (isRun) {
+                        isRun = false;
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                        pauseImg.setImageResource(R.mipmap.ic_resume);
+                    }
+                    time = Integer.parseInt(editText.getText().toString());
+                    currentTime = time * 60;
+
+                    int days = time / 1440;
+                    int hours = (time % 1440) / 60;
+                    int minutes = ((time % 1440) % 60);
+                    int seconds = ((time % 1440) % 60) / 60;
+
+                    String day = String.format("%02d", days);
+                    String hour = String.format("%02d", hours);
+                    String minute = String.format("%02d", minutes);
+                    String second = String.format("%02d", seconds);
+
+                    if (days != 0) {
+                        s = (day + ":" + hour + ":" + minute + ":" + second);
+                        timeTv.setText(s);
+                    } else {
+                        if (hours != 0) {
+                            s = (hour + ":" + minute + ":" + second);
+                            timeTv.setText(s);
+                        } else {
+                            s = (minute + ":" + second);
+                            timeTv.setText(s);
+                        }
+                    }
+
+                } else {
+                    Toast.makeText(this, "Time is InValid", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.reset:
-                isRun = false;
-                stopTimer();
-                currentTime = 0;
-                DataUtil.writeOneStringData(this, TIMER_TIME, String.valueOf(currentTime));
-                timeTv.setText("0:0");
+                if (isRun) {
+                    isRun = false;
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
+                    currentTime = time * 60;
+                    timeTv.setText(s);
+                    pauseImg.setImageResource(R.mipmap.ic_resume);
+                } else {
+                    return;
+                }
                 break;
             case R.id.pause:
-                if(!isPause){
-                    stopTimer();
-                    pauseImg.setImageResource(R.mipmap.ic_resume);
-                    DataUtil.writeOneStringData(this, TIMER_PAUSE, "YES");
-                    isPause = true;
-                }else{
+                if (isRun) {
+                    if (!isPause) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                        pauseImg.setImageResource(R.mipmap.ic_resume);
+                        isPause = true;
+                    } else {
+                        startTimer();
+                        isPause = false;
+                        pauseImg.setImageResource(R.mipmap.ic_pause);
+                    }
+                } else if (time == 0) {
+                    return;
+                } else {
                     startTimer();
                     isPause = false;
                     pauseImg.setImageResource(R.mipmap.ic_pause);
                     DataUtil.writeOneStringData(this, TIMER_PAUSE, "NO");
                 }
                 break;
+            case R.id.sound:
+                if (r.isPlaying()) {
+                    r.stop();
+                } else {
+                    return;
+                }
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if(mVibrator!=null) {
+        if (mVibrator != null) {
             mVibrator.cancel();
         }
     }
+
 }
