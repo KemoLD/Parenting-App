@@ -32,7 +32,7 @@
     <string name="current_child_history_text">View %1s\'s History</string>
 
     <!--    flip coin choose children menu-->
-    <string name="flip_window_head_text">long touch to set the child to the first in queue</string>
+    <string name="flip_window_head_text">click to set the child to the first in queue</string>
 
     <!--    History-->
     <string name="history_title">History</string>

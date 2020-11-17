@@ -10,10 +10,14 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -25,6 +29,7 @@ import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.Coin;
+import com.cmpt276.teal.parentingpro.ui.ChooseChildPopUpWindow;
 import com.cmpt276.teal.parentingpro.ui.FlipListener;
 import com.cmpt276.teal.parentingpro.ui.FlipResultListener;
 import com.cmpt276.teal.parentingpro.ui.FlipSoundListener;
@@ -59,6 +64,7 @@ public class FlipCoinActivity extends AppCompatActivity
         setUpFlipSound();
         setUpFlipAnimation();
         setUpFlipChoice();
+        setupTextPopupMenu();
 
         if (!childManager.isEmpty()) {
             displayFlipChoice();
@@ -250,5 +256,21 @@ public class FlipCoinActivity extends AppCompatActivity
     private void displayFlipChoice(){
         TextView currentChildText = findViewById(R.id.text_view_flip_choice);
         currentChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
+    }
+
+    private void setupTextPopupMenu(){
+        final TextView chooseView = findViewById(R.id.text_view_flip_choice);
+        chooseView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(FlipCoinActivity.this);
+                View parent = FlipCoinActivity.this.getWindow().getDecorView();
+                popUpWindow.showAtLocation(parent, Gravity.CENTER,0,0);
+
+                return false;
+            }
+        });
+
+
     }
 }
