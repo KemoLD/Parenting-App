@@ -45,6 +45,7 @@ public class FlipCoinActivity extends AppCompatActivity
     private History historyList;
     private ChildManager childManager;
     private int lastChildFlippedIndex;
+    private int currentChildIndex;
     private Child currentChildFlipping;
 
     private ValueAnimator flipAnimator;
@@ -110,9 +111,7 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void setCurrentChildFlipping(int lastChildFlippedIndex) {
-
-
-            int currentChildIndex = (lastChildFlippedIndex + 1) % childManager.length();
+            currentChildIndex = (lastChildFlippedIndex + 1) % childManager.length();
             Log.i("tah", "" + lastChildFlippedIndex);
 
 //            if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
@@ -158,7 +157,7 @@ public class FlipCoinActivity extends AppCompatActivity
         currentChildHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = HistoryActivity.makeLaunchIntent(FlipCoinActivity.this, lastChildFlippedIndex);
+                Intent intent = HistoryActivity.makeLaunchIntent(FlipCoinActivity.this, currentChildIndex);
                 startActivity(intent);
             }
         });
@@ -178,6 +177,7 @@ public class FlipCoinActivity extends AppCompatActivity
                     historyList.saveToLocal(FlipCoinActivity.this);
 
                     setCurrentChildFlipping(++lastChildFlippedIndex);
+                    lastChildFlippedIndex = lastChildFlippedIndex % childManager.length();
                     DataUtil.writeOneIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
 
                     Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
