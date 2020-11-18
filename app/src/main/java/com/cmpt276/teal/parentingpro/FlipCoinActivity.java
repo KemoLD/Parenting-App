@@ -111,19 +111,8 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void setCurrentChildFlipping(int lastChildFlippedIndex) {
-            currentChildIndex = (lastChildFlippedIndex + 1) % childManager.length();
-            Log.i("tah", "" + lastChildFlippedIndex);
-
-//            if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
-//                lastChildFlippedIndex++;
-//            } else {
-//                lastChildFlippedIndex = 0;
-//            }
-
-           // currentChildFlipping = childManager.getChild(lastChildFlippedIndex);
-
+        currentChildIndex = (lastChildFlippedIndex + 1) % childManager.length();
         currentChildFlipping = childManager.getChild((currentChildIndex));
-
     }
 
     private void setUpHistoryButton() {
@@ -271,6 +260,14 @@ public class FlipCoinActivity extends AppCompatActivity
             @Override
             public boolean onLongClick(View view) {
                 ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(FlipCoinActivity.this);
+                popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+                        setCurrentChildFlipping(lastChildFlippedIndex);
+                        displayFlipChoice();
+                    }
+                });
                 View parent = FlipCoinActivity.this.getWindow().getDecorView();
                 popUpWindow.showAtLocation(parent, Gravity.CENTER,0,0);
 

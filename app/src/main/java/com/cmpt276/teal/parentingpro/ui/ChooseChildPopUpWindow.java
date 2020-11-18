@@ -45,8 +45,8 @@ public class ChooseChildPopUpWindow extends PopupWindow
 
     private void setupWindow(){
         childListView = this.windowView.findViewById(R.id.popup_child_list);
-        ChildListAdapter adapter = new ChildListAdapter();
-        childListView.setAdapter(new ChildListAdapter());
+        ChildListAdapter adapter = new ChildListAdapter(childManager);
+        childListView.setAdapter(adapter);
         childListView.setOnItemClickListener(new ChildClickListener(adapter));
         this.setContentView(this.windowView);
         this.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -67,24 +67,26 @@ public class ChooseChildPopUpWindow extends PopupWindow
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Log.i("tag", "position =  " + position + " lastindex = " + lastFlipChildIndex);
             Toast.makeText(activity, "test", Toast.LENGTH_LONG).show();
-
-             if(position < lastFlipChildIndex){
+            int arrayIndex = (int)view.getTag();
+             if(arrayIndex < lastFlipChildIndex){
                  Log.i("tag", "in < ");
-                 childManager.move(position, lastFlipChildIndex);
+                 childManager.move(arrayIndex, lastFlipChildIndex);
                  lastFlipChildIndex--;
                  DataUtil.writeOneIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
              }
-             else if(position == lastFlipChildIndex){
+             else if(arrayIndex == lastFlipChildIndex){
                  Log.i("tag", "in == ");
                  lastFlipChildIndex = lastFlipChildIndex - 1 < 0 ? childManager.length() - 1 : --lastFlipChildIndex;
                  DataUtil.writeOneIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
              }
-             else{  // position > last flip child index
+             else{  // arrayIndex > last flip child index
                  Log.i("tag", "in > ");
-                 childManager.move(position, lastFlipChildIndex + 1);
+                 childManager.move(arrayIndex, lastFlipChildIndex + 1);
              }
 
-             adapter.notifyDataSetChanged();
+              adapter.notifyDataSetChanged();
+             // adapter.notifyDataSetInvalidated();
+            Log.i("tag", "update");
         }
     }
 
@@ -92,20 +94,21 @@ public class ChooseChildPopUpWindow extends PopupWindow
     private class ChildListAdapter extends BaseAdapter
     {
         private int currentChildFlipIndex;
-        public ChildListAdapter(){
-            lastFlipChildIndex = DataUtil.getIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
-            currentChildFlipIndex = lastFlipChildIndex != -1 && lastFlipChildIndex < childManager.length() ? lastFlipChildIndex + 1 : 0;
+        private ChildManager manager;
 
+        public ChildListAdapter(ChildManager childManager){
+            this.manager = childManager;
+            updateIndex();
         }
 
         @Override
         public int getCount() {
-            return childManager.length();
+            return manager.length();
         }
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return manager.getChild(position);
         }
 
         @Override
@@ -117,13 +120,16 @@ public class ChooseChildPopUpWindow extends PopupWindow
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
             View outputView = convertView;
+            updateIndex();
             if(outputView == null){
                 outputView = activity.getLayoutInflater().inflate(R.layout.child_order_item, parent, false);
             }
 
             int listPosition = (position + currentChildFlipIndex) % childManager.length();
-            Child child = childManager.getChild(listPosition);
+            Child child = manager.getChild(listPosition);
             setListItemView(outputView, child, position);
+            outputView.setTag(listPosition);
+
             return outputView;
         }
 
@@ -133,6 +139,11 @@ public class ChooseChildPopUpWindow extends PopupWindow
             nameView.setText(child.getName());
             TextView orderView = outputView.findViewById(R.id.flip_child_order);
             orderView.setText("" + position);
+        }
+
+        private void updateIndex(){
+            lastFlipChildIndex = DataUtil.getIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+            currentChildFlipIndex = lastFlipChildIndex != -1 && lastFlipChildIndex < childManager.length() ? lastFlipChildIndex + 1 : 0;
         }
     }
 
