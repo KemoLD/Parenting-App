@@ -109,8 +109,9 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void setCurrentChildFlipping() {
-            lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
 
+            lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+        Log.i("tah", "" + lastChildFlippedIndex);
             if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
                 lastChildFlippedIndex++;
             } else {

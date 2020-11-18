@@ -3,15 +3,18 @@ package com.cmpt276.teal.parentingpro.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,6 +31,8 @@ public class ChooseChildPopUpWindow extends PopupWindow
     private View windowView;
     private Activity activity;
     private ChildManager childManager;
+    ListView childListView;
+    int lastFlipChildIndex;
 
     public ChooseChildPopUpWindow(Activity activity) {
         super();
@@ -39,8 +44,10 @@ public class ChooseChildPopUpWindow extends PopupWindow
 
 
     private void setupWindow(){
-        ListView childListView = this.windowView.findViewById(R.id.popup_child_list);
+        childListView = this.windowView.findViewById(R.id.popup_child_list);
+        ChildListAdapter adapter = new ChildListAdapter();
         childListView.setAdapter(new ChildListAdapter());
+        childListView.setOnItemClickListener(new ChildClickListener(adapter));
         this.setContentView(this.windowView);
         this.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         this.setHeight((activity.getWindowManager().getDefaultDisplay().getHeight() >> 3) * 5);
@@ -48,13 +55,47 @@ public class ChooseChildPopUpWindow extends PopupWindow
     }
 
 
+    private class ChildClickListener implements AdapterView.OnItemClickListener
+    {
+        private BaseAdapter adapter;
+
+        public ChildClickListener(BaseAdapter adapter){
+            this.adapter = adapter;
+        }
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Log.i("tag", "position =  " + position + " lastindex = " + lastFlipChildIndex);
+            Toast.makeText(activity, "test", Toast.LENGTH_LONG).show();
+
+             if(position < lastFlipChildIndex){
+                 Log.i("tag", "in < ");
+                 childManager.move(position, lastFlipChildIndex);
+                 lastFlipChildIndex--;
+                 DataUtil.writeOneIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
+             }
+             else if(position == lastFlipChildIndex){
+                 Log.i("tag", "in == ");
+                 lastFlipChildIndex = lastFlipChildIndex - 1 < 0 ? childManager.length() - 1 : --lastFlipChildIndex;
+                 DataUtil.writeOneIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
+             }
+             else{  // position > last flip child index
+                 Log.i("tag", "in > ");
+                 childManager.move(position, lastFlipChildIndex + 1);
+             }
+
+             adapter.notifyDataSetChanged();
+        }
+    }
+
 
     private class ChildListAdapter extends BaseAdapter
     {
         private int currentChildFlipIndex;
         public ChildListAdapter(){
-            int lastFlipChildIndex = DataUtil.getIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
-            currentChildFlipIndex = lastFlipChildIndex != -1 && lastFlipChildIndex < childManager.length() ? ++lastFlipChildIndex : 0;
+            lastFlipChildIndex = DataUtil.getIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+            currentChildFlipIndex = lastFlipChildIndex != -1 && lastFlipChildIndex < childManager.length() ? lastFlipChildIndex + 1 : 0;
+
         }
 
         @Override
@@ -94,4 +135,5 @@ public class ChooseChildPopUpWindow extends PopupWindow
             orderView.setText("" + position);
         }
     }
+
 }
