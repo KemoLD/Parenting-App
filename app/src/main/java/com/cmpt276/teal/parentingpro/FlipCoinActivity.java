@@ -78,7 +78,7 @@ public class FlipCoinActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         soundPool.release();
-        DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, --lastChildFlippedIndex);
+        // DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, --lastChildFlippedIndex);
     }
 
     @Override
@@ -104,22 +104,27 @@ public class FlipCoinActivity extends AppCompatActivity
 
         // If there are children, use the index of the child who flipped last in order to get the current child flipping
         if (!childManager.isEmpty()) {
-            setCurrentChildFlipping();
+            lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+            setCurrentChildFlipping(lastChildFlippedIndex);
         }
     }
 
-    private void setCurrentChildFlipping() {
+    private void setCurrentChildFlipping(int lastChildFlippedIndex) {
 
-            lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
-        Log.i("tah", "" + lastChildFlippedIndex);
-            if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
-                lastChildFlippedIndex++;
-            } else {
-                lastChildFlippedIndex = 0;
-            }
 
-            currentChildFlipping = childManager.getChild(lastChildFlippedIndex);
-            DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
+            int currentChildIndex = (lastChildFlippedIndex + 1) % childManager.length();
+            Log.i("tah", "" + lastChildFlippedIndex);
+
+//            if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
+//                lastChildFlippedIndex++;
+//            } else {
+//                lastChildFlippedIndex = 0;
+//            }
+
+           // currentChildFlipping = childManager.getChild(lastChildFlippedIndex);
+
+        currentChildFlipping = childManager.getChild((currentChildIndex));
+
     }
 
     private void setUpHistoryButton() {
@@ -172,7 +177,8 @@ public class FlipCoinActivity extends AppCompatActivity
                     historyList.addHistory(data);
                     historyList.saveToLocal(FlipCoinActivity.this);
 
-                    setCurrentChildFlipping();
+                    setCurrentChildFlipping(++lastChildFlippedIndex);
+                    DataUtil.writeOneIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
 
                     Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
                     currentChildHistoryButton.setText(getString(R.string.current_child_history_text, currentChildFlipping.getName()));
