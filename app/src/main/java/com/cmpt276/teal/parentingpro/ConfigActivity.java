@@ -35,7 +35,7 @@ public class ConfigActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = editText.getText().toString();
                 if(name.length() > 0){
-                    manager.addChild(new Child(name));
+                    manager.addChild(new Child(name,ConfigActivity.this));
                     adapter.notifyDataSetChanged();
                 }
             }
