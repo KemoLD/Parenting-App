@@ -1,7 +1,6 @@
 package com.cmpt276.teal.parentingpro;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,12 +73,21 @@ public class ChildrenAdapter extends BaseAdapter {
         viewHolder.editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("name", childManager.getChild(position).getName());
-                intent.putExtra("pos",position);
-
-                //intent.putExtra()
-
+                if(finalViewHolder.itemTv.getVisibility() == View.VISIBLE){
+                    finalViewHolder.itemTv.setVisibility(View.INVISIBLE);
+                    finalViewHolder.itemEv.setVisibility(View.VISIBLE);
+                    finalViewHolder.editBtn.setText(R.string.save_button_text);
+                }else{
+                    if(finalViewHolder.itemEv.getText().toString().length() == 0){
+                        return;
+                    }
+                    finalViewHolder.itemTv.setVisibility(View.VISIBLE);
+                    finalViewHolder.itemEv.setVisibility(View.INVISIBLE);
+                    Log.e("TAG", finalViewHolder.itemEv.getText().toString());
+                    finalViewHolder.editBtn.setText(R.string.edit_button_text);
+                    childManager.getChild(position).setName(finalViewHolder.itemEv.getText().toString());
+                    ChildrenAdapter.this.notifyDataSetChanged();
+                }
             }
         });
 

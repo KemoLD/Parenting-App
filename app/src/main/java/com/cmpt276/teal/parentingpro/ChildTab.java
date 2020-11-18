@@ -136,8 +136,8 @@ public class ChildTab extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Intent intent = new Intent();
-            if((!extras.getString("name").equals(name)) || newProfilepic != null){
-                if (!extras.getString("name").equals(name)) {
+            if((extras.getString("name") != name) || newProfilepic != null){
+                if (extras.getString("name") != name) {
                     intent.putExtra("name", name);
                 }
                 if(newProfilepic != null){
