@@ -21,6 +21,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_config).setOnClickListener(this);
         findViewById(R.id.btn_flip).setOnClickListener(this);
         findViewById(R.id.btn_timer).setOnClickListener(this);
+
+        findViewById(R.id.btn_turns).setOnClickListener(this);
     }
 
     @Override
@@ -39,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_timer: {
                 Intent integer = new Intent(MainActivity.this, TimerActivity.class);
                 startActivity(integer);
+                break;
+            }
+            case R.id.btn_turns: {
                 break;
             }
         }
