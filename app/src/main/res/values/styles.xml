@@ -12,30 +12,23 @@
         <item name="android:typeface">monospace</item>
     </style>
 
-    <style name="history_text_listhead">
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:typeface">monospace</item>
+    <style name="history_text_listhead" parent="text_general">
         <item name="android:textSize">18sp</item>
         <item name="android:textAlignment">center</item>
     </style>
 
-    <style name="history_text_listitem">
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:typeface">monospace</item>
+    <style name="history_text_listitem" parent="text_general">
         <item name="android:textSize">17sp</item>
         <item name="android:textAlignment">center</item>
     </style>
 
     <style name="button_general">
-        <item name="android:textColor">#ffffff</item>
         <item name="android:background">#52c067</item>
+        <item name="android:textColor">#ffffff</item>
         <item name="android:typeface">monospace</item>
     </style>
 
-    <style name="main_page_button">
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:background">#52c067</item>
-        <item name="android:typeface">monospace</item>
+    <style name="main_page_button" parent="button_general">
         <item name="android:layout_gravity">center</item>
         <item name="android:paddingTop">20dp</item>
         <item name="android:paddingBottom">20dp</item>
@@ -43,22 +36,26 @@
         <item name="android:textSize">20sp</item>
     </style>
 
-    <style name="flip_page_button">
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:background">#52c067</item>
-        <item name="android:typeface">monospace</item>
+    <style name="flip_page_button" parent="button_general">
         <item name="android:layout_gravity">center</item>
         <item name="android:textSize">30sp</item>
         <item name="textAllCaps">false</item>
     </style>
 
-    <style name="timer_button">
-        <item name="android:textColor">#ffffff</item>
-        <item name="android:background">#52c067</item>
-        <item name="android:typeface">monospace</item>
+    <style name="timer_button" parent="button_general">
         <item name="android:layout_marginLeft">2dp</item>
         <item name="android:layout_marginRight">2dp</item>
         <item name="textAllCaps">false</item>
+    </style>
+
+    <style name="popup_text_style">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">#111111</item>
+        <item name="android:typeface">monospace</item>
+    </style>
+
+    <style name="popup_headtext_style" parent="popup_text_style">
+        <item name="android:textSize">18sp</item>
     </style>
 
 </resources>
