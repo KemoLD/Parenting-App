@@ -39,6 +39,8 @@ import java.util.Date;
 public class FlipCoinActivity extends AppCompatActivity
 {
     public static Coin coin;
+    public static final int NO_CHILD_CHOOSE = 0;
+    public static final int HAS_CHILD_CHOOSE = 1;
     private Coin.CoinState flipChoice;
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
@@ -250,8 +252,16 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void displayFlipChoice(){
+        int hasChildFlip = DataUtil.getIntData(this, AppDataKey.IS_NO_CHILD);
         TextView currentChildText = findViewById(R.id.text_view_flip_choice);
-        currentChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
+
+        if(hasChildFlip == DataUtil.DEFAULT_INT_VALUE || hasChildFlip == NO_CHILD_CHOOSE){
+            currentChildText.setText(R.string.no_child_choose);
+        }
+        else{
+            currentChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
+        }
+
     }
 
     private void setupTextPopupMenu(){
@@ -274,7 +284,6 @@ public class FlipCoinActivity extends AppCompatActivity
                 return false;
             }
         });
-
-
     }
+
 }

@@ -17,4 +17,6 @@ public class AppDataKey
 
     public static final String TIMER_PAUSE = "timer_pause";
 
+    public static final String IS_NO_CHILD = "is_no_children_fliping";
+
 }

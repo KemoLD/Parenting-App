@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -31,8 +32,9 @@ public class ChooseChildPopUpWindow extends PopupWindow
     private View windowView;
     private Activity activity;
     private ChildManager childManager;
-    ListView childListView;
-    int lastFlipChildIndex;
+    private Button noChildButton;
+    private ListView childListView;
+    private int lastFlipChildIndex;
 
     public ChooseChildPopUpWindow(Activity activity) {
         super();
@@ -44,14 +46,31 @@ public class ChooseChildPopUpWindow extends PopupWindow
 
 
     private void setupWindow(){
-        childListView = this.windowView.findViewById(R.id.popup_child_list);
-        ChildListAdapter adapter = new ChildListAdapter(childManager);
-        childListView.setAdapter(adapter);
-        childListView.setOnItemClickListener(new ChildClickListener(adapter));
+        setuppopUpView();
         this.setContentView(this.windowView);
         this.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         this.setHeight((activity.getWindowManager().getDefaultDisplay().getHeight() >> 3) * 5);
         this.setFocusable(true);
+    }
+
+
+    private void setuppopUpView(){
+        childListView = this.windowView.findViewById(R.id.popup_child_list);
+        ChildListAdapter adapter = new ChildListAdapter(childManager);
+        childListView.setAdapter(adapter);
+        childListView.setOnItemClickListener(new ChildClickListener(adapter));
+        setupNoChildButton();
+    }
+
+    private void setupNoChildButton(){
+        noChildButton = this.windowView.findViewById(R.id.pop_no_child_btn);
+        noChildButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataUtil.writeOneIntData(activity, AppDataKey.IS_NO_CHILD, 0);
+                dismiss();
+            }
+        });
     }
 
 
@@ -65,28 +84,22 @@ public class ChooseChildPopUpWindow extends PopupWindow
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            Log.i("tag", "position =  " + position + " lastindex = " + lastFlipChildIndex);
-            Toast.makeText(activity, "test", Toast.LENGTH_LONG).show();
             int arrayIndex = (int)view.getTag();
              if(arrayIndex < lastFlipChildIndex){
-                 Log.i("tag", "in < ");
                  childManager.move(arrayIndex, lastFlipChildIndex);
                  lastFlipChildIndex--;
                  DataUtil.writeOneIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
              }
              else if(arrayIndex == lastFlipChildIndex){
-                 Log.i("tag", "in == ");
                  lastFlipChildIndex = lastFlipChildIndex - 1 < 0 ? childManager.length() - 1 : --lastFlipChildIndex;
                  DataUtil.writeOneIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
              }
              else{  // arrayIndex > last flip child index
-                 Log.i("tag", "in > ");
                  childManager.move(arrayIndex, lastFlipChildIndex + 1);
              }
 
-              adapter.notifyDataSetChanged();
-             // adapter.notifyDataSetInvalidated();
-            Log.i("tag", "update");
+             adapter.notifyDataSetChanged();
+             DataUtil.writeOneIntData(activity, AppDataKey.IS_NO_CHILD, FlipCoinActivity.HAS_CHILD_CHOOSE);
         }
     }
 
