@@ -11,10 +11,12 @@
         android:roundIcon="@drawable/logo"
         android:launchMode="singleTop"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <activity android:name=".HistoryActivity"></activity>
         <activity android:name=".FlipCoinActivity" />
         <activity android:name=".ConfigActivity"></activity>
+        <activity android:name=".ChildTab"></activity>
         <activity android:name=".TimerActivity"
             android:launchMode="singleTask"
             android:taskAffinity=""

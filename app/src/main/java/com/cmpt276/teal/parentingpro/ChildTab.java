@@ -16,6 +16,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -72,7 +75,7 @@ public class ChildTab extends AppCompatActivity {
                     editText.setVisibility(View.VISIBLE);
                     edit.setText(R.string.save_button_text);
                 } else {
-                    if (editText.getText().toString().length() == 0 || editText.getText().toString() == name) {
+                    if (editText.getText().toString().length() == 0 ) {
                         return;
                     }
                     else {
@@ -135,15 +138,15 @@ public class ChildTab extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Intent intent = new Intent();
-            if((!extras.getString("name").equals(name)) || newProfilepic != null){
+            if((!extras.getString("name").equals(name)) || newProfilepic != profilepic){
                 if (!extras.getString("name").equals(name)) {
                     intent.putExtra("name", name);
                 }
-                if(newProfilepic != null){
-                    int scaleDivider = 4;
+                if( newProfilepic != null && newProfilepic != profilepic){
+
                     try {
-                        int scaleWidth = newProfilepic.getWidth() / scaleDivider;
-                        int scaleHeight = newProfilepic.getHeight() / scaleDivider;
+                        int scaleWidth = newProfilepic.getWidth() / 4;
+                        int scaleHeight = newProfilepic.getHeight() / 4;
                         byte[] downsizedImageBytes =
                                 getDownsizedImageBytes(newProfilepic, scaleWidth, scaleHeight);
                         intent.putExtra("profile",downsizedImageBytes);

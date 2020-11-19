@@ -12,26 +12,26 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
-        app:srcCompat="@drawable/default_profile_pic" />
+        app:srcCompat="@drawable/default_profile_pic"
+        android:contentDescription="@string/profile_picture" />
 
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="nameasdafa"
             style="@style/text_general"/>
 
     <Button
         android:id="@+id/btn_edit"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="wrap_content"
         style="@style/button_general"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:text="@string/edit"/>
+        android:layout_weight="2"
+        android:text="@string/select" />
     <Button
         android:id="@+id/btn_del"
         android:layout_width="0dp"
