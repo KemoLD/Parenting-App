@@ -10,6 +10,7 @@ import android.widget.ListView;
 
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
+import com.cmpt276.teal.parentingpro.ui.ChildrenAdapter;
 
 
 public class ConfigActivity extends AppCompatActivity {

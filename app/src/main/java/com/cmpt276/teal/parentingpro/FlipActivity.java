@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.cmpt276.teal.parentingpro.ui.ShakeLayout;
+
 public class FlipActivity extends AppCompatActivity {
 
 

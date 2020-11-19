@@ -3,11 +3,9 @@ package com.cmpt276.teal.parentingpro;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
-import com.cmpt276.teal.parentingpro.data.DataUtil;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -21,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_config).setOnClickListener(this);
         findViewById(R.id.btn_flip).setOnClickListener(this);
         findViewById(R.id.btn_timer).setOnClickListener(this);
+        findViewById(R.id.btn_help).setOnClickListener(this);
     }
 
     @Override
@@ -38,6 +37,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.btn_timer: {
                 Intent integer = new Intent(MainActivity.this, TimerActivity.class);
+                startActivity(integer);
+                break;
+            }
+            case R.id.btn_help: {
+                Intent integer = new Intent(MainActivity.this, HelpActivity.class);
                 startActivity(integer);
                 break;
             }

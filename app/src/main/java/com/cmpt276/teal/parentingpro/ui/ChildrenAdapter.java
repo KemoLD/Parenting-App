@@ -1,4 +1,4 @@
-package com.cmpt276.teal.parentingpro;
+package com.cmpt276.teal.parentingpro.ui;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
 
 public class ChildrenAdapter extends BaseAdapter {

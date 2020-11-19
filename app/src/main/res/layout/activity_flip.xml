@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-        <com.cmpt276.teal.parentingpro.ShakeLayout
+        <com.cmpt276.teal.parentingpro.ui.ShakeLayout
             android:id="@+id/shake_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
