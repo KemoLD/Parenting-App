@@ -1,43 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingVertical="8dp"
     android:orientation="horizontal">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="0dp"
-        android:layout_weight="5"
-        android:gravity="center"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        app:srcCompat="@drawable/default_profile_pic"
+        android:contentDescription="@string/profile_picture" />
+
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="nameasdafa"
             style="@style/text_general"/>
-        <EditText
-            android:id="@+id/edit_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:ems="10"
-            android:visibility="invisible"
-            style="@style/text_general"
-            android:text="tv"/>
-    </RelativeLayout>
+
     <Button
         android:id="@+id/btn_edit"
-        android:layout_width="0dp"
-        android:layout_weight="2"
-        android:layout_height="wrap_content"
         style="@style/button_general"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:text="@string/edit"/>
+        android:layout_weight="2"
+        android:text="@string/select" />
     <Button
         android:id="@+id/btn_del"
         android:layout_width="0dp"
