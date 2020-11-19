@@ -55,7 +55,7 @@ public class ChildManager
             String[] names = val.split("###");
             for(String n : names){
                 if(!n.isEmpty()){
-                    childrenList.add(new Child(n));
+                    childrenList.add(new Child(n, context));
                 }
             }
         }

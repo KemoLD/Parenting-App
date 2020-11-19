@@ -14,14 +14,14 @@
         android:layout_weight="2"
         app:srcCompat="@drawable/default_profile_pic" />
 
-    <TextView
-        android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:textSize="20dp"
-        android:text="nameasdafa"
-        style="@style/text_general"/>
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textSize="20dp"
+            android:text="nameasdafa"
+            style="@style/text_general"/>
 
     <Button
         android:id="@+id/btn_edit"

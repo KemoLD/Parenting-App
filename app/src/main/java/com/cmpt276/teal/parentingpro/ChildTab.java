@@ -16,7 +16,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
@@ -136,8 +135,8 @@ public class ChildTab extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             Intent intent = new Intent();
-            if((extras.getString("name") != name) || newProfilepic != null){
-                if (extras.getString("name") != name) {
+            if((!extras.getString("name").equals(name)) || newProfilepic != null){
+                if (!extras.getString("name").equals(name)) {
                     intent.putExtra("name", name);
                 }
                 if(newProfilepic != null){
