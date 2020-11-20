@@ -3,6 +3,13 @@ package com.cmpt276.teal.parentingpro.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.cmpt276.teal.parentingpro.model.Child;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 
 /**
  * the class contain methods for general saving and reading data from android app
@@ -50,6 +57,45 @@ public class DataUtil
      * data type is String
      * @param context can be any subclass for the context like Activity
      * @param key a String as key too loop in for the data
+     * @param value Arraylist contaning child objects
+     */
+    public static void writeChildData(Context context, String key, ArrayList<Child> value) {
+        if(context == null)
+            throw new IllegalArgumentException("context cannot be null");
+
+        SharedPreferences.Editor editor = getSharedEditor(context);
+        Gson gson = new Gson();
+        String serializedObject = gson.toJson(value);
+        editor.putString(key, serializedObject);
+        editor.apply();
+    }
+
+
+    /**
+     * get a stored data from app
+     * @param context can be any subclass for the context like Activity
+     * @return  Arraylist containing Child data
+     */
+    public static ArrayList<Child> getChildData(Context context) {
+        if(context == null) {
+            throw new IllegalArgumentException("context cannot be null");
+        }
+
+        SharedPreferences sp = getSharedPreferences(context);
+        if (sp.contains(AppDataKey.CHILDREN_NAMES)){
+            Gson gson = new Gson();
+            Type type = new TypeToken<ArrayList<Child>>() {}.getType();
+            return gson.fromJson(sp.getString(AppDataKey.CHILDREN_NAMES, null), type);
+        }
+            return null;
+
+    }
+
+    /**
+     * writing one stored data in the app
+     * data type is String
+     * @param context can be any subclass for the context like Activity
+     * @param key a String as key too loop in for the data
      * @param value data to store into the app
      */
     public static void writeOneStringData(Context context, String key, String value) {
@@ -75,6 +121,7 @@ public class DataUtil
         SharedPreferences sp = getSharedPreferences(context);
         return sp.getString(key, DEFAULT_STRING_VALUE);
     }
+
 
 
     /**

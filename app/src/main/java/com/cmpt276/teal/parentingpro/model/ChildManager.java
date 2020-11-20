@@ -50,22 +50,15 @@ public class ChildManager
 
     public void loadFromLocal(Context context){
         childrenList.removeAll(childrenList);
-        String val = DataUtil.getStringData(context, AppDataKey.CHILDREN_NAMES);
-        if (!val.equals("NaN")) {
-            String[] names = val.split("###");
-            for(String n : names){
-                if(!n.isEmpty()){
-                    childrenList.add(new Child(n, context));
-                }
-            }
-        }
+        ArrayList<Child> val = DataUtil.getChildData(context);
+        childrenList.addAll(val);
     }
 
     public void saveToLocal(Context context){
-        StringBuilder sb = new StringBuilder();
-        for(Child child : childrenList){
-            sb.append(child.getName() + "###");
-        }
-        DataUtil.writeOneStringData(context, AppDataKey.CHILDREN_NAMES, sb.toString());
+
+        ArrayList<Child> childrenToSave = new ArrayList<Child>();
+        childrenToSave.addAll(childrenList);
+        DataUtil.writeChildData(context, AppDataKey.CHILDREN_NAMES, childrenToSave);
+
     }
 }
