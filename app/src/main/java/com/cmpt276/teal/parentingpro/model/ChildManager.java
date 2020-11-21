@@ -26,7 +26,7 @@ public class ChildManager
     }
 
 
-    private ChildManager(){
+    protected ChildManager(){
         this.childrenList = new ArrayList<>();
         this.gson = new Gson();
     }

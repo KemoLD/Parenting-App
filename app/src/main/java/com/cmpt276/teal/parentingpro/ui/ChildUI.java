@@ -27,8 +27,7 @@ public class ChildUI extends Child
     public ChildUI(String name, String imageFileName, Context context){
         super(name, imageFileName);
         this.context = context;
-        profile = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.default_profile_pic);
+        profile = null;
     }
 
     public ChildUI(Child child, Context context){
@@ -41,6 +40,15 @@ public class ChildUI extends Child
 
     public Bitmap getProfile(){
         return profile;
+    }
+
+    public String getChildDataString(String seperator){
+        return this.getName() + seperator + this.getImageFileName();
+    }
+
+    public static ChildUI buildChildFromData(Context context, String data, String seperator){
+        String[] fields = data.split(seperator);
+        return new ChildUI(fields[0], fields[1], context);
     }
 
     public void updateImage(){

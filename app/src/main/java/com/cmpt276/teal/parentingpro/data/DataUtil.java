@@ -2,6 +2,17 @@ package com.cmpt276.teal.parentingpro.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+import com.cmpt276.teal.parentingpro.ChildTab;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 
 /**
@@ -106,5 +117,70 @@ public class DataUtil
 
         SharedPreferences sp = getSharedPreferences(context);
         return sp.getInt(key, DEFAULT_INT_VALUE);
+    }
+
+
+    /**
+     * the method get the internal file and return byte array as data for the file
+     * @param context can be any subclass for the context like Activity
+     * @param fileName a string represent the file name
+     * @return the byte array represent the file in internal storage
+     */
+    public static byte[] getInteralFileInBytes(Context context, String fileName){
+        if(fileName == null){
+            throw new IllegalArgumentException("file name can not be null");
+        }
+
+        FileInputStream input = null;
+        byte[] data = null;
+        try {
+            input = context.openFileInput(fileName);
+            data = new byte[input.available()];
+            input.read(data);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if(input != null){
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return data;
+    }
+
+
+    public static boolean writeToInternalStorage(Context context, String fileName, byte[] data) {
+        if(fileName == null){
+            throw new IllegalArgumentException("file name can not be null");
+        }
+        boolean success = true;
+        FileOutputStream out = null;
+        try {
+            // get the output stream for the file
+            out = context.openFileOutput(fileName, context.MODE_PRIVATE);
+            out.write(data);
+            out.flush();
+        } catch (FileNotFoundException e) {
+            success = false;
+            e.printStackTrace();
+        } catch (IOException e) {
+            success = false;
+            e.printStackTrace();
+        }
+        finally {
+            if(out != null){
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return success;
     }
 }
