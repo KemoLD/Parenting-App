@@ -29,6 +29,7 @@ public class FlipResultListener extends AnimatorListenerAdapter
         Coin.CoinState flipResult = FlipCoinActivity.coin.getState();
         boolean flipResultIsHeads = (flipResult == Coin.CoinState.HEADS);
         imageViewCoin.setImageResource(flipResultIsHeads ? R.drawable.coin_heads : R.drawable.coin_tails);
-        Toast.makeText(context, "" + flipResult, Toast.LENGTH_SHORT).show();
+        CharSequence outputText = flipResult == Coin.CoinState.HEADS ? context.getText(R.string.head) : context.getText(R.string.tail);
+        Toast.makeText(context, "" + outputText, Toast.LENGTH_SHORT).show();
     }
 }

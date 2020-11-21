@@ -90,7 +90,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             String channelName = "hint";
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
-            channel.setDescription("Your timeout timer has expired");
+            channel.setDescription(getString(R.string.timer_expire_text));
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
         }
@@ -136,8 +136,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
         NotificationManagerCompat manager = NotificationManagerCompat.from(this);
         NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "chat");
-        notification.setContentTitle("Timeout Timer Notification");
-        notification.setContentText("Timer Expired");
+        notification.setContentTitle(getText(R.string.timeout_title));
+        notification.setContentText(getText(R.string.timeout_content));
         notification.setSmallIcon(R.drawable.alarm_icon);
         notification.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.alarm_icon));
         notification.setVibrate(new long[]{100, 1000, 100, 1000});
@@ -323,7 +323,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                     }
 
                 } else {
-                    Toast.makeText(this, "Time is InValid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getText(R.string.time_invalid), Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.reset:

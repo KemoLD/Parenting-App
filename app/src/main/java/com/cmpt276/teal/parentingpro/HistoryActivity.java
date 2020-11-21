@@ -81,7 +81,7 @@ public class HistoryActivity extends AppCompatActivity
     private class HistoryListAdapter extends ArrayAdapter<HistoryData>
     {
         // for formatting the Date in History date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d HH:mm");
 
         public HistoryListAdapter(ArrayList<HistoryData> dataList){
             super(HistoryActivity.this, R.layout.history_listview_content, dataList);
@@ -107,7 +107,7 @@ public class HistoryActivity extends AppCompatActivity
             Coin.CoinState chosenState = data.getChosenState();
             Coin.CoinState resultState = data.getResultState();
 
-            String state = (chosenState == Coin.CoinState.HEADS ? "HEADS" : "TAILS");
+            CharSequence state = (chosenState == Coin.CoinState.HEADS) ? getText(R.string.head) : getText(R.string.tail);
 
             // Check mark source: https://freeiconshop.com/icon/checkmark-icon-flat/
             // Cross source: https://freeiconshop.com/icon/cross-icon-flat/

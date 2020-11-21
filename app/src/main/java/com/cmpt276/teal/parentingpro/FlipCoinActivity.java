@@ -214,7 +214,9 @@ public class FlipCoinActivity extends AppCompatActivity
         for (int i = 0; i < flipChoices.length; i++) {
             final int finalI = i;
             RadioButton button = new RadioButton(this);
-            button.setText(flipChoices[i]);
+            String choice = flipChoices[i];
+            int textId = getResources().getIdentifier(choice, "string", getPackageName());
+            button.setText(getResources().getText(textId));
             setupRadioButtonLayout(button);
 
             button.setOnClickListener(new View.OnClickListener() {
