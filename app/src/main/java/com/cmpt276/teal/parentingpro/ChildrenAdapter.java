@@ -15,7 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 
 import java.io.ByteArrayOutputStream;
 
@@ -56,6 +58,10 @@ public class ChildrenAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
+        final Child child = childManager.getChild(position);
+        Log.i("tag", "getview save image name = " + childManager.getChild(position).getImageFileName());
+        final ChildUI childUI = new ChildUI(child, mContext);
+        childUI.updateImage();
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.child_item, parent, false);
@@ -66,14 +72,15 @@ public class ChildrenAdapter extends BaseAdapter {
             viewHolder.delBtn = convertView.findViewById(R.id.btn_del);
 
             viewHolder.itemTv.setText(childManager.getChild(position).getName());
-            viewHolder.profile.setImageBitmap(childManager.getChild(position).getProfile());
+
+            viewHolder.profile.setImageBitmap(childUI.getProfile());
 
             convertView.setTag(viewHolder);
 
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
             viewHolder.itemTv.setText(childManager.getChild(position).getName());
-            viewHolder.profile.setImageBitmap(childManager.getChild(position).getProfile());
+            viewHolder.profile.setImageBitmap(childUI.getProfile());
         }
 
         final ViewHolder finalViewHolder = viewHolder;
@@ -86,7 +93,7 @@ public class ChildrenAdapter extends BaseAdapter {
                 intent.putExtra("name", childManager.getChild(position).getName());
                 intent.putExtra("pos",position);
                 ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-                childManager.getChild(position).getProfile().compress(Bitmap.CompressFormat.PNG, 100, bStream);
+                childUI.getProfile().compress(Bitmap.CompressFormat.PNG, 100, bStream);
                 byte[] byteArray = bStream.toByteArray();
                 intent.putExtra("profile",byteArray);
                 activity.startActivityForResult(intent, 1);
@@ -97,6 +104,7 @@ public class ChildrenAdapter extends BaseAdapter {
         viewHolder.delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                childUI.deleteImage();
                 childManager.remove(position);
                 ChildrenAdapter.this.notifyDataSetChanged();
             }

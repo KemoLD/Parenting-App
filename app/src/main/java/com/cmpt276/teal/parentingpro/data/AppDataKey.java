@@ -11,10 +11,14 @@ public class AppDataKey
 
     public static final String COIN_HISTORY = "coin_history";
 
-    public static final String CHILDREN_NAMES = "child_names";
+    public static final String CHILDRENS = "child_names";
 
     public static final String TIMER_TIME = "timer_time";
 
     public static final String TIMER_PAUSE = "timer_pause";
+
+    public static final String IMAGE_ID = "image_id";
+
+    public static final String INAME_NAME_BASE = "child_image";
 
 }

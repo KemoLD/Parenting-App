@@ -44,7 +44,7 @@ public class ConfigActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = editText.getText().toString();
                 if(name.length() > 0){
-                    manager.addChild(new Child(name, ConfigActivity.this));
+                    manager.addChild(new Child(name));
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -70,7 +70,8 @@ public class ConfigActivity extends AppCompatActivity {
            }
            if(data.getByteArrayExtra("profile") != null){
                byte[] byteArray = data.getByteArrayExtra("profile");
-               manager.getChild(pos).setProfile(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+
+               // manager.getChild(pos).setProfile(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
            }
             adapter.notifyDataSetChanged();
 

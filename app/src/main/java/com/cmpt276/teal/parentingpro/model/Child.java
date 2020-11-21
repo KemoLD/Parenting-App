@@ -9,22 +9,15 @@ import com.cmpt276.teal.parentingpro.R;
 public class Child
 {
     private String name;
-    private Bitmap profile;
-    private Context context;
+    private String imageFileName;
 
-    public Child(String name, Context context){
+    public Child(String name){
         this.name = name;
-        this.context = context;
-        profile = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.default_profile_pic);
     }
 
-    public void setProfile(Bitmap bitmap){
-        profile = bitmap;
-    }
-
-    public Bitmap getProfile(){
-        return profile;
+    public Child(String name, String imageFileName){
+        this.name = name;
+        this.imageFileName = imageFileName;
     }
 
     public String getName(){
@@ -33,6 +26,14 @@ public class Child
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImageFileName() {
+        return imageFileName;
+    }
+
+    public void setImageFileName(String imageFileName) {
+        this.imageFileName = imageFileName;
     }
 
     public boolean equals(Child otherChild){

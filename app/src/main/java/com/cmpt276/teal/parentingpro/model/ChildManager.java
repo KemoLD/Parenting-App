@@ -54,19 +54,16 @@ public class ChildManager
     }
 
     public void loadFromLocal(Context context){
-        String savedDataStr = DataUtil.getStringData(context, AppDataKey.CHILDREN_NAMES);
-
-        // do not have any history yet
-        if(savedDataStr.equals(DataUtil.DEFAULT_STRING_VALUE))
+        childrenList.removeAll(childrenList);
+        String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
+        if(childrenDataString.equals(DataUtil.DEFAULT_STRING_VALUE))
             return;
-        ArrayList<Child> localHistoryArray = (ArrayList<Child>)gson.fromJson(savedDataStr, new TypeToken<ArrayList<Child>>(){}.getType());
-        this.childrenList = localHistoryArray;
+        ArrayList<Child> dataList = (ArrayList<Child>)gson.fromJson(childrenDataString, new TypeToken<ArrayList<Child>>(){}.getType());
+        childrenList = dataList;
     }
 
     public void saveToLocal(Context context){
-
         String savedDataStr = gson.toJson(childrenList);
-        DataUtil.writeOneStringData(context, AppDataKey.CHILDREN_NAMES, savedDataStr);
-
+        DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, savedDataStr);
     }
 }
