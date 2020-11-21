@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.btn_turns: {
+                Intent integer = new Intent(MainActivity.this, WhoseTurnActivity.class);
+                startActivity(integer);
                 break;
             }
         }
