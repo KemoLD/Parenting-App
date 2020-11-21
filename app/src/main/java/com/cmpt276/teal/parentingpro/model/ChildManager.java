@@ -53,8 +53,12 @@ public class ChildManager
         childrenList.remove(index);
     }
 
-    public void loadFromLocal(Context context){
+    public void removeAll(){
         childrenList.removeAll(childrenList);
+    }
+
+    public void loadFromLocal(Context context){
+        removeAll();
         String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
         if(childrenDataString.equals(DataUtil.DEFAULT_STRING_VALUE))
             return;

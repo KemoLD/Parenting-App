@@ -9,6 +9,7 @@ import android.util.Log;
 import com.cmpt276.teal.parentingpro.ChildTab;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -154,6 +155,13 @@ public class DataUtil
     }
 
 
+    /**
+     * the the byte array data to the disk
+     * @param context can be any subclass for the context like Activity
+     * @param fileName string represent the file name
+     * @param data byte array represent data in a file
+     * @return boolean represent the write is success or not
+     */
     public static boolean writeToInternalStorage(Context context, String fileName, byte[] data) {
         if(fileName == null){
             throw new IllegalArgumentException("file name can not be null");
@@ -182,5 +190,19 @@ public class DataUtil
             }
         }
         return success;
+    }
+
+
+
+    /**
+     * the method remove a file in internal storage
+     * @param context can be any subclass for the context like Activity
+     * @param fileName string represent the file name
+     */
+    public static void removeInternalFile(Context context, String fileName){
+        File file = new File(context.getFilesDir(), fileName);
+        if(file.exists()){
+            file.delete();
+        }
     }
 }

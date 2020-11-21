@@ -16,13 +16,15 @@ import android.widget.ListView;
 
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
+import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 
 import java.io.IOException;
 
 
 public class ConfigActivity extends AppCompatActivity {
 
-     private ChildManager manager = ChildManager.getInstance();
+     private ChildManagerUI manager;
      private ChildrenAdapter adapter;
      
     @Override
@@ -32,7 +34,7 @@ public class ConfigActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         final ListView listView = findViewById(R.id.list);
-
+        manager = ChildManagerUI.getInstance(this);
         manager.loadFromLocal(ConfigActivity.this);
 
         adapter = new ChildrenAdapter(this, manager,this);
@@ -44,7 +46,7 @@ public class ConfigActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = editText.getText().toString();
                 if(name.length() > 0){
-                    manager.addChild(new Child(name));
+                    manager.addChild(new ChildUI(name));
                     adapter.notifyDataSetChanged();
                 }
             }
@@ -71,7 +73,7 @@ public class ConfigActivity extends AppCompatActivity {
            if(data.getByteArrayExtra("profile") != null){
                byte[] byteArray = data.getByteArrayExtra("profile");
 
-               // manager.getChild(pos).setProfile(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
+                manager.getChild(pos).setProfile(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
            }
             adapter.notifyDataSetChanged();
 

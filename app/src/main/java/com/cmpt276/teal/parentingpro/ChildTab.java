@@ -23,6 +23,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
+import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -161,7 +162,7 @@ public class ChildTab extends AppCompatActivity {
                         byte[] downsizedImageBytes =
                                 getDownsizedImageBytes(newProfilepic, scaleWidth, scaleHeight);
                         intent.putExtra("profile",downsizedImageBytes);
-                        saveImage(newProfilepic);
+                        saveImageBytes(downsizedImageBytes);
                     }
                     catch (IOException ioEx){
                         ioEx.printStackTrace();
@@ -192,46 +193,16 @@ public class ChildTab extends AppCompatActivity {
     }
 
     // save the bitmap to the disk and also update the child in child manager
-    private void saveImage(Bitmap bitmap)
+    private void saveImageBytes(byte[] imageBytes)
     {
         Log.i("tag", "enter saveImage");
         // get the image name for saving on the disk
         String imageName = AppDataKey.INAME_NAME_BASE + imageID;
-        ChildManager childManager = ChildManager.getInstance();
+        ChildManagerUI childManager = ChildManagerUI.getInstance(this);
+        DataUtil.writeToInternalStorage(this, imageName, imageBytes);
+        imageID++;
+        DataUtil.writeOneIntData(ChildTab.this, AppDataKey.IMAGE_ID, imageID);
+        childManager.getChild(position).setImageFileName(imageName);
 
-        FileOutputStream out = null;
-        try {
-            // get the output stream for the file
-            out = openFileOutput(imageName, MODE_PRIVATE);
-
-            // cover bitmap to byte array
-            ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, bStream);
-            byte[] byteArray = bStream.toByteArray();
-            childManager.getChild(position).setImageFileName(imageName);
-            Log.i("tag", "save image name = " + childManager.getChild(position).getImageFileName());
-
-            // update id for saving next image if need
-            imageID++;
-            DataUtil.writeOneIntData(ChildTab.this, AppDataKey.IMAGE_ID, imageID);
-
-            out.write(byteArray);
-            out.flush();
-        } catch (FileNotFoundException e) {
-            Log.i("tag", "flie not found" + e.toString());
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.i("tag", "IO execption " + e.toString());
-            e.printStackTrace();
-        }
-        finally {
-            if(out != null){
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }
