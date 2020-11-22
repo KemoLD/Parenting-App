@@ -156,17 +156,11 @@ public class ChildTab extends AppCompatActivity {
                 }
                 if( newProfilepic != null && newProfilepic != profilepic){
 
-                    try {
-                        int scaleWidth = newProfilepic.getWidth() / 4;
-                        int scaleHeight = newProfilepic.getHeight() / 4;
-                        byte[] downsizedImageBytes =
-                                getDownsizedImageBytes(newProfilepic, scaleWidth, scaleHeight);
+                        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+                        newProfilepic.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+                        byte[] downsizedImageBytes = bStream.toByteArray();;
                         intent.putExtra("profile",downsizedImageBytes);
                         saveImageBytes(downsizedImageBytes);
-                    }
-                    catch (IOException ioEx){
-                        ioEx.printStackTrace();
-                    }
                 }
                 intent.putExtra("pos",position);
                 setResult(Activity.RESULT_OK, intent);
@@ -179,17 +173,6 @@ public class ChildTab extends AppCompatActivity {
 
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public byte[] getDownsizedImageBytes(Bitmap fullBitmap, int scaleWidth, int scaleHeight) throws IOException {
-
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(fullBitmap, scaleWidth, scaleHeight, true);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] downsizedImageBytes = baos.toByteArray();
-
-        return downsizedImageBytes;
     }
 
     // save the bitmap to the disk and also update the child in child manager
