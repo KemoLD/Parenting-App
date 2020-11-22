@@ -16,7 +16,8 @@
         <activity android:name=".HistoryActivity"></activity>
         <activity android:name=".FlipCoinActivity" />
         <activity android:name=".ConfigActivity"></activity>
-        <activity android:name=".ChildTab"></activity>
+        <activity android:name=".ChildTab"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".TimerActivity"
             android:launchMode="singleTask"
             android:taskAffinity=""

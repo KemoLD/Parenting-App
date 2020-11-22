@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
@@ -36,6 +37,7 @@ public class ChildTab extends AppCompatActivity {
     private int position;
     private Bundle extras;
     private String name;
+    private String newName;
     private Bitmap profilepic;
     private Bitmap newProfilepic;
     private ImageButton exit;
@@ -53,8 +55,8 @@ public class ChildTab extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_child_tab);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         extras = getIntent().getExtras();
 
@@ -84,7 +86,7 @@ public class ChildTab extends AppCompatActivity {
                 if (display.getVisibility() == View.VISIBLE) {
                     display.setVisibility(View.INVISIBLE);
                     editText.setVisibility(View.VISIBLE);
-                    edit.setText(R.string.save_button_text);
+                    edit.setText(R.string.set);
                 } else {
                     if (editText.getText().toString().length() == 0 ) {
                         return;
@@ -117,62 +119,68 @@ public class ChildTab extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                gallery.setType("image/*");
                 startActivityForResult(gallery, REQUEST_IMAGE_GALLERY);
 
             }
         });
+
+        Button save = (Button)findViewById(R.id.toolbar_save);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                newName = name;
+                newProfilepic = profilepic;
+                Toast.makeText(getBaseContext(), "saved", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        ImageButton home = (ImageButton)findViewById(R.id.toolbar_home);
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                if(newName != null && newProfilepic != null){
+                    intent.putExtra("name", newName);
+                    ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+                    newProfilepic.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+                    byte[] downsizedImageBytes = bStream.toByteArray();;
+                    intent.putExtra("profile",downsizedImageBytes);
+                    saveImageBytes(downsizedImageBytes);
+                    intent.putExtra("pos",position);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                }
+                else {
+                    setResult(Activity.RESULT_CANCELED, intent);
+                    finish();
+                }
+            }
+        });
+
 
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("tag", "result from camaera or gallery");
+        Log.i("tag", "result from camera or gallery");
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK){
-            Log.i("tag", "result from camaera");
+            Log.i("tag", "result from camera");
             Bundle extras = data.getExtras();
-            newProfilepic = (Bitmap)extras.get("data");
-            profile.setImageBitmap(newProfilepic);
+            profilepic = (Bitmap)extras.get("data");
+            profile.setImageBitmap(profilepic);
         }
         if(requestCode == REQUEST_IMAGE_GALLERY && resultCode == Activity.RESULT_OK){
             Log.i("tag", "result from gallery");
             Uri imageUri = data.getData();
             try {
-                newProfilepic = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imageUri);
+                profilepic = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imageUri);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            profile.setImageBitmap(newProfilepic);
+            profile.setImageBitmap(profilepic);
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Intent intent = new Intent();
-            if((!extras.getString("name").equals(name)) || newProfilepic != profilepic){
-                if (!extras.getString("name").equals(name)) {
-                    intent.putExtra("name", name);
-                }
-                if( newProfilepic != null && newProfilepic != profilepic){
-
-                        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-                        newProfilepic.compress(Bitmap.CompressFormat.PNG, 100, bStream);
-                        byte[] downsizedImageBytes = bStream.toByteArray();;
-                        intent.putExtra("profile",downsizedImageBytes);
-                        saveImageBytes(downsizedImageBytes);
-                }
-                intent.putExtra("pos",position);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
-            else {
-                setResult(Activity.RESULT_CANCELED, intent);
-                finish();
-            }
-
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     // save the bitmap to the disk and also update the child in child manager

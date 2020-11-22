@@ -44,5 +44,7 @@
     <string name="gallery">Gallery</string>
     <string name="take_photo">take photo</string>
     <string name="name">name</string>
+    <string name="child_editor">Child Editor</string>
+    <string name="back">back</string>
 
 </resources>
