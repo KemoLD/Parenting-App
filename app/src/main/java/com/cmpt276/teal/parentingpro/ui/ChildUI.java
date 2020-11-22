@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class ChildUI extends Child
 {
@@ -59,50 +60,8 @@ public class ChildUI extends Child
 
     public static byte[] coverBitmapToBytes(Bitmap bitmap){
         ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bStream);
         return bStream.toByteArray();
     }
-/*
-    public void updateImage(){
-        FileInputStream input = null;
-        String fileName = super.getImageFileName();
-        if(fileName == null)
-            return;
-        Log.i("tag", "in update image filename = " + fileName);
-        try {
-            input = context.openFileInput(fileName);
-            byte[] imageData = new byte[input.available()];
-            input.read(imageData);
-            this.profile = BitmapFactory.decodeByteArray(imageData,0, imageData.length);
-            Log.i("tag", "in update finish loading image");
-        } catch (FileNotFoundException e) {
-            Log.i("tag", "can not found the file: " + fileName);
-            e.printStackTrace();
-        } catch (IOException e) {
-            Log.i("tag", "can not read the data");
-            e.printStackTrace();
-        }finally {
-            if(input != null){
-                try {
-                    input.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
 
-    }
-    */
-
-
-/*
-    public void deleteImage(){
-        File file = new File(context.getFilesDir(), super.getImageFileName());
-        if(file.exists()){
-            file.delete();
-        }
-    }
-
-
- */
 }
