@@ -8,16 +8,16 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.cmpt276.teal.parentingpro.data.DataUtil;
+import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-
+//    ChildManagerUI childManager;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        SharedPreferences.Editor editor = DataUtil.getSharedEditor(this);
-//                editor.clear().commit();
+//        childManager = ChildManagerUI.getInstance(this);
         findViewById(R.id.btn_config).setOnClickListener(this);
         findViewById(R.id.btn_flip).setOnClickListener(this);
         findViewById(R.id.btn_timer).setOnClickListener(this);

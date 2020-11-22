@@ -25,6 +25,7 @@ import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -47,6 +48,7 @@ public class ChildTab extends AppCompatActivity {
     private Button takephoto;
     private Button gallery;
     private ImageView profile;
+    private ChildManagerUI manager;
     static final int REQUEST_IMAGE_CAPTURE = 2;
     static final int REQUEST_IMAGE_GALLERY = 3;
 
@@ -59,12 +61,14 @@ public class ChildTab extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         extras = getIntent().getExtras();
+        manager = ChildManagerUI.getInstance(this);
 
         if (extras != null) {
             name = extras.getString("name");
             position = extras.getInt("pos");
-            byte[] byteArray = extras.getByteArray("profile");
-            profilepic = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+//            byte[] byteArray = extras.getByteArray("profile");
+//            profilepic = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+            profilepic = manager.getChild(position).getProfile();
         }
         imageID = DataUtil.getIntData(ChildTab.this, AppDataKey.IMAGE_ID);
         imageID = imageID == DataUtil.DEFAULT_INT_VALUE ? 0 : imageID;
@@ -135,26 +139,31 @@ public class ChildTab extends AppCompatActivity {
             }
         });
 
-        ImageButton home = (ImageButton)findViewById(R.id.toolbar_home);
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                if(newName != null && newProfilepic != null){
-                    intent.putExtra("name", newName);
-                    ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-                    newProfilepic.compress(Bitmap.CompressFormat.PNG, 100, bStream);
-                    byte[] downsizedImageBytes = bStream.toByteArray();;
-                    intent.putExtra("profile",downsizedImageBytes);
-                    saveImageBytes(downsizedImageBytes);
-                    intent.putExtra("pos",position);
-                    setResult(Activity.RESULT_OK, intent);
-                    finish();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            Intent intent = new Intent();
+            if((!extras.getString("name").equals(name)) || newProfilepic != profilepic){
+                if (!extras.getString("name").equals(name)) {
+                    intent.putExtra("name", name);
                 }
-                else {
-                    setResult(Activity.RESULT_CANCELED, intent);
-                    finish();
+                if( newProfilepic != null && newProfilepic != profilepic){
+
+//                        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
+//                        newProfilepic.compress(Bitmap.CompressFormat.PNG, 100, bStream);
+//                        byte[] downsizedImageBytes = bStream.toByteArray();;
+//                        intent.putExtra("profile",downsizedImageBytes);
+
+                    manager.getChild(position).setProfile(newProfilepic);
+                    saveImageBytes(newProfilepic);
                 }
+                intent.putExtra("pos",position);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
+            }
+            else {
+                setResult(Activity.RESULT_CANCELED, intent);
+                finish();
             }
         });
 
@@ -184,16 +193,25 @@ public class ChildTab extends AppCompatActivity {
     }
 
     // save the bitmap to the disk and also update the child in child manager
-    private void saveImageBytes(byte[] imageBytes)
+    private void saveImageBytes(final Bitmap image)
     {
         Log.i("tag", "enter saveImage");
         // get the image name for saving on the disk
-        String imageName = AppDataKey.INAME_NAME_BASE + imageID;
+        final String imageName = AppDataKey.INAME_NAME_BASE + imageID;
         ChildManagerUI childManager = ChildManagerUI.getInstance(this);
-        DataUtil.writeToInternalStorage(this, imageName, imageBytes);
         imageID++;
         DataUtil.writeOneIntData(ChildTab.this, AppDataKey.IMAGE_ID, imageID);
         childManager.getChild(position).setImageFileName(imageName);
+
+        Thread writeImageTask = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                byte[] imageBytes = ChildUI.coverBitmapToBytes(image);
+                DataUtil.writeToInternalStorage(ChildTab.this, imageName, imageBytes);
+            }
+        });
+
+        writeImageTask.start();
 
     }
 }

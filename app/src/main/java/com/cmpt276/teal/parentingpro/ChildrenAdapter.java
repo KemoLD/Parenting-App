@@ -92,7 +92,7 @@ public class ChildrenAdapter extends BaseAdapter {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("name", childManager.getChild(position).getName());
                 intent.putExtra("pos",position);
-                intent.putExtra("profile",childUI.converProfileToBytes());
+//                intent.putExtra("profile",childUI.converProfileToBytes());
                 activity.startActivityForResult(intent, 1);
 
             }
