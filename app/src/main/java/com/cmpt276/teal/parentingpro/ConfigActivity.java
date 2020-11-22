@@ -70,11 +70,6 @@ public class ConfigActivity extends AppCompatActivity {
            if(data.getStringExtra("name") != null){
                manager.getChild(pos).setName(data.getStringExtra("name"));
            }
-//           if(data.getByteArrayExtra("profile") != null){
-//               byte[] byteArray = data.getByteArrayExtra("profile");
-//
-//                manager.getChild(pos).setProfile(BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length));
-//           }
             adapter.notifyDataSetChanged();
 
         }

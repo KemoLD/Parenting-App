@@ -48,7 +48,7 @@
           android:id="@+id/toolbar_save"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:background="?attr/colorPrimary"
+          android:background="@color/colorPrimaryDark"
           android:text="@string/save_button_text" />
 
     </LinearLayout>

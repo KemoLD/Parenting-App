@@ -66,8 +66,6 @@ public class ChildTab extends AppCompatActivity {
         if (extras != null) {
             name = extras.getString("name");
             position = extras.getInt("pos");
-//            byte[] byteArray = extras.getByteArray("profile");
-//            profilepic = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
             profilepic = manager.getChild(position).getProfile();
         }
         imageID = DataUtil.getIntData(ChildTab.this, AppDataKey.IMAGE_ID);
@@ -139,35 +137,24 @@ public class ChildTab extends AppCompatActivity {
             }
         });
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            Intent intent = new Intent();
-            if((!extras.getString("name").equals(name)) || newProfilepic != profilepic){
-                if (!extras.getString("name").equals(name)) {
-                    intent.putExtra("name", name);
-                }
-                if( newProfilepic != null && newProfilepic != profilepic){
-
-//                        ByteArrayOutputStream bStream = new ByteArrayOutputStream();
-//                        newProfilepic.compress(Bitmap.CompressFormat.PNG, 100, bStream);
-//                        byte[] downsizedImageBytes = bStream.toByteArray();;
-//                        intent.putExtra("profile",downsizedImageBytes);
-
+        ImageButton home = (ImageButton)findViewById(R.id.toolbar_home);
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                if (newProfilepic != null && newName != null) {
+                    intent.putExtra("name", newName);
                     manager.getChild(position).setProfile(newProfilepic);
                     saveImageBytes(newProfilepic);
+                    intent.putExtra("pos", position);
+                    setResult(Activity.RESULT_OK, intent);
+                    finish();
+                } else {
+                    setResult(Activity.RESULT_CANCELED, intent);
+                    finish();
                 }
-                intent.putExtra("pos",position);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
-            }
-            else {
-                setResult(Activity.RESULT_CANCELED, intent);
-                finish();
             }
         });
-
-
     }
 
     @Override
