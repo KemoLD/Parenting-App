@@ -67,10 +67,11 @@ public class FlipCoinActivity extends AppCompatActivity
         setUpFlipSound();
         setUpFlipAnimation();
         setUpFlipChoice();
-        setupTextPopupMenu();
 
         if (!childManager.isEmpty()) {
             displayFlipChoice();
+            setupTextPopupMenu();
+            DataUtil.writeOneIntData(this, AppDataKey.IS_NO_CHILD, HAS_CHILD_CHOOSE);
             setUpHistoryButtons();
         } else {
             setUpHistoryButton();
@@ -161,8 +162,9 @@ public class FlipCoinActivity extends AppCompatActivity
             public void onClick(View view) {
                 coin.flipCoin();
                 flipAnimator.start();
+                int hasChildFlip = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
 
-                if (!childManager.isEmpty()) {
+                if (!childManager.isEmpty() && hasChildFlip == HAS_CHILD_CHOOSE) {
                     HistoryData data = new HistoryData(currentChildFlipping, new Date(), flipChoice, coin.getState());
                     historyList.addHistory(data);
                     historyList.saveToLocal(FlipCoinActivity.this);
@@ -264,6 +266,7 @@ public class FlipCoinActivity extends AppCompatActivity
             currentChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
         }
 
+        currentChildText.setVisibility(View.VISIBLE);
     }
 
     private void setupTextPopupMenu(){
@@ -287,5 +290,4 @@ public class FlipCoinActivity extends AppCompatActivity
             }
         });
     }
-
 }

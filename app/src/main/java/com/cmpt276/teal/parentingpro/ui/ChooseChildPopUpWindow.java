@@ -73,7 +73,6 @@ public class ChooseChildPopUpWindow extends PopupWindow
         });
     }
 
-
     private class ChildClickListener implements AdapterView.OnItemClickListener
     {
         private BaseAdapter adapter;
