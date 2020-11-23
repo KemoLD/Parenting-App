@@ -22,9 +22,12 @@ public class ChildManagerUI extends ChildManager
     private Context context;
     private final String CHILD_FILE_SEPERATOR = "#####";
     private final String CHILD_LIST_SERERATOR = "@@@@@";
+
     public static Bitmap defaultChildImage = null;
     private static ChildManagerUI manager;
     public static final int UPDATE_LISTVIEW = 0x123;
+    private static Boolean isLoadDefault = false;
+
 
     public static ChildManagerUI getInstance(Context context){
         if(manager == null){
@@ -33,13 +36,22 @@ public class ChildManagerUI extends ChildManager
         return manager;
     }
 
-    protected ChildManagerUI(Context context){
+    protected ChildManagerUI(final Context context){
         super();
         this.context = context;
         // loading the default image first as static to reduce the work load for the system
-        defaultChildImage = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.default_profile_pic);    //
+        Thread loadDefaultTask = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                defaultChildImage = BitmapFactory.decodeResource(context.getResources(),
+                        R.drawable.default_profile_pic);
+                ChildManagerUI.isLoadDefault = true;
+            }
+        });
+
+        loadDefaultTask.start();
     }
+
 
 
     public void addChild(ChildUI child){
@@ -98,10 +110,7 @@ public class ChildManagerUI extends ChildManager
             return;
         }
         String[] childList = childListData.split(CHILD_LIST_SERERATOR);
-        Log.i("tag", "childListData = " + childListData);
-        Log.i("tag", "child list length = " + childList.length);
         for(String childData : childList){
-            Log.i("tag", "child data = " + childData);
             if(childData != null && !childData.equals(DataUtil.DEFAULT_STRING_VALUE)){
                 ChildUI child = ChildUI.buildChildFromData(context, childData, CHILD_FILE_SEPERATOR);
                 manager.addChild(child);
@@ -153,10 +162,11 @@ public class ChildManagerUI extends ChildManager
 
         @Override
         public void run() {
-            Log.i("tag", "in run");
-            Log.i("tag", "context = " + context + " fileName = " + fileName);
             byte[] imageData = DataUtil.getInteralFileInBytes(context, fileName);
             if(imageData == null || imageData.length == 0){
+                while (ChildManagerUI.isLoadDefault.equals(false)){
+                    // wait for done
+                }
                 child.setProfile(defaultChildImage);
             }
             else{

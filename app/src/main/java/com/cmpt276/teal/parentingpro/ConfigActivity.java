@@ -80,7 +80,7 @@ public class ConfigActivity extends AppCompatActivity {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
-            super.handleMessage(msg);
+            // super.handleMessage(msg);
             switch(msg.what){
                 case ChildManagerUI.UPDATE_LISTVIEW: adapter.notifyDataSetChanged(false);
 
