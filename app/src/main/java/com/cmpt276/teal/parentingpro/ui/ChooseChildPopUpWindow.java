@@ -99,6 +99,7 @@ public class ChooseChildPopUpWindow extends PopupWindow
 
              adapter.notifyDataSetChanged();
              DataUtil.writeOneIntData(activity, AppDataKey.IS_NO_CHILD, FlipCoinActivity.HAS_CHILD_CHOOSE);
+             dismiss();
         }
     }
 
