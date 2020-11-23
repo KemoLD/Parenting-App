@@ -53,7 +53,6 @@ public class ChildManagerUI extends ChildManager
     }
 
 
-
     public void addChild(ChildUI child){
         super.addChild(child);
 
@@ -70,7 +69,6 @@ public class ChildManagerUI extends ChildManager
             }
         }
     }
-
 
     public void remove(int index){
         ChildUI child = getChild(index);

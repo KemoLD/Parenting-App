@@ -1,5 +1,6 @@
 package com.cmpt276.teal.parentingpro;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ValueAnimator;
@@ -10,6 +11,8 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -29,6 +32,8 @@ import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.Coin;
+import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 import com.cmpt276.teal.parentingpro.ui.ChooseChildPopUpWindow;
 import com.cmpt276.teal.parentingpro.ui.FlipListener;
 import com.cmpt276.teal.parentingpro.ui.FlipResultListener;
@@ -45,10 +50,13 @@ public class FlipCoinActivity extends AppCompatActivity
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
     private History historyList;
-    private ChildManager childManager;
+    private ChildManagerUI childManager;
+    private ChildrenAdapter adapter;
+    //private ChildManagerUI childManagerUI;
     private int lastChildFlippedIndex;
     private int currentChildIndex;
-    private Child currentChildFlipping;
+    private ChildUI currentChildFlipping;
+    //private ChildUI currentChildFlippingUI;
 
     private ValueAnimator flipAnimator;
     private SoundPool soundPool;
@@ -72,6 +80,7 @@ public class FlipCoinActivity extends AppCompatActivity
             setupTextPopupMenu();
             DataUtil.writeOneIntData(this, AppDataKey.IS_NO_CHILD, HAS_CHILD_CHOOSE);
             displayFlipChoice();
+            displayProfilePic();
             setUpHistoryButtons();
             displayHistoryButtons();
         } else {
@@ -101,7 +110,7 @@ public class FlipCoinActivity extends AppCompatActivity
         flipChoice = Coin.CoinState.HEADS;
 
         // Child manager containing the list of children (if any)
-        childManager = ChildManager.getInstance();
+        childManager = ChildManagerUI.getInstance(this);
         childManager.loadFromLocal(this);
 
         // History to keep a record of coin flips
@@ -258,6 +267,18 @@ public class FlipCoinActivity extends AppCompatActivity
         }
     }
 
+    private void displayProfilePic() {
+        ImageView profilePic = findViewById(R.id.image_view_profile_pic);
+        profilePic.setImageBitmap(currentChildFlipping.getProfile());
+        profilePic.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProfilePic() {
+        ImageView profilePic = findViewById(R.id.image_view_profile_pic);
+        profilePic.setVisibility(View.GONE);
+    }
+
+
     private void setupRadioButtonLayout(RadioButton button)
     {
         ColorStateList colorStateList = new ColorStateList(
@@ -308,9 +329,11 @@ public class FlipCoinActivity extends AppCompatActivity
                         if (hasChildFlip == HAS_CHILD_CHOOSE) {
                             setUpHistoryButtons();
                             displayHistoryButtons();
+                            displayProfilePic();
                         } else {
                             setUpHistoryButton();
                             displayHistoryButton();
+                            hideProfilePic();
                         }
                     }
                 });
@@ -321,4 +344,6 @@ public class FlipCoinActivity extends AppCompatActivity
             }
         });
     }
+
+
 }
