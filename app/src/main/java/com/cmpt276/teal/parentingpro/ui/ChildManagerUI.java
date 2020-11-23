@@ -91,6 +91,8 @@ public class ChildManagerUI extends ChildManager
 
     public ChildUI getChild(int index){
         Child child = super.getChild(index);
+        if(child == null)
+            return null;
         if(child instanceof ChildUI){
             return (ChildUI)child;
         }

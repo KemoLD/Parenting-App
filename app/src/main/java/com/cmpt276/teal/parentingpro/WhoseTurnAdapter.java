@@ -2,6 +2,7 @@ package com.cmpt276.teal.parentingpro;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,9 +61,6 @@ public class WhoseTurnAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-        int childIndex = manager.get(position).getChildIndex();
-        final ChildUI child = childManager.getChild(childIndex);
-        final TurnTask task = manager.get(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.task_item, parent, false);
             viewHolder = new ViewHolder();
@@ -80,10 +78,27 @@ public class WhoseTurnAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
+
+        int childIndex = manager.get(position).getChildIndex();
+        final ChildUI child = childManager.getChild(childIndex);
+        final String childName;
+        final Bitmap childImage;
+        if(child == null){
+            childName = mContext.getString(R.string.empty);
+            childImage = ChildManagerUI.defaultChildImage;
+        }
+        else{
+            childName = child.getName();
+            childImage = child.getProfile();
+        }
+
+        final TurnTask task = manager.get(position);
+
+
         viewHolder.itemEv.setText(task.getDescription());
         viewHolder.descTv.setText(task.getDescription());
         // viewHolder.itemTv.setText(manager.get(position).getChild());
-       viewHolder.itemTv.setText(child.getName());
+       viewHolder.itemTv.setText(childName);
 
 //        if(manager.get(position).getStatus() == 1){
 //            viewHolder.editBtn.setEnabled(false);
@@ -98,7 +113,8 @@ public class WhoseTurnAdapter extends BaseAdapter {
 
                 CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
                 builder.setMessage(task.getDescription());
-                builder.setTitle(child.getName() + " TO DO");
+                builder.setTitle(childName + " TO DO");
+                builder.setImage(childImage);
                 builder.setPositiveButton("finish", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         task.setToNextChild(childManager);

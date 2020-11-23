@@ -3,10 +3,12 @@ package com.cmpt276.teal.parentingpro.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -29,6 +31,7 @@ public class CustomDialog extends Dialog {
         private String positiveButtonText;
         private String negativeButtonText;
         private View contentView;
+        private Bitmap childImage;
         private DialogInterface.OnClickListener positiveButtonClickListener;
         private DialogInterface.OnClickListener negativeButtonClickListener;
 
@@ -44,7 +47,7 @@ public class CustomDialog extends Dialog {
         /**
          * Set the Dialog message from resource
          *
-         * @param title
+         * @param message
          * @return
          */
         public Builder setMessage(int message) {
@@ -75,8 +78,25 @@ public class CustomDialog extends Dialog {
             return this;
         }
 
+        /**
+         *  set the content view for the dialog
+         * @param v
+         * @return
+         */
+
         public Builder setContentView(View v) {
             this.contentView = v;
+            return this;
+        }
+
+        /**
+         * set the image from bitmap
+         * @param image
+         * @return
+         */
+
+        public Builder setImage(Bitmap image){
+            this.childImage = image;
             return this;
         }
 
@@ -172,6 +192,12 @@ public class CustomDialog extends Dialog {
                         .removeAllViews();
                 ((LinearLayout) layout.findViewById(R.id.content))
                         .addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+            }
+
+            // set the child image
+            if(childImage != null){
+                ImageView imageView = layout.findViewById(R.id.whose_dialog_image);
+                imageView.setImageBitmap(childImage);
             }
             dialog.setContentView(layout);
             return dialog;

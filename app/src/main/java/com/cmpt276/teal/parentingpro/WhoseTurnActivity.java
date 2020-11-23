@@ -40,10 +40,7 @@ public class WhoseTurnActivity extends AppCompatActivity {
         childManager.loadFromLocal(this);
         manager.loadFromLocal(WhoseTurnActivity.this, childManager);
 
-        // if no child do not display the list
-        if(childManager.length() == 0){
-            return;
-        }
+
         final ListView listView = findViewById(R.id.list);
         final WhoseTurnAdapter adapter = new WhoseTurnAdapter(this, manager, childManager);
         listView.setAdapter(adapter);

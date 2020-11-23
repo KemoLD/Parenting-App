@@ -37,7 +37,12 @@ public class ChildManager
     }
 
     public Child getChild(int i){
-        return childrenList.get(i);
+        try{
+            return childrenList.get(i);
+        }catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public int length(){
