@@ -41,6 +41,7 @@
           android:layout_weight="1"
           android:fontFamily="casual"
           android:text="@string/child_editor"
+          android:textColor="#ffffff"
           android:textAlignment="center"
           android:textSize="30sp" />
 
@@ -48,8 +49,10 @@
           android:id="@+id/toolbar_save"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:background="@color/colorPrimaryDark"
-          android:text="@string/save_button_text" />
+          android:background="@color/colorPrimary"
+          android:text="@string/save_button_text"
+          android:textSize="18sp"
+          android:textColor="#FFFFFF" />
 
     </LinearLayout>
 
@@ -63,6 +66,7 @@
       android:layout_marginTop="67dp"
       android:layout_marginBottom="145dp"
       android:text="@string/gallery"
+      style="@style/button_general"
       app:layout_constraintBottom_toTopOf="@+id/popup_profile_pic"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -75,6 +79,7 @@
       android:layout_marginEnd="55dp"
       android:layout_marginBottom="145dp"
       android:text="@string/take_photo"
+      style="@style/button_general"
       app:layout_constraintBottom_toTopOf="@+id/popup_profile_pic"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -83,11 +88,10 @@
       android:id="@+id/popup_profile_pic"
       android:layout_width="247dp"
       android:layout_height="255dp"
-      android:layout_marginBottom="124dp"
+      android:layout_marginBottom="56dp"
       android:contentDescription="@string/profile_picture"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintHorizontal_bias="0.554"
       app:layout_constraintStart_toStartOf="parent"
       app:srcCompat="@drawable/default_profile_pic" />
 
@@ -97,33 +101,32 @@
       android:layout_width="174dp"
       android:layout_height="49dp"
       android:layout_marginStart="55dp"
-      android:layout_marginTop="20dp"
-      android:layout_marginBottom="13dp"
+      android:layout_marginBottom="62dp"
       android:ems="10"
       android:textSize="20sp"
       android:visibility="invisible"
-      app:layout_constraintBottom_toTopOf="@+id/popup_text"
-      app:layout_constraintStart_toStartOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/popup_gallery" />
+      app:layout_constraintBottom_toTopOf="@+id/popup_profile_pic"
+      app:layout_constraintStart_toStartOf="parent" />
 
   <TextView
       android:id="@+id/popup_text"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="82dp"
+      android:layout_marginEnd="25dp"
       android:layout_marginBottom="22dp"
       android:text="@string/name"
       android:textAlignment="center"
       android:textSize="30sp"
       android:textStyle="bold"
       app:layout_constraintBottom_toTopOf="@+id/popup_profile_pic"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintEnd_toStartOf="@+id/popup_edit" />
 
   <Button
       android:id="@+id/popup_edit"
+      style="@style/button_general"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="73dp"
+      android:layout_marginEnd="55dp"
       android:layout_marginBottom="22dp"
       android:text="@string/edit"
       app:layout_constraintBottom_toTopOf="@+id/popup_profile_pic"

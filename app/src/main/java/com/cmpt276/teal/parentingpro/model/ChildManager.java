@@ -53,6 +53,10 @@ public class ChildManager
         childrenList.remove(index);
     }
 
+    public void removeAll(){
+        childrenList.removeAll(childrenList);
+    }
+
     public void move(int srcIndex, int desIndex){
         if(srcIndex == desIndex)
             return;
@@ -71,9 +75,6 @@ public class ChildManager
         childrenList.set(desIndex, temp);
     }
 
-    public void removeAll(){
-        childrenList.removeAll(childrenList);
-    }
 
     public void loadFromLocal(Context context){
         removeAll();
@@ -88,6 +89,4 @@ public class ChildManager
         String savedDataStr = gson.toJson(childrenList);
         DataUtil.writeOneStringData(context, AppDataKey.CHILDREN, savedDataStr);
     }
-
-
 }

@@ -134,13 +134,6 @@ public class ChildTab extends AppCompatActivity {
                 newName = name;
                 newProfilepic = profilepic;
                 Toast.makeText(getBaseContext(), "saved", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        ImageButton home = (ImageButton)findViewById(R.id.toolbar_home);
-        home.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
                 Intent intent = new Intent();
                 if (newProfilepic != null && newName != null) {
                     intent.putExtra("name", newName);
@@ -153,6 +146,16 @@ public class ChildTab extends AppCompatActivity {
                     setResult(Activity.RESULT_CANCELED, intent);
                     finish();
                 }
+            }
+        });
+
+        ImageButton home = (ImageButton)findViewById(R.id.toolbar_home);
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                setResult(Activity.RESULT_CANCELED, intent);
+                finish();
             }
         });
     }
