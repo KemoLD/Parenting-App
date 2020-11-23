@@ -3,8 +3,11 @@ package com.cmpt276.teal.parentingpro.ui;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Handler;
 import android.util.Log;
+import android.widget.BaseAdapter;
 
+import com.cmpt276.teal.parentingpro.ChildrenAdapter;
 import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
@@ -21,6 +24,7 @@ public class ChildManagerUI extends ChildManager
     private final String CHILD_LIST_SERERATOR = "@@@@@";
     public static Bitmap defaultChildImage = null;
     private static ChildManagerUI manager;
+    public static final int UPDATE_LISTVIEW = 0x123;
 
     public static ChildManagerUI getInstance(Context context){
         if(manager == null){
@@ -83,6 +87,11 @@ public class ChildManagerUI extends ChildManager
     }
 
     public void loadFromLocal(Context context){
+       this.loadFromLocal(context, null);
+    }
+
+
+    public void loadFromLocal(Context context, Handler handler){
         removeAll();
         String childListData = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
         if(childListData == null || childListData.length() == 0 || childListData.equals(DataUtil.DEFAULT_STRING_VALUE)){
@@ -103,7 +112,14 @@ public class ChildManagerUI extends ChildManager
                 else{
                     // create other thread so to reduce the work load in main thread
                     // also able to load the image while the program is running
-                    Thread setImageTask = new Thread(new LoadImageTask(child, imageFileName));
+                    Thread setImageTask;
+                    if(handler == null) {
+                        setImageTask = new Thread(new LoadImageTask(child, imageFileName));
+                    }
+                    else{
+                        setImageTask = new Thread(new LoadImageAdaptorTask(child, imageFileName, handler));
+                    }
+
                     setImageTask.start();
                 }
 
@@ -147,6 +163,21 @@ public class ChildManagerUI extends ChildManager
                 Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
                 child.setProfile(image);
             }
+        }
+    }
+
+
+    private class LoadImageAdaptorTask extends LoadImageTask implements Runnable
+    {
+        Handler handler;
+        public LoadImageAdaptorTask(ChildUI child, String fileName, Handler handler){
+            super(child, fileName);
+            this.handler = handler;
+        }
+
+        public void run(){
+            super.run();
+            handler.sendEmptyMessage(UPDATE_LISTVIEW);
         }
     }
 }

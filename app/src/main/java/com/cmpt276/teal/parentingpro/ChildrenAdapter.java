@@ -40,6 +40,13 @@ public class ChildrenAdapter extends BaseAdapter {
         childManager.saveToLocal(mContext);
     }
 
+    public void notifyDataSetChanged(boolean isSaving){
+        super.notifyDataSetChanged();
+        if(isSaving){
+            childManager.saveToLocal(mContext);
+        }
+    }
+
     @Override
     public int getCount() {
         // return names.size();
@@ -60,7 +67,7 @@ public class ChildrenAdapter extends BaseAdapter {
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         final ChildUI childUI = childManager.getChild(position);
-        Log.i("tag", "getview save image name = " + childManager.getChild(position).getImageFileName());
+        Log.i("tag", "getview image name = " + childManager.getChild(position).getImageFileName());
 //        childUI.updateImage();
 
         if (convertView == null) {

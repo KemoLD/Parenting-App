@@ -1,5 +1,6 @@
 package com.cmpt276.teal.parentingpro;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -8,6 +9,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,11 +36,11 @@ public class ConfigActivity extends AppCompatActivity {
         setContentView(R.layout.activity_config);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        final ListView listView = findViewById(R.id.list);
         manager = ChildManagerUI.getInstance(this);
-        manager.loadFromLocal(ConfigActivity.this);
-
+        manager.loadFromLocal(ConfigActivity.this, handler);
+        final ListView listView = findViewById(R.id.list);
         adapter = new ChildrenAdapter(this, manager,this);
+
         listView.setAdapter(adapter);
         final EditText editText = findViewById(R.id.edit_name);
 
@@ -71,8 +74,17 @@ public class ConfigActivity extends AppCompatActivity {
                manager.getChild(pos).setName(data.getStringExtra("name"));
            }
             adapter.notifyDataSetChanged();
-
         }
-
     }
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            switch(msg.what){
+                case ChildManagerUI.UPDATE_LISTVIEW: adapter.notifyDataSetChanged(false);
+
+            }
+        }
+    };
 }
