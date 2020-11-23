@@ -67,15 +67,15 @@ public class FlipCoinActivity extends AppCompatActivity
         setUpFlipSound();
         setUpFlipAnimation();
         setUpFlipChoice();
-        setUpHistoryButton();
-        setUpHistoryButtons();
 
         if (!childManager.isEmpty()) {
             setupTextPopupMenu();
             DataUtil.writeOneIntData(this, AppDataKey.IS_NO_CHILD, HAS_CHILD_CHOOSE);
             displayFlipChoice();
+            setUpHistoryButtons();
             displayHistoryButtons();
         } else {
+            setUpHistoryButton();
             displayHistoryButton();
         }
     }
@@ -306,8 +306,10 @@ public class FlipCoinActivity extends AppCompatActivity
 
                         int hasChildFlip = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
                         if (hasChildFlip == HAS_CHILD_CHOOSE) {
+                            setUpHistoryButtons();
                             displayHistoryButtons();
                         } else {
+                            setUpHistoryButton();
                             displayHistoryButton();
                         }
                     }
