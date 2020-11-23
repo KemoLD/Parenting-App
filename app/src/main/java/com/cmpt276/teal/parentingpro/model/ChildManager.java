@@ -57,6 +57,25 @@ public class ChildManager
         childrenList.removeAll(childrenList);
     }
 
+    public void move(int srcIndex, int desIndex){
+        if(srcIndex == desIndex)
+            return;
+        Child temp = getChild(srcIndex);
+        if(srcIndex < desIndex){
+            for(int i = srcIndex; i < desIndex; i++){
+                childrenList.set(i, childrenList.get(i + 1));
+            }
+        }
+        else{
+            for(int i = srcIndex; i > desIndex; i--){
+                childrenList.set(i, childrenList.get(i - 1));
+            }
+        }
+
+        childrenList.set(desIndex, temp);
+    }
+        
+
     public void loadFromLocal(Context context){
         removeAll();
         String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDRENS);

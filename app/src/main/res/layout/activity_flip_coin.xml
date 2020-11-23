@@ -58,16 +58,27 @@
         app:layout_constraintTop_toTopOf="@+id/guideline"
         app:srcCompat="@drawable/coin_heads"
         tools:ignore="ContentDescription" />
-
-    <TextView
-        android:id="@+id/text_view_flip_choice"
-        style="@style/text_general"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="20sp"
-        app:layout_constraintStart_toStartOf="@+id/guideline7"
-        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+        android:background="@drawable/flip_coin_select_child"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline5">
+        <TextView
+            android:id="@+id/text_view_flip_choice"
+            style="@style/text_general"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/flip_choice_text"
+            android:textColor="#C6F3F0F0"
+            android:textSize="20sp"
+            />
+    </LinearLayout>
+
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"

@@ -20,5 +20,8 @@ public class AppDataKey
     public static final String IMAGE_ID = "image_id";
 
     public static final String INAME_NAME_BASE = "child_image";
+    
+    public static final String IS_NO_CHILD = "is_no_children_fliping";
+
 
 }

@@ -10,10 +10,14 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -25,6 +29,7 @@ import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.Coin;
+import com.cmpt276.teal.parentingpro.ui.ChooseChildPopUpWindow;
 import com.cmpt276.teal.parentingpro.ui.FlipListener;
 import com.cmpt276.teal.parentingpro.ui.FlipResultListener;
 import com.cmpt276.teal.parentingpro.ui.FlipSoundListener;
@@ -34,12 +39,15 @@ import java.util.Date;
 public class FlipCoinActivity extends AppCompatActivity
 {
     public static Coin coin;
+    public static final int NO_CHILD_CHOOSE = 0;
+    public static final int HAS_CHILD_CHOOSE = 1;
     private Coin.CoinState flipChoice;
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
     private History historyList;
     private ChildManager childManager;
     private int lastChildFlippedIndex;
+    private int currentChildIndex;
     private Child currentChildFlipping;
 
     private ValueAnimator flipAnimator;
@@ -59,6 +67,7 @@ public class FlipCoinActivity extends AppCompatActivity
         setUpFlipSound();
         setUpFlipAnimation();
         setUpFlipChoice();
+        setupTextPopupMenu();
 
         if (!childManager.isEmpty()) {
             displayFlipChoice();
@@ -72,7 +81,7 @@ public class FlipCoinActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         soundPool.release();
-        DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, --lastChildFlippedIndex);
+        // DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, --lastChildFlippedIndex);
     }
 
     @Override
@@ -98,21 +107,14 @@ public class FlipCoinActivity extends AppCompatActivity
 
         // If there are children, use the index of the child who flipped last in order to get the current child flipping
         if (!childManager.isEmpty()) {
-            setCurrentChildFlipping();
+            lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+            setCurrentChildFlipping(lastChildFlippedIndex);
         }
     }
 
-    private void setCurrentChildFlipping() {
-            lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
-
-            if (lastChildFlippedIndex != -1 && lastChildFlippedIndex < childManager.length() - 1) {
-                lastChildFlippedIndex++;
-            } else {
-                lastChildFlippedIndex = 0;
-            }
-
-            currentChildFlipping = childManager.getChild(lastChildFlippedIndex);
-            DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
+    private void setCurrentChildFlipping(int lastChildFlippedIndex) {
+        currentChildIndex = (lastChildFlippedIndex + 1) % childManager.length();
+        currentChildFlipping = childManager.getChild((currentChildIndex));
     }
 
     private void setUpHistoryButton() {
@@ -146,7 +148,7 @@ public class FlipCoinActivity extends AppCompatActivity
         currentChildHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = HistoryActivity.makeLaunchIntent(FlipCoinActivity.this, lastChildFlippedIndex);
+                Intent intent = HistoryActivity.makeLaunchIntent(FlipCoinActivity.this, currentChildIndex);
                 startActivity(intent);
             }
         });
@@ -165,7 +167,9 @@ public class FlipCoinActivity extends AppCompatActivity
                     historyList.addHistory(data);
                     historyList.saveToLocal(FlipCoinActivity.this);
 
-                    setCurrentChildFlipping();
+                    setCurrentChildFlipping(++lastChildFlippedIndex);
+                    lastChildFlippedIndex = lastChildFlippedIndex % childManager.length();
+                    DataUtil.writeOneIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
 
                     Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
                     currentChildHistoryButton.setText(getString(R.string.current_child_history_text, currentChildFlipping.getName()));
@@ -210,7 +214,9 @@ public class FlipCoinActivity extends AppCompatActivity
         for (int i = 0; i < flipChoices.length; i++) {
             final int finalI = i;
             RadioButton button = new RadioButton(this);
-            button.setText(flipChoices[i]);
+            String choice = flipChoices[i];
+            int textId = getResources().getIdentifier(choice, "string", getPackageName());
+            button.setText(getResources().getText(textId));
             setupRadioButtonLayout(button);
 
             button.setOnClickListener(new View.OnClickListener() {
@@ -248,7 +254,38 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void displayFlipChoice(){
+        int hasChildFlip = DataUtil.getIntData(this, AppDataKey.IS_NO_CHILD);
         TextView currentChildText = findViewById(R.id.text_view_flip_choice);
-        currentChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
+
+        if(hasChildFlip == DataUtil.DEFAULT_INT_VALUE || hasChildFlip == NO_CHILD_CHOOSE){
+            currentChildText.setText(R.string.no_child_choose);
+        }
+        else{
+            currentChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
+        }
+
     }
+
+    private void setupTextPopupMenu(){
+        final TextView chooseView = findViewById(R.id.text_view_flip_choice);
+        chooseView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(FlipCoinActivity.this);
+                popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+                        setCurrentChildFlipping(lastChildFlippedIndex);
+                        displayFlipChoice();
+                    }
+                });
+                View parent = FlipCoinActivity.this.getWindow().getDecorView();
+                popUpWindow.showAtLocation(parent, Gravity.CENTER,0,0);
+
+                return false;
+            }
+        });
+    }
+
 }

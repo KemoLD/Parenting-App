@@ -21,15 +21,25 @@
     <string name="ten_min">10 min</string>
     <string name="cus_time">Custom Minutes:</string>
     <string name="set">SET</string>
+    <string name="timer_expire_text">Your timeout timer has expired</string>
+    <string name="timeout_title">Timeout Timer Notification</string>
+    <string name="timeout_content">Timer Expired</string>
+    <string name="time_invalid">Time is InValid</string>
 
     <!--    Flip Coin-->
     <string name="flip_coin_title">Flip Coin</string>
     <string name="flip_button_text">FLIP</string>
-    <string name="flip_choice_text">Heads or tails, %1s?</string>
+    <string name="flip_choice_text">(long click)   Now is %1s</string>
     <string name="history_button_text">View Full History</string>
     <string name="no_play">No Play</string>
     <string name="next_child_text">%1s?</string>
     <string name="current_child_history_text">View %1s\'s History</string>
+    <string name="no_child_choose">No Child is Choosen</string>
+    <string name="head">Heads</string>
+    <string name="tail">Tails</string>
+
+    <!--    flip coin choose children menu-->
+    <string name="flip_window_head_text">click to set the child to the first in queue</string>
 
     <!--    History-->
     <string name="history_title">History</string>
