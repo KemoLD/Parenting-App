@@ -208,6 +208,7 @@ public class FlipCoinActivity extends AppCompatActivity
                     currentChildHistoryButton.setText(getString(R.string.current_child_history_text, currentChildFlipping.getName()));
 
                     displayFlipChoice();
+                    displayProfilePic();
                 }
             }
         });
@@ -317,7 +318,7 @@ public class FlipCoinActivity extends AppCompatActivity
         chooseView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(FlipCoinActivity.this);
+                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(FlipCoinActivity.this, FlipCoinActivity.this);
                 popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
