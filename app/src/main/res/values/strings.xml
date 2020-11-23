@@ -56,5 +56,6 @@
     <string name="name">name</string>
     <string name="child_editor">Child Editor</string>
     <string name="back">back</string>
+    <string name="text_change_turn_hint">Note: Press and hold turn in order to change</string>
 
 </resources>

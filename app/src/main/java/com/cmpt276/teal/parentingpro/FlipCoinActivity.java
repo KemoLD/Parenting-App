@@ -1,6 +1,5 @@
 package com.cmpt276.teal.parentingpro;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ValueAnimator;
@@ -11,12 +10,8 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -29,8 +24,6 @@ import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
-import com.cmpt276.teal.parentingpro.model.Child;
-import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.Coin;
 import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 import com.cmpt276.teal.parentingpro.ui.ChildUI;
@@ -51,12 +44,9 @@ public class FlipCoinActivity extends AppCompatActivity
 
     private History historyList;
     private ChildManagerUI childManager;
-    private ChildrenAdapter adapter;
-    //private ChildManagerUI childManagerUI;
     private int lastChildFlippedIndex;
     private int currentChildIndex;
     private ChildUI currentChildFlipping;
-    //private ChildUI currentChildFlippingUI;
 
     private ValueAnimator flipAnimator;
     private SoundPool soundPool;
@@ -83,6 +73,7 @@ public class FlipCoinActivity extends AppCompatActivity
             displayProfilePic();
             setUpHistoryButtons();
             displayHistoryButtons();
+            displayHint();
         } else {
             setUpHistoryButton();
             displayHistoryButton();
@@ -93,7 +84,6 @@ public class FlipCoinActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         soundPool.release();
-        // DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, --lastChildFlippedIndex);
     }
 
     @Override
@@ -147,10 +137,10 @@ public class FlipCoinActivity extends AppCompatActivity
         historyButtonNoChild.setVisibility(View.VISIBLE);
 
         Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
-        currentChildHistoryButton.setVisibility(View.GONE);
+        currentChildHistoryButton.setVisibility(View.INVISIBLE);
 
         Button historyButton = findViewById(R.id.full_history_button);
-        historyButton.setVisibility((View.GONE));
+        historyButton.setVisibility((View.INVISIBLE));
     }
 
     private void setUpHistoryButtons() {
@@ -182,7 +172,7 @@ public class FlipCoinActivity extends AppCompatActivity
         historyButton.setVisibility((View.VISIBLE));
 
         Button historyButtonNoChild = findViewById(R.id.history_button_no_children);
-        historyButtonNoChild.setVisibility(View.GONE);
+        historyButtonNoChild.setVisibility(View.INVISIBLE);
     }
 
 
@@ -209,6 +199,7 @@ public class FlipCoinActivity extends AppCompatActivity
 
                     displayFlipChoice();
                     displayProfilePic();
+                    displayHint();
                 }
             }
         });
@@ -276,7 +267,17 @@ public class FlipCoinActivity extends AppCompatActivity
 
     private void hideProfilePic() {
         ImageView profilePic = findViewById(R.id.image_view_profile_pic);
-        profilePic.setVisibility(View.GONE);
+        profilePic.setVisibility(View.INVISIBLE);
+    }
+
+    private void displayHint() {
+        TextView changeTurnHint = findViewById(R.id.text_view_change_turn_hint);
+        changeTurnHint.setVisibility(View.VISIBLE);
+    }
+
+    private void hideHint() {
+        TextView changeTurnHint = findViewById(R.id.text_view_change_turn_hint);
+        changeTurnHint.setVisibility(View.INVISIBLE);
     }
 
 
@@ -331,10 +332,12 @@ public class FlipCoinActivity extends AppCompatActivity
                             setUpHistoryButtons();
                             displayHistoryButtons();
                             displayProfilePic();
+                            displayHint();
                         } else {
                             setUpHistoryButton();
                             displayHistoryButton();
                             hideProfilePic();
+                            displayHint();
                         }
                     }
                 });
@@ -345,6 +348,4 @@ public class FlipCoinActivity extends AppCompatActivity
             }
         });
     }
-
-
 }
