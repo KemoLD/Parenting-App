@@ -5,6 +5,9 @@ import android.content.Context;
 
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
+import com.cmpt276.teal.parentingpro.data.HistoryData;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +15,7 @@ import java.util.List;
 public class ChildManager
 {
     private static ChildManager manager;
+    private Gson gson;
 
     private ArrayList<Child> childrenList;
 
@@ -23,8 +27,9 @@ public class ChildManager
     }
 
 
-    private ChildManager(){
+    protected ChildManager(){
         this.childrenList = new ArrayList<>();
+        this.gson = new Gson();
     }
 
     public void addChild(Child child){
@@ -49,16 +54,40 @@ public class ChildManager
         childrenList.remove(index);
     }
 
-    public void loadFromLocal(Context context){
+    public void removeAll(){
         childrenList.removeAll(childrenList);
-        String val = DataUtil.getStringData(context, AppDataKey.CHILDREN_NAMES);
-        if (!val.equals("NaN")) {
-            String[] names = val.split("###");
-            for(String n : names){
-                if(!n.isEmpty()){
-                    childrenList.add(new Child(n));
-                }
+    }
+
+    public void move(int srcIndex, int desIndex){
+        if(srcIndex == desIndex)
+            return;
+        Child temp = getChild(srcIndex);
+        if(srcIndex < desIndex){
+            for(int i = srcIndex; i < desIndex; i++){
+                childrenList.set(i, childrenList.get(i + 1));
             }
+        }
+        else{
+            for(int i = srcIndex; i > desIndex; i--){
+                childrenList.set(i, childrenList.get(i - 1));
+            }
+        }
+
+        childrenList.set(desIndex, temp);
+    }
+        
+
+    public void loadFromLocal(Context context){
+        removeAll();
+        String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
+        if(childrenDataString.equals(DataUtil.DEFAULT_STRING_VALUE))
+            return;
+        try {
+            ArrayList<Child> dataList = (ArrayList<Child>) gson.fromJson(childrenDataString, new TypeToken<ArrayList<Child>>() {
+            }.getType());
+            childrenList = dataList;
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -71,10 +100,7 @@ public class ChildManager
     }
 
     public void saveToLocal(Context context){
-        StringBuilder sb = new StringBuilder();
-        for(Child child : childrenList){
-            sb.append(child.getName() + "###");
-        }
-        DataUtil.writeOneStringData(context, AppDataKey.CHILDREN_NAMES, sb.toString());
+        String savedDataStr = gson.toJson(childrenList);
+        DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, savedDataStr);
     }
 }

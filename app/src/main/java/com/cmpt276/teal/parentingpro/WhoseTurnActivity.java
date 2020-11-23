@@ -16,6 +16,7 @@ import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.TurnTask;
 import com.cmpt276.teal.parentingpro.model.TurnTaskManager;
+import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,10 +40,9 @@ public class WhoseTurnActivity extends AppCompatActivity {
 
         final WhoseTurnAdapter adapter = new WhoseTurnAdapter(this, manager);
         listView.setAdapter(adapter);
-        final EditText editText = findViewById(R.id.edit_name);
         final EditText editText0 = findViewById(R.id.edit_desc);
 
-        ChildManager childManager = ChildManager.getInstance();
+        ChildManagerUI childManager = ChildManagerUI.getInstance(this);
         childManager.loadFromLocal(this);
         List<String> childStrs = childManager.getChilds();
         if(childStrs.size() == 0){
