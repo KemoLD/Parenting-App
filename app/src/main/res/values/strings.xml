@@ -49,5 +49,12 @@
     <string name="history_result">Result</string>
     <string name="save_button_text">SAVE</string>
     <string name="edit_button_text">EDIT</string>
+    <string name="select">select</string>
+    <string name="profile_picture">profile picture</string>
+    <string name="gallery">Gallery</string>
+    <string name="take_photo">take photo</string>
+    <string name="name">name</string>
+    <string name="child_editor">Child Editor</string>
+    <string name="back">back</string>
 
 </resources>
