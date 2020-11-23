@@ -7,6 +7,7 @@ import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChildManager
 {
@@ -59,6 +60,14 @@ public class ChildManager
                 }
             }
         }
+    }
+
+    public List<String> getChilds(){
+        List<String> s = new ArrayList<>();
+        for(Child c : childrenList){
+            s.add(c.getName());
+        }
+        return s;
     }
 
     public void saveToLocal(Context context){

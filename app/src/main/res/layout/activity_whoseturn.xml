@@ -51,18 +51,12 @@
                 android:paddingStart="15dp"
                 android:singleLine="true"
                 android:textColor="#000000" />
-
-            <EditText
-                android:id="@+id/edit_name"
+            <Spinner
+                android:id="@+id/spinner"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="#83D5CFCF"
-                android:ems="10"
-                android:hint="@string/input_name"
                 android:paddingStart="15dp"
-                android:singleLine="true"
-                android:textColor="#000000" />
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
 
             <Button
                 android:id="@+id/btn_add"
