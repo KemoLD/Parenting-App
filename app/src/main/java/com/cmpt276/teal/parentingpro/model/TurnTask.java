@@ -25,6 +25,10 @@ public class TurnTask{
         return childIndex;
     }
 
+    public void setToNextChild(ChildManager childManager){
+        childIndex = (childIndex + 1) % childManager.length();
+    }
+
     public void setChildIndex(int childIndex) {
         this.childIndex = childIndex;
     }

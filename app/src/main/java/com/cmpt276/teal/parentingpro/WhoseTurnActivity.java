@@ -25,7 +25,7 @@ import java.util.List;
 public class WhoseTurnActivity extends AppCompatActivity {
 
      private TurnTaskManager manager = TurnTaskManager.getInstance();
-     private ChildManager childManager;
+     private ChildManagerUI childManager;
      // private String choseChild;
     private int choseChildIndex;
      
@@ -35,16 +35,21 @@ public class WhoseTurnActivity extends AppCompatActivity {
         setContentView(R.layout.activity_whoseturn);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        final ListView listView = findViewById(R.id.list);
-
-        manager.loadFromLocal(WhoseTurnActivity.this);
-
-        final WhoseTurnAdapter adapter = new WhoseTurnAdapter(this, manager);
-        listView.setAdapter(adapter);
-        final EditText editText0 = findViewById(R.id.edit_desc);
 
         childManager = ChildManagerUI.getInstance(this);
         childManager.loadFromLocal(this);
+        manager.loadFromLocal(WhoseTurnActivity.this, childManager);
+
+        // if no child do not display the list
+        if(childManager.length() == 0){
+            return;
+        }
+        final ListView listView = findViewById(R.id.list);
+        final WhoseTurnAdapter adapter = new WhoseTurnAdapter(this, manager, childManager);
+        listView.setAdapter(adapter);
+        final EditText editText0 = findViewById(R.id.edit_desc);
+
+
         List<String> childStrs = childManager.getChilds();
         if(childStrs.size() == 0){
             Toast.makeText(this, "Must Config Childrens First", Toast.LENGTH_LONG).show();
@@ -78,8 +83,8 @@ public class WhoseTurnActivity extends AppCompatActivity {
 //                    manager.addTask(new TurnTask(desc, name));
 //                    adapter.notifyDataSetChanged();
 //                }
-                if(choseChildIndex > 0 && choseChildIndex < childManager.length() && desc.length() > 0){
-                    manager.addTask(new TurnTask(desc, choseChildIndex));
+                if(childIndex >= 0 && childIndex < childManager.length() && desc.length() > 0){
+                    manager.addTask(new TurnTask(desc, childIndex));
                     adapter.notifyDataSetChanged();
                 }
             }

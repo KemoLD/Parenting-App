@@ -49,7 +49,7 @@ public class TurnTaskManager
         turnTasks.remove(index);
     }
 
-    public void loadFromLocal(Context context){
+    public void loadFromLocal(Context context, ChildManager childManager){
         turnTasks.clear();
         String val = DataUtil.getStringData(context, AppDataKey.CHILDREN_TURN_TASKS);
         if (!val.equals("NaN")) {
@@ -57,7 +57,8 @@ public class TurnTaskManager
             for(String n : names){
                 String[] ss = n.split("@@@");
                 if(!n.isEmpty()){
-                    TurnTask task = new TurnTask(ss[0], Integer.parseInt(ss[1]));
+                    int correctIndex = getCorrectIndex(Integer.parseInt(ss[1]), childManager);
+                    TurnTask task = new TurnTask(ss[0], correctIndex);
 //                    if(ss.length > 2){
 //                        try{
 //                            task.setStatus(Integer.parseInt(ss[2]));
@@ -78,5 +79,17 @@ public class TurnTaskManager
             sb.append(task.getDescription() + "@@@" + task.getChildIndex() + "@@@" + "123" + "###");
         }
         DataUtil.writeOneStringData(context, AppDataKey.CHILDREN_TURN_TASKS, sb.toString());
+    }
+
+
+    public int getCorrectIndex(int childIndex, ChildManager childManager){
+        int correctIndex = childIndex;
+        if(childIndex < 0){
+            correctIndex = 0;
+        }
+        else if(childIndex >= childManager.length()){
+            correctIndex = childManager.length() - 1;
+        }
+        return correctIndex;
     }
 }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.cmpt276.teal.parentingpro.model.ChildManager;
+import com.cmpt276.teal.parentingpro.model.TurnTask;
 import com.cmpt276.teal.parentingpro.model.TurnTaskManager;
 import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 import com.cmpt276.teal.parentingpro.ui.ChildUI;
@@ -59,7 +60,9 @@ public class WhoseTurnAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-        final ChildUI child = childManager.getChild(position);
+        int childIndex = manager.get(position).getChildIndex();
+        final ChildUI child = childManager.getChild(childIndex);
+        final TurnTask task = manager.get(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.task_item, parent, false);
             viewHolder = new ViewHolder();
@@ -77,8 +80,8 @@ public class WhoseTurnAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.itemEv.setText(manager.get(position).getDescription());
-        viewHolder.descTv.setText(manager.get(position).getDescription());
+        viewHolder.itemEv.setText(task.getDescription());
+        viewHolder.descTv.setText(task.getDescription());
         // viewHolder.itemTv.setText(manager.get(position).getChild());
        viewHolder.itemTv.setText(child.getName());
 
@@ -94,10 +97,11 @@ public class WhoseTurnAdapter extends BaseAdapter {
                 //Toast.makeText(mContext, "Toast", Toast.LENGTH_SHORT).show();
 
                 CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
-                builder.setMessage(manager.get(position).getDescription());
+                builder.setMessage(task.getDescription());
                 builder.setTitle(child.getName() + " TO DO");
                 builder.setPositiveButton("finish", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        task.setToNextChild(childManager);
                         dialog.dismiss();
                         // manager.get(position).setStatus(1);
                         WhoseTurnAdapter.this.notifyDataSetChanged();
@@ -132,7 +136,7 @@ public class WhoseTurnAdapter extends BaseAdapter {
                     finalViewHolder.itemEv.setVisibility(View.INVISIBLE);
                     Log.e("TAG", finalViewHolder.itemEv.getText().toString());
                     finalViewHolder.editBtn.setText(R.string.edit_button_text);
-                    manager.get(position).setDescription(finalViewHolder.itemEv.getText().toString());
+                    task.setDescription(finalViewHolder.itemEv.getText().toString());
                     WhoseTurnAdapter.this.notifyDataSetChanged();
                 }
             }
@@ -148,6 +152,7 @@ public class WhoseTurnAdapter extends BaseAdapter {
 
         return convertView;
     }
+
 
     class ViewHolder {
         RelativeLayout layout;
