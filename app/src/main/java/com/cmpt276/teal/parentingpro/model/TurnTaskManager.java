@@ -57,14 +57,14 @@ public class TurnTaskManager
             for(String n : names){
                 String[] ss = n.split("@@@");
                 if(!n.isEmpty()){
-                    TurnTask task = new TurnTask(ss[0], ss[1]);
-                    if(ss.length > 2){
-                        try{
-                            task.setStatus(Integer.parseInt(ss[2]));
-                        }catch (Exception e){
-                            Log.e("TAG", e.toString());
-                        }
-                    }
+                    TurnTask task = new TurnTask(ss[0], Integer.parseInt(ss[1]));
+//                    if(ss.length > 2){
+//                        try{
+//                            task.setStatus(Integer.parseInt(ss[2]));
+//                        }catch (Exception e){
+//                            Log.e("TAG", e.toString());
+//                        }
+//                    }
                     turnTasks.add(task);
                 }
             }
@@ -74,7 +74,8 @@ public class TurnTaskManager
     public void saveToLocal(Context context){
         StringBuilder sb = new StringBuilder();
         for(TurnTask task : turnTasks){
-            sb.append(task.getDescription() + "@@@" + task.getChild() + "@@@" + task.getStatus() + "###");
+            // sb.append(task.getDescription() + "@@@" + task.getChild() + "@@@" + task.getStatus() + "###");
+            sb.append(task.getDescription() + "@@@" + task.getChildIndex() + "@@@" + "123" + "###");
         }
         DataUtil.writeOneStringData(context, AppDataKey.CHILDREN_TURN_TASKS, sb.toString());
     }

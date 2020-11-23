@@ -2,13 +2,15 @@ package com.cmpt276.teal.parentingpro.model;
 
 public class TurnTask{
     private String description;
-    private String child;
-    private int status; // 0 create 1 finish
+    private int childIndex;
+    // private String child;
+    // private int status; // 0 create 1 finish
 
-    public TurnTask(String description, String child) {
+    public TurnTask(String description, int childIndex) {
         this.description = description;
-        this.child = child;
-        this.status = 0;
+//        this.child = child;
+//        this.status = 0;
+        this.childIndex = childIndex;
     }
 
     public String getDescription() {
@@ -19,19 +21,26 @@ public class TurnTask{
         this.description = description;
     }
 
-    public String getChild() {
-        return child;
+    public int getChildIndex() {
+        return childIndex;
     }
 
-    public void setChild(String child) {
-        this.child = child;
+    public void setChildIndex(int childIndex) {
+        this.childIndex = childIndex;
     }
+//    public String getChild() {
+//        return child;
+//    }
 
-    public int getStatus() {
-        return status;
-    }
+//    public void setChild(String child) {
+//        this.child = child;
+//    }
 
-    public void setStatus(int status) {
-        this.status = status;
-    }
+//    public int getStatus() {
+//        return status;
+//    }
+//
+//    public void setStatus(int status) {
+//        this.status = status;
+//    }
 }

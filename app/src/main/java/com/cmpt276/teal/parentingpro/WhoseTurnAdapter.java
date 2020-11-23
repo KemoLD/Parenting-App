@@ -15,6 +15,8 @@ import android.widget.Toast;
 
 import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.TurnTaskManager;
+import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 import com.cmpt276.teal.parentingpro.ui.CustomDialog;
 
 import java.util.List;
@@ -24,10 +26,12 @@ public class WhoseTurnAdapter extends BaseAdapter {
     private Context mContext;
 
     private TurnTaskManager manager;
+    private ChildManagerUI childManager;
 
-    public WhoseTurnAdapter(Context context, TurnTaskManager manager) {
+    public WhoseTurnAdapter(Context context, TurnTaskManager manager, ChildManagerUI childManager) {
         this.mContext = context;
         this.manager = manager;
+        this.childManager = childManager;
     }
 
     @Override
@@ -55,7 +59,7 @@ public class WhoseTurnAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
-
+        final ChildUI child = childManager.getChild(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.task_item, parent, false);
             viewHolder = new ViewHolder();
@@ -75,27 +79,27 @@ public class WhoseTurnAdapter extends BaseAdapter {
 
         viewHolder.itemEv.setText(manager.get(position).getDescription());
         viewHolder.descTv.setText(manager.get(position).getDescription());
-        viewHolder.itemTv.setText(manager.get(position).getChild());
+        // viewHolder.itemTv.setText(manager.get(position).getChild());
+       viewHolder.itemTv.setText(child.getName());
 
-
-        if(manager.get(position).getStatus() == 1){
-            viewHolder.editBtn.setEnabled(false);
-            viewHolder.itemTv.setText(manager.get(position).getChild() + " Finished");
-        }
+//        if(manager.get(position).getStatus() == 1){
+//            viewHolder.editBtn.setEnabled(false);
+//            viewHolder.itemTv.setText(manager.get(position).getChild() + " Finished");
+//        }
 
         viewHolder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(manager.get(position).getStatus() != 0)return;
+                // if(manager.get(position).getStatus() != 0)return;
                 //Toast.makeText(mContext, "Toast", Toast.LENGTH_SHORT).show();
 
                 CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
                 builder.setMessage(manager.get(position).getDescription());
-                builder.setTitle(manager.get(position).getChild() + " TO DO");
+                builder.setTitle(child.getName() + " TO DO");
                 builder.setPositiveButton("finish", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        manager.get(position).setStatus(1);
+                        // manager.get(position).setStatus(1);
                         WhoseTurnAdapter.this.notifyDataSetChanged();
                     }
                 });

@@ -25,8 +25,9 @@ import java.util.List;
 public class WhoseTurnActivity extends AppCompatActivity {
 
      private TurnTaskManager manager = TurnTaskManager.getInstance();
-
-     private String choseChild;
+     private ChildManager childManager;
+     // private String choseChild;
+    private int choseChildIndex;
      
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +43,15 @@ public class WhoseTurnActivity extends AppCompatActivity {
         listView.setAdapter(adapter);
         final EditText editText0 = findViewById(R.id.edit_desc);
 
-        ChildManagerUI childManager = ChildManagerUI.getInstance(this);
+        childManager = ChildManagerUI.getInstance(this);
         childManager.loadFromLocal(this);
         List<String> childStrs = childManager.getChilds();
         if(childStrs.size() == 0){
             Toast.makeText(this, "Must Config Childrens First", Toast.LENGTH_LONG).show();
             return;
         }
-        choseChild = childStrs.get(0);
+        // choseChild = childStrs.get(0);
+        choseChildIndex = 0;
         Spinner spinnertext =  findViewById(R.id.spinner);
         final ArrayAdapter<String> arrAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, childStrs);
         arrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -57,7 +59,8 @@ public class WhoseTurnActivity extends AppCompatActivity {
         spinnertext.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                choseChild = arrAdapter.getItem(position);
+                // choseChild = arrAdapter.getItem(position);
+                choseChildIndex = position;
             }
 
             @Override
@@ -68,10 +71,15 @@ public class WhoseTurnActivity extends AppCompatActivity {
         findViewById(R.id.btn_add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String name = choseChild;
+                // String name = choseChild;
+                int childIndex = choseChildIndex;
                 String desc = editText0.getText().toString();
-                if(name.length() > 0 && desc.length() > 0){
-                    manager.addTask(new TurnTask(desc, name));
+//                if(name.length() > 0 && desc.length() > 0){
+//                    manager.addTask(new TurnTask(desc, name));
+//                    adapter.notifyDataSetChanged();
+//                }
+                if(choseChildIndex > 0 && choseChildIndex < childManager.length() && desc.length() > 0){
+                    manager.addTask(new TurnTask(desc, choseChildIndex));
                     adapter.notifyDataSetChanged();
                 }
             }
