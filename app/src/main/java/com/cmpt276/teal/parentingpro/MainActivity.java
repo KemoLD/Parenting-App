@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_flip).setOnClickListener(this);
         findViewById(R.id.btn_timer).setOnClickListener(this);
         findViewById(R.id.btn_help).setOnClickListener(this);
+        findViewById(R.id.btn_turns).setOnClickListener(this);
     }
 
     @Override
@@ -44,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.btn_help: {
                 Intent integer = new Intent(MainActivity.this, HelpActivity.class);
+                startActivity(integer);
+                break;
+            }
+            case R.id.btn_turns: {
+                Intent integer = new Intent(MainActivity.this, WhoseTurnActivity.class);
                 startActivity(integer);
                 break;
             }

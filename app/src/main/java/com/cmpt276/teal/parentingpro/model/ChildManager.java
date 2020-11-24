@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChildManager
 {
@@ -36,7 +37,12 @@ public class ChildManager
     }
 
     public Child getChild(int i){
-        return childrenList.get(i);
+        try{
+            return childrenList.get(i);
+        }catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public int length(){
@@ -78,15 +84,28 @@ public class ChildManager
 
     public void loadFromLocal(Context context){
         removeAll();
-        String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDREN);
+        String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
         if(childrenDataString.equals(DataUtil.DEFAULT_STRING_VALUE))
             return;
-        ArrayList<Child> dataList = (ArrayList<Child>)gson.fromJson(childrenDataString, new TypeToken<ArrayList<Child>>(){}.getType());
-        childrenList = dataList;
+        try {
+            ArrayList<Child> dataList = (ArrayList<Child>) gson.fromJson(childrenDataString, new TypeToken<ArrayList<Child>>() {
+            }.getType());
+            childrenList = dataList;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getChilds(){
+        List<String> s = new ArrayList<>();
+        for(Child c : childrenList){
+            s.add(c.getName());
+        }
+        return s;
     }
 
     public void saveToLocal(Context context){
         String savedDataStr = gson.toJson(childrenList);
-        DataUtil.writeOneStringData(context, AppDataKey.CHILDREN, savedDataStr);
+        DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, savedDataStr);
     }
 }

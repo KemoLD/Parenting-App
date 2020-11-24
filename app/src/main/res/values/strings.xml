@@ -58,6 +58,13 @@
     <string name="back">back</string>
     <string name="text_change_turn_hint">Note: Press and hold turn in order to change</string>
 
+
+    <!--    Whose Turn-->
+    <string name="empty">NA</string>
+    <string name="whose_turn_title">Tasks</string>
+    <string name="whose_ture_finish">finish</string>
+    <string name="whose_ture_cancel">cancel</string>
+
     <!--    Help-->
     <string name="help">Help</string>
     <string name="help_title_text">Help</string>
