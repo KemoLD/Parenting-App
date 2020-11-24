@@ -84,7 +84,7 @@ public class ChildManager
 
     public void loadFromLocal(Context context){
         removeAll();
-        String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDREN);
+        String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
         if(childrenDataString.equals(DataUtil.DEFAULT_STRING_VALUE))
             return;
         try {
@@ -106,6 +106,6 @@ public class ChildManager
 
     public void saveToLocal(Context context){
         String savedDataStr = gson.toJson(childrenList);
-        DataUtil.writeOneStringData(context, AppDataKey.CHILDREN, savedDataStr);
+        DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, savedDataStr);
     }
 }

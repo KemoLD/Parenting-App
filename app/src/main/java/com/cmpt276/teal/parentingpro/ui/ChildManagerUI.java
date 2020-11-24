@@ -106,7 +106,7 @@ public class ChildManagerUI extends ChildManager
 
     public void loadFromLocal(Context context, Handler handler){
         removeAll();
-        String childListData = DataUtil.getStringData(context, AppDataKey.CHILDREN);
+        String childListData = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
         if(childListData == null || childListData.length() == 0 || childListData.equals(DataUtil.DEFAULT_STRING_VALUE)){
             return;
         }
@@ -145,7 +145,7 @@ public class ChildManagerUI extends ChildManager
             childListString.append(child.getChildDataString(CHILD_FILE_SEPERATOR));
             childListString.append(CHILD_LIST_SERERATOR);
         }
-        DataUtil.writeOneStringData(context, AppDataKey.CHILDREN, childListString.toString());
+        DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, childListString.toString());
     }
 
 
