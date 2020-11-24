@@ -32,8 +32,7 @@ public class HelpActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
+    
     private void setUpCopyrightLinks() {
         TextView textView = findViewById(R.id.text_view_copyright_body);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
