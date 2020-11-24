@@ -60,5 +60,6 @@
 
     <!--    Whose Turn-->
     <string name="empty">NA</string>
+    <string name="whose_turn_title">Tasks</string>
 
 </resources>
