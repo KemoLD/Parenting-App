@@ -65,4 +65,24 @@
     <string name="whose_ture_finish">finish</string>
     <string name="whose_ture_cancel">cancel</string>
 
+    <!--    Help-->
+    <string name="help">Help</string>
+    <string name="help_title_text">Help</string>
+    <string name="team_body_text">Teal</string>
+    <string name="developers_body_text">\Hareet Dhillon\nNyarika Kemo Sonko\nZhilong Gan\nZhu Zhao</string>
+    <string name="copyright_title_text">Copyright Information:</string>
+    <string name="developers_title_text">Developers:</string>
+    <string name="team_title_text">Team:</string>
+    <string name="copyright_body_text">
+        <![CDATA[            1. Green check mark image: <a href="https://freeiconshop.com/icon/checkmark-icon-flat/">LINK</a>
+                             <br />2. Red cross image: <a href="https://freeiconshop.com/icon/cross-icon-flat/">LINK</a>
+                             <br />3. Coin heads image: <a href="https://imgbin.com/png/V0sKs9P6/150th-anniversary-of-canada-toonie-royal-canadian-mint-canadian-dollar-png">LINK</a>
+                             <br />4. Coin tails image <a href="https://imgbin.com/png/Bu9vSHhb/150th-anniversary-of-canada-toonie-loonie-coin-png">LINK</a>
+                             <br />5. Coin flip sound: <a href="https://freesound.org/people/bone666138/sounds/198877/">LINK</a>
+                             <br />6. App icon: <a href="https://www.vectorstock.com/royalty-free-vector/single-cartoon-the-letter-p-vector-29560936">LINK</a>
+                             <br />7. Default child image: <a href="https://www.google.com/imgres?imgurl=https://icon-library.com/images/default-profile-icon/default-profile-icon-16.jpg&imgrefurl=https://icon-library.com/icon/default-profile-icon-17.html&tbnid=HNsL7Ta1qfeJdM&vet=1&docid=4DpWwwRlSTf6qM&w=1890&h=1890&hl=en-us&source=sh/x/im">LINK</a>
+                             <br />8. App background: <a href="https://prcm.jp/album/04b729af46ecb/pic/83724955">LINK</a>\n
+        ]]>
+    </string>
+    <string name="whose_turn">Whose Turn</string>
 </resources>

@@ -16,12 +16,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        SharedPreferences.Editor editor = DataUtil.getSharedEditor(this);
-//        editor.clear().commit();
+        
         findViewById(R.id.btn_config).setOnClickListener(this);
         findViewById(R.id.btn_flip).setOnClickListener(this);
         findViewById(R.id.btn_timer).setOnClickListener(this);
-
+        findViewById(R.id.btn_help).setOnClickListener(this);
         findViewById(R.id.btn_turns).setOnClickListener(this);
     }
 
@@ -40,6 +39,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.btn_timer: {
                 Intent integer = new Intent(MainActivity.this, TimerActivity.class);
+                startActivity(integer);
+                break;
+            }
+            case R.id.btn_help: {
+                Intent integer = new Intent(MainActivity.this, HelpActivity.class);
                 startActivity(integer);
                 break;
             }

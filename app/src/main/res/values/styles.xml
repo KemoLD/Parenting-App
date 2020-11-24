@@ -28,6 +28,13 @@
         <item name="android:typeface">monospace</item>
     </style>
 
+    <style name="help_page_text_view">
+        <item name="android:background">#52c067</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:typeface">monospace</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
     <style name="main_page_button" parent="button_general">
         <item name="android:layout_gravity">center</item>
         <item name="android:paddingTop">20dp</item>

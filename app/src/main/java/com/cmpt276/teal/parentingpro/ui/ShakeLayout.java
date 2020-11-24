@@ -1,4 +1,4 @@
-package com.cmpt276.teal.parentingpro;
+package com.cmpt276.teal.parentingpro.ui;
 
 import android.content.Context;
 import android.os.SystemClock;
@@ -10,6 +10,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import com.cmpt276.teal.parentingpro.R;
 
 import java.util.Random;
 
