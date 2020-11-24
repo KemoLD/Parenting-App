@@ -74,11 +74,11 @@ public class ChildManager
 
         childrenList.set(desIndex, temp);
     }
-        
+
 
     public void loadFromLocal(Context context){
         removeAll();
-        String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
+        String childrenDataString = DataUtil.getStringData(context, AppDataKey.CHILDREN);
         if(childrenDataString.equals(DataUtil.DEFAULT_STRING_VALUE))
             return;
         ArrayList<Child> dataList = (ArrayList<Child>)gson.fromJson(childrenDataString, new TypeToken<ArrayList<Child>>(){}.getType());
@@ -87,6 +87,6 @@ public class ChildManager
 
     public void saveToLocal(Context context){
         String savedDataStr = gson.toJson(childrenList);
-        DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, savedDataStr);
+        DataUtil.writeOneStringData(context, AppDataKey.CHILDREN, savedDataStr);
     }
 }
