@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -32,6 +33,17 @@ public class CustomDialog extends Dialog {
         private DialogInterface.OnClickListener positiveButtonClickListener;
         private DialogInterface.OnClickListener negativeButtonClickListener;
 
+        /**
+         * kemo
+         *
+         */
+        private String description;
+
+        /**
+         *
+         * kemo
+         */
+
         public Builder(Context context) {
             this.context = context;
         }
@@ -44,7 +56,7 @@ public class CustomDialog extends Dialog {
         /**
          * Set the Dialog message from resource
          *
-         * @param title
+         * @param //title
          * @return
          */
         public Builder setMessage(int message) {
@@ -126,6 +138,44 @@ public class CustomDialog extends Dialog {
                     LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
             // set the dialog title
             ((TextView) layout.findViewById(R.id.title)).setText(title);
+
+            /**
+             * kemo
+             */
+            if(description != null){
+                ((TextView) layout.findViewById(R.id.textview_description)).setText(description);
+            }
+
+            final Button edit = (Button) layout.findViewById(R.id.dialog_edit);
+            final TextView display = (TextView)layout.findViewById(R.id.textview_description) ;
+            final EditText editText = (EditText)layout.findViewById(R.id.description_input);
+            edit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (display.getVisibility() == View.VISIBLE) {
+                        display.setVisibility(View.INVISIBLE);
+                        editText.setVisibility(View.VISIBLE);
+                        edit.setText(R.string.set);
+                    } else {
+                        if (editText.getText().toString().length() == 0 ) {
+                            return;
+                        }
+                        else {
+                            description = editText.getText().toString();
+                            display.setText(description);
+                            editText.setText(description);
+                            edit.setText(R.string.edit_button_text);
+                            editText.setVisibility(View.INVISIBLE);
+                            display.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            });
+
+            /**
+             * kemo
+             */
+
             // set the confirm button
             if (positiveButtonText != null) {
                 ((Button) layout.findViewById(R.id.positiveButton))
@@ -164,7 +214,7 @@ public class CustomDialog extends Dialog {
             }
             // set the content message
             if (message != null) {
-                ((TextView) layout.findViewById(R.id.message)).setText(message);
+                ((TextView) layout.findViewById(R.id.textview_child_name)).setText(message);
             } else if (contentView != null) {
                 // if no message set
                 // add the contentView to the dialog body

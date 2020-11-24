@@ -106,7 +106,9 @@
       android:textSize="20sp"
       android:visibility="invisible"
       app:layout_constraintBottom_toTopOf="@+id/popup_profile_pic"
-      app:layout_constraintStart_toStartOf="parent" />
+      app:layout_constraintStart_toStartOf="parent"
+      android:inputType="text"
+      android:autofillHints="Name" />
 
   <TextView
       android:id="@+id/popup_text"
