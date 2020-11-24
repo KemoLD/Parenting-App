@@ -1,5 +1,6 @@
 package com.cmpt276.teal.parentingpro;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.animation.ValueAnimator;
@@ -10,6 +11,9 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +43,7 @@ public class FlipCoinActivity extends AppCompatActivity
     public static Coin coin;
     public static final int NO_CHILD_CHOOSE = 0;
     public static final int HAS_CHILD_CHOOSE = 1;
+    public static final int UPDATA_IMAGE = 0x123;
     private Coin.CoinState flipChoice;
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
@@ -51,6 +56,7 @@ public class FlipCoinActivity extends AppCompatActivity
     private ValueAnimator flipAnimator;
     private SoundPool soundPool;
     private int flipSound;
+    private ImageView childImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +112,9 @@ public class FlipCoinActivity extends AppCompatActivity
         // History to keep a record of coin flips
         historyList = History.getInstance();
         historyList.loadFromLocal(this);
+
+        // get the child image view
+        childImageView = findViewById(R.id.image_view_profile_pic);
 
         // If there are children, use the index of the child who flipped last in order to get the current child flipping
         if (!childManager.isEmpty()) {
@@ -260,13 +269,32 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void displayProfilePic() {
-        ImageView profilePic = findViewById(R.id.image_view_profile_pic);
-        profilePic.setImageBitmap(currentChildFlipping.getProfile());
+        // ImageView profilePic = findViewById(R.id.image_view_profile_pic);
+        final ImageView profilePic = childImageView;
+        profilePic.setTag(currentChildFlipping.getName());
+        Log.i("tag", "display picture " + currentChildFlipping.getProfile());
+        // if(currentChildFlipping.getProfile() == null){
+        Log.i("tag", "image is null for " + currentChildFlipping.getName());
+        Thread setImageTask = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(currentChildFlipping.getProfile() == null){
+                    // wait for it
+                }
+                handler.sendEmptyMessage(UPDATA_IMAGE);
+                Log.i("tag", "send message");
+                // profilePic.setImageBitmap(currentChildFlipping.getProfile());
+            }
+        });
+        setImageTask.start();
+        //   }
+        // profilePic.setImageBitmap(currentChildFlipping.getProfile());
         profilePic.setVisibility(View.VISIBLE);
     }
 
     private void hideProfilePic() {
-        ImageView profilePic = findViewById(R.id.image_view_profile_pic);
+        // ImageView profilePic = findViewById(R.id.image_view_profile_pic);
+        final ImageView profilePic = childImageView;
         profilePic.setVisibility(View.INVISIBLE);
     }
 
@@ -348,4 +376,25 @@ public class FlipCoinActivity extends AppCompatActivity
             }
         });
     }
+
+
+    private final Handler handler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            switch(msg.what){
+                case UPDATA_IMAGE:
+                    if(childImageView.getTag().equals(currentChildFlipping.getName())){
+                        childImageView.setImageBitmap(currentChildFlipping.getProfile());
+                        Log.i("tag", "set image");
+                    }
+                    else{
+                        Log.i("tag", "set image but child change");
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 }
