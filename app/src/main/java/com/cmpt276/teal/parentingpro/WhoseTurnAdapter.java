@@ -1,5 +1,6 @@
 package com.cmpt276.teal.parentingpro;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -97,29 +99,21 @@ public class WhoseTurnAdapter extends BaseAdapter {
 
         viewHolder.itemEv.setText(task.getDescription());
         viewHolder.descTv.setText(task.getDescription());
-        // viewHolder.itemTv.setText(manager.get(position).getChild());
        viewHolder.itemTv.setText(childName);
-
-//        if(manager.get(position).getStatus() == 1){
-//            viewHolder.editBtn.setEnabled(false);
-//            viewHolder.itemTv.setText(manager.get(position).getChild() + " Finished");
-//        }
 
         viewHolder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // if(manager.get(position).getStatus() != 0)return;
-                //Toast.makeText(mContext, "Toast", Toast.LENGTH_SHORT).show();
 
                 CustomDialog.Builder builder = new CustomDialog.Builder(mContext);
                 builder.setMessage(task.getDescription());
                 builder.setTitle(childName + " TO DO");
+                Log.i("tag", "child image = " + childImage);
                 builder.setImage(childImage);
                 builder.setPositiveButton("finish", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         task.setToNextChild(childManager);
                         dialog.dismiss();
-                        // manager.get(position).setStatus(1);
                         WhoseTurnAdapter.this.notifyDataSetChanged();
                     }
                 });
@@ -131,7 +125,12 @@ public class WhoseTurnAdapter extends BaseAdapter {
                             }
                         });
 
-                builder.create().show();
+                Dialog dialog = builder.create();
+                WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                params.width = 800;
+                params.height = 1200;
+                dialog.getWindow().setAttributes(params);
+                dialog.show();
             }
         });
 

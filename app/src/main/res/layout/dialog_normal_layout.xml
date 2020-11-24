@@ -32,7 +32,7 @@
             <ImageView
                 android:id="@+id/whose_dialog_image"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="200dp"
                 android:layout_weight="1"
                 android:src="@mipmap/im_child" />
 
@@ -70,7 +70,7 @@
                 android:layout_height="40.0dip"
                 android:background="@color/colorPrimary"
                 android:gravity="center"
-                android:text="finish" />
+                android:text="@string/whose_ture_finish" />
 
             <Button
                 android:id="@+id/negativeButton"
@@ -80,7 +80,8 @@
                 android:layout_marginLeft="20.0dip"
                 android:background="@color/colorPrimary"
                 android:gravity="center"
-                android:text="cancel" />
+                android:textColor="#ffffff"
+                android:text="@string/whose_ture_cancel" />
         </LinearLayout>
     </LinearLayout>
 
