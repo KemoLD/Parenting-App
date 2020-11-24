@@ -29,12 +29,12 @@
     <!--    Flip Coin-->
     <string name="flip_coin_title">Flip Coin</string>
     <string name="flip_button_text">FLIP</string>
-    <string name="flip_choice_text">(long click)   Now is %1s</string>
+    <string name="flip_choice_text">Turn: %1s</string>
     <string name="history_button_text">View Full History</string>
     <string name="no_play">No Play</string>
     <string name="next_child_text">%1s?</string>
     <string name="current_child_history_text">View %1s\'s History</string>
-    <string name="no_child_choose">No Child is Choosen</string>
+    <string name="no_child_choose">Turn: Nobody</string>
     <string name="head">Heads</string>
     <string name="tail">Tails</string>
 
@@ -56,6 +56,7 @@
     <string name="name">name</string>
     <string name="child_editor">Child Editor</string>
     <string name="back">back</string>
+    <string name="text_change_turn_hint">Note: Press and hold turn in order to change</string>
 
 
     <!--    Whose Turn-->

@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -31,22 +32,24 @@ public class ChooseChildPopUpWindow extends PopupWindow
 {
     private View windowView;
     private Activity activity;
-    private ChildManager childManager;
+    private Context context;
+    private ChildManagerUI childManager;
     private Button noChildButton;
     private ListView childListView;
     private int lastFlipChildIndex;
 
-    public ChooseChildPopUpWindow(Activity activity) {
+    public ChooseChildPopUpWindow(Activity activity, Context context) {
         super();
         this.activity = activity;
-        this.childManager = ChildManager.getInstance();
+        this.context = context;
+        this.childManager = ChildManagerUI.getInstance(context);
         windowView = activity.getLayoutInflater().from(activity).inflate(R.layout.flip_coin_child_order, null);
-        setupWindow();
+        setUpWindow();
     }
 
 
-    private void setupWindow(){
-        setuppopUpView();
+    private void setUpWindow(){
+        setUpPopUpView();
         this.setContentView(this.windowView);
         this.setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
         this.setHeight((activity.getWindowManager().getDefaultDisplay().getHeight() >> 3) * 5);
@@ -54,15 +57,15 @@ public class ChooseChildPopUpWindow extends PopupWindow
     }
 
 
-    private void setuppopUpView(){
+    private void setUpPopUpView(){
         childListView = this.windowView.findViewById(R.id.popup_child_list);
         ChildListAdapter adapter = new ChildListAdapter(childManager);
         childListView.setAdapter(adapter);
         childListView.setOnItemClickListener(new ChildClickListener(adapter));
-        setupNoChildButton();
+        setUpNoChildButton();
     }
 
-    private void setupNoChildButton(){
+    private void setUpNoChildButton(){
         noChildButton = this.windowView.findViewById(R.id.pop_no_child_btn);
         noChildButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,7 +75,6 @@ public class ChooseChildPopUpWindow extends PopupWindow
             }
         });
     }
-
 
     private class ChildClickListener implements AdapterView.OnItemClickListener
     {
@@ -100,6 +102,7 @@ public class ChooseChildPopUpWindow extends PopupWindow
 
              adapter.notifyDataSetChanged();
              DataUtil.writeOneIntData(activity, AppDataKey.IS_NO_CHILD, FlipCoinActivity.HAS_CHILD_CHOOSE);
+             dismiss();
         }
     }
 
@@ -107,9 +110,9 @@ public class ChooseChildPopUpWindow extends PopupWindow
     private class ChildListAdapter extends BaseAdapter
     {
         private int currentChildFlipIndex;
-        private ChildManager manager;
+        private ChildManagerUI manager;
 
-        public ChildListAdapter(ChildManager childManager){
+        public ChildListAdapter(ChildManagerUI childManager){
             this.manager = childManager;
             updateIndex();
         }
@@ -139,7 +142,7 @@ public class ChooseChildPopUpWindow extends PopupWindow
             }
 
             int listPosition = (position + currentChildFlipIndex) % childManager.length();
-            Child child = manager.getChild(listPosition);
+            ChildUI child = manager.getChild(listPosition);
             setListItemView(outputView, child, position);
             outputView.setTag(listPosition);
 
@@ -147,11 +150,13 @@ public class ChooseChildPopUpWindow extends PopupWindow
         }
 
 
-        private void setListItemView(View outputView, Child child, int position){
+        private void setListItemView(View outputView, ChildUI child, int position){
             TextView nameView = outputView.findViewById(R.id.flip_child_name);
             nameView.setText(child.getName());
             TextView orderView = outputView.findViewById(R.id.flip_child_order);
             orderView.setText("" + position);
+            ImageView profilePicView = outputView.findViewById(R.id.flip_child_profile_pic);
+            profilePicView.setImageBitmap(child.getProfile());
         }
 
         private void updateIndex(){

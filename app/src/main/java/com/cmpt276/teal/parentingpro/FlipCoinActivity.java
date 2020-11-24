@@ -10,10 +10,8 @@ import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -26,9 +24,9 @@ import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.data.HistoryData;
-import com.cmpt276.teal.parentingpro.model.Child;
-import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.Coin;
+import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 import com.cmpt276.teal.parentingpro.ui.ChooseChildPopUpWindow;
 import com.cmpt276.teal.parentingpro.ui.FlipListener;
 import com.cmpt276.teal.parentingpro.ui.FlipResultListener;
@@ -45,10 +43,10 @@ public class FlipCoinActivity extends AppCompatActivity
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
     private History historyList;
-    private ChildManager childManager;
+    private ChildManagerUI childManager;
     private int lastChildFlippedIndex;
     private int currentChildIndex;
-    private Child currentChildFlipping;
+    private ChildUI currentChildFlipping;
 
     private ValueAnimator flipAnimator;
     private SoundPool soundPool;
@@ -67,13 +65,18 @@ public class FlipCoinActivity extends AppCompatActivity
         setUpFlipSound();
         setUpFlipAnimation();
         setUpFlipChoice();
-        setupTextPopupMenu();
 
         if (!childManager.isEmpty()) {
+            setupTextPopupMenu();
+            DataUtil.writeOneIntData(this, AppDataKey.IS_NO_CHILD, HAS_CHILD_CHOOSE);
             displayFlipChoice();
+            displayProfilePic();
             setUpHistoryButtons();
+            displayHistoryButtons();
+            displayHint();
         } else {
             setUpHistoryButton();
+            displayHistoryButton();
         }
     }
 
@@ -81,7 +84,6 @@ public class FlipCoinActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         soundPool.release();
-        // DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, --lastChildFlippedIndex);
     }
 
     @Override
@@ -98,7 +100,7 @@ public class FlipCoinActivity extends AppCompatActivity
         flipChoice = Coin.CoinState.HEADS;
 
         // Child manager containing the list of children (if any)
-        childManager = ChildManager.getInstance();
+        childManager = ChildManagerUI.getInstance(this);
         childManager.loadFromLocal(this);
 
         // History to keep a record of coin flips
@@ -118,9 +120,8 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
     private void setUpHistoryButton() {
-        Button historyButton = findViewById(R.id.history_button_no_children);
-        historyButton.setVisibility(View.VISIBLE);
-        historyButton.setOnClickListener(new View.OnClickListener()
+        Button historyButtonNoChild = findViewById(R.id.history_button_no_children);
+        historyButtonNoChild.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
@@ -131,9 +132,19 @@ public class FlipCoinActivity extends AppCompatActivity
         });
     }
 
+    private void displayHistoryButton() {
+        Button historyButtonNoChild = findViewById(R.id.history_button_no_children);
+        historyButtonNoChild.setVisibility(View.VISIBLE);
+
+        Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
+        currentChildHistoryButton.setVisibility(View.INVISIBLE);
+
+        Button historyButton = findViewById(R.id.full_history_button);
+        historyButton.setVisibility((View.INVISIBLE));
+    }
+
     private void setUpHistoryButtons() {
         Button historyButton = findViewById(R.id.full_history_button);
-        historyButton.setVisibility(View.VISIBLE);
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,7 +155,6 @@ public class FlipCoinActivity extends AppCompatActivity
 
         Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
         currentChildHistoryButton.setText(getString(R.string.current_child_history_text, currentChildFlipping.getName()));
-        currentChildHistoryButton.setVisibility(View.VISIBLE);
         currentChildHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,6 +164,18 @@ public class FlipCoinActivity extends AppCompatActivity
         });
     }
 
+    private void displayHistoryButtons() {
+        Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
+        currentChildHistoryButton.setVisibility(View.VISIBLE);
+
+        Button historyButton = findViewById(R.id.full_history_button);
+        historyButton.setVisibility((View.VISIBLE));
+
+        Button historyButtonNoChild = findViewById(R.id.history_button_no_children);
+        historyButtonNoChild.setVisibility(View.INVISIBLE);
+    }
+
+
     private void setUpFlipButton() {
         Button flipButton = findViewById(R.id.flip_button);
         flipButton.setOnClickListener(new View.OnClickListener() {
@@ -161,8 +183,9 @@ public class FlipCoinActivity extends AppCompatActivity
             public void onClick(View view) {
                 coin.flipCoin();
                 flipAnimator.start();
+                int hasChildFlip = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
 
-                if (!childManager.isEmpty()) {
+                if (!childManager.isEmpty() && hasChildFlip == HAS_CHILD_CHOOSE) {
                     HistoryData data = new HistoryData(currentChildFlipping, new Date(), flipChoice, coin.getState());
                     historyList.addHistory(data);
                     historyList.saveToLocal(FlipCoinActivity.this);
@@ -175,6 +198,8 @@ public class FlipCoinActivity extends AppCompatActivity
                     currentChildHistoryButton.setText(getString(R.string.current_child_history_text, currentChildFlipping.getName()));
 
                     displayFlipChoice();
+                    displayProfilePic();
+                    displayHint();
                 }
             }
         });
@@ -234,6 +259,28 @@ public class FlipCoinActivity extends AppCompatActivity
         }
     }
 
+    private void displayProfilePic() {
+        ImageView profilePic = findViewById(R.id.image_view_profile_pic);
+        profilePic.setImageBitmap(currentChildFlipping.getProfile());
+        profilePic.setVisibility(View.VISIBLE);
+    }
+
+    private void hideProfilePic() {
+        ImageView profilePic = findViewById(R.id.image_view_profile_pic);
+        profilePic.setVisibility(View.INVISIBLE);
+    }
+
+    private void displayHint() {
+        TextView changeTurnHint = findViewById(R.id.text_view_change_turn_hint);
+        changeTurnHint.setVisibility(View.VISIBLE);
+    }
+
+    private void hideHint() {
+        TextView changeTurnHint = findViewById(R.id.text_view_change_turn_hint);
+        changeTurnHint.setVisibility(View.INVISIBLE);
+    }
+
+
     private void setupRadioButtonLayout(RadioButton button)
     {
         ColorStateList colorStateList = new ColorStateList(
@@ -264,6 +311,7 @@ public class FlipCoinActivity extends AppCompatActivity
             currentChildText.setText(getString(R.string.flip_choice_text, currentChildFlipping.getName()));
         }
 
+        currentChildText.setVisibility(View.VISIBLE);
     }
 
     private void setupTextPopupMenu(){
@@ -271,13 +319,26 @@ public class FlipCoinActivity extends AppCompatActivity
         chooseView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(FlipCoinActivity.this);
+                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(FlipCoinActivity.this, FlipCoinActivity.this);
                 popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
                         lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
                         setCurrentChildFlipping(lastChildFlippedIndex);
                         displayFlipChoice();
+
+                        int hasChildFlip = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
+                        if (hasChildFlip == HAS_CHILD_CHOOSE) {
+                            setUpHistoryButtons();
+                            displayHistoryButtons();
+                            displayProfilePic();
+                            displayHint();
+                        } else {
+                            setUpHistoryButton();
+                            displayHistoryButton();
+                            hideProfilePic();
+                            displayHint();
+                        }
                     }
                 });
                 View parent = FlipCoinActivity.this.getWindow().getDecorView();
@@ -287,5 +348,4 @@ public class FlipCoinActivity extends AppCompatActivity
             }
         });
     }
-
 }
