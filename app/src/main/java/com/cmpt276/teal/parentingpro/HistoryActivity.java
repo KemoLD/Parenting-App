@@ -20,6 +20,8 @@ import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.Coin;
+import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,7 +54,7 @@ public class HistoryActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        ChildManager childManager = ChildManager.getInstance();
+        ChildManagerUI childManager = ChildManagerUI.getInstance(this);
         extractIntentData();
 
         History historyList = History.getInstance();
@@ -61,7 +63,7 @@ public class HistoryActivity extends AppCompatActivity
         if (currentChildIndex == -1) {
             historyArray = historyList.getAllHistoryList();
         } else {
-            Child currentChild = childManager.getChild(currentChildIndex);
+            ChildUI currentChild = childManager.getChild(currentChildIndex);
             historyArray = historyList.getHistoryListWithChild(currentChild);
         }
         historyListView.setAdapter(new HistoryListAdapter(historyArray));
@@ -81,7 +83,7 @@ public class HistoryActivity extends AppCompatActivity
     private class HistoryListAdapter extends ArrayAdapter<HistoryData>
     {
         // for formatting the Date in History date
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d HH:mm");
 
         public HistoryListAdapter(ArrayList<HistoryData> dataList){
             super(HistoryActivity.this, R.layout.history_listview_content, dataList);
@@ -107,7 +109,7 @@ public class HistoryActivity extends AppCompatActivity
             Coin.CoinState chosenState = data.getChosenState();
             Coin.CoinState resultState = data.getResultState();
 
-            String state = (chosenState == Coin.CoinState.HEADS ? "HEADS" : "TAILS");
+            CharSequence state = (chosenState == Coin.CoinState.HEADS) ? getText(R.string.head) : getText(R.string.tail);
 
             // Check mark source: https://freeiconshop.com/icon/checkmark-icon-flat/
             // Cross source: https://freeiconshop.com/icon/cross-icon-flat/

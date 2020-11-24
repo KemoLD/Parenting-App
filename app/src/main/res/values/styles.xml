@@ -55,6 +55,11 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="popup_text_style">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">#111111</item>
