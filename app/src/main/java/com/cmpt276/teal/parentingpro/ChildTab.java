@@ -32,6 +32,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * the class is the sub page in child config when user edit for the child
+ */
 public class ChildTab extends AppCompatActivity {
 
     private int imageID;
@@ -163,15 +166,12 @@ public class ChildTab extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("tag", "result from camera or gallery");
         if(requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK){
-            Log.i("tag", "result from camera");
             Bundle extras = data.getExtras();
             profilepic = (Bitmap)extras.get("data");
             profile.setImageBitmap(profilepic);
         }
         if(requestCode == REQUEST_IMAGE_GALLERY && resultCode == Activity.RESULT_OK){
-            Log.i("tag", "result from gallery");
             Uri imageUri = data.getData();
             try {
                 profilepic = MediaStore.Images.Media.getBitmap(this.getContentResolver(),imageUri);
@@ -185,7 +185,6 @@ public class ChildTab extends AppCompatActivity {
     // save the bitmap to the disk and also update the child in child manager
     private void saveImageBytes(final Bitmap image)
     {
-        Log.i("tag", "enter saveImage");
         // get the image name for saving on the disk
         final String imageName = AppDataKey.INAME_NAME_BASE + imageID;
         ChildManagerUI childManager = ChildManagerUI.getInstance(this);
@@ -202,6 +201,5 @@ public class ChildTab extends AppCompatActivity {
         });
 
         writeImageTask.start();
-
     }
 }

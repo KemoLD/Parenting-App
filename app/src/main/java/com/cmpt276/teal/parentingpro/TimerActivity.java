@@ -27,6 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 //timer activity that rings once it expires
+
+/**
+ * the class represent the timer activity for the app
+ */
 public class TimerActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView pauseImg;
@@ -56,6 +60,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         }
         return super.onKeyDown(keyCode, event);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +94,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             String channelId = "chat";
             String channelName = "hint";
             int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(channelId, channelName, importance);
+            NotificationChannel channel = new NotificationChannel(channelId,
+                    channelName, importance);
             channel.setDescription(getString(R.string.timer_expire_text));
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
@@ -166,7 +172,6 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;
 
                 // calls the time
-                Log.d("TAG", String.format("count：%d hours %d minutes %d seconds", hour, minute, second));
 
                 String days = String.format("%02d", day);
                 String hours = String.format("%02d", hour);
@@ -289,7 +294,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 isPause = false;
                 break;
             case R.id.start:
-                if (editText.getText().length() != 0 && Integer.parseInt(editText.getText().toString()) > 0) {
+                if (editText.getText().length() != 0 &&
+                        Integer.parseInt(editText.getText().toString()) > 0) {
                     if (isRun) {
                         isRun = false;
                         countDownTimer.cancel();

@@ -26,6 +26,9 @@ import com.cmpt276.teal.parentingpro.ui.ChildUI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+/**
+ * the class represent the hisotry page in the flip coin activity
+ */
 public class HistoryActivity extends AppCompatActivity
 {
     private ArrayList<HistoryData> historyArray;
@@ -95,7 +98,8 @@ public class HistoryActivity extends AppCompatActivity
         {
             View itemView = convertView;
             if(itemView == null){
-                itemView = getLayoutInflater().inflate(R.layout.history_listview_content, parent, false);
+                itemView = getLayoutInflater().inflate(R.layout.history_listview_content,
+                        parent, false);
             }
 
             TextView dateText = itemView.findViewById(R.id.history_content_date);

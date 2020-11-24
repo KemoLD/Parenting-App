@@ -1,11 +1,9 @@
-package com.cmpt276.teal.parentingpro;
+package com.cmpt276.teal.parentingpro.ui;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +13,19 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.cmpt276.teal.parentingpro.model.Child;
-import com.cmpt276.teal.parentingpro.model.ChildManager;
-import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
-import com.cmpt276.teal.parentingpro.ui.ChildUI;
+import com.cmpt276.teal.parentingpro.ChildTab;
+import com.cmpt276.teal.parentingpro.R;
 
-import java.io.ByteArrayOutputStream;
 
+/**
+ * the class a adapter for the list view in config activity
+ */
 public class ChildrenAdapter extends BaseAdapter {
 
     private Context mContext;
     private Activity activity ;
     private ChildManagerUI childManager;
+
 
     public ChildrenAdapter(Context context, ChildManagerUI childManager, Activity activity) {
         this.mContext = context;
@@ -34,11 +33,13 @@ public class ChildrenAdapter extends BaseAdapter {
         this.activity = activity;
     }
 
+
     @Override
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
         childManager.saveToLocal(mContext);
     }
+
 
     public void notifyDataSetChanged(boolean isSaving){
         super.notifyDataSetChanged();
@@ -47,27 +48,30 @@ public class ChildrenAdapter extends BaseAdapter {
         }
     }
 
+
     @Override
     public int getCount() {
         // return names.size();
         return childManager.length();
     }
 
+
     @Override
     public Object getItem(int position) {
         return null;
     }
+
 
     @Override
     public long getItemId(int position) {
         return position;
     }
 
+
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         final ChildUI childUI = childManager.getChild(position);
-//        childUI.updateImage();
 
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.child_item, parent, false);
@@ -78,9 +82,7 @@ public class ChildrenAdapter extends BaseAdapter {
             viewHolder.delBtn = convertView.findViewById(R.id.btn_del);
 
             viewHolder.itemTv.setText(childManager.getChild(position).getName());
-
             viewHolder.profile.setImageBitmap(childUI.getProfile());
-
             convertView.setTag(viewHolder);
 
         } else {
@@ -98,9 +100,7 @@ public class ChildrenAdapter extends BaseAdapter {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("name", childManager.getChild(position).getName());
                 intent.putExtra("pos",position);
-//                intent.putExtra("profile",childUI.converProfileToBytes());
                 activity.startActivityForResult(intent, 1);
-
             }
         });
 

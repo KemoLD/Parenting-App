@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.widget.BaseAdapter;
 
-import com.cmpt276.teal.parentingpro.ChildrenAdapter;
+import com.cmpt276.teal.parentingpro.ui.ChildrenAdapter;
 import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
@@ -18,6 +18,10 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * the class represent the child manager will use for the app
+ * it support ChildUI
+ */
 public class ChildManagerUI extends ChildManager
 {
     private Context context;
@@ -36,6 +40,7 @@ public class ChildManagerUI extends ChildManager
         }
         return manager;
     }
+
 
     protected ChildManagerUI(final Context context){
         super();
@@ -71,6 +76,7 @@ public class ChildManagerUI extends ChildManager
         }
     }
 
+
     public void remove(int index){
         ChildUI child = getChild(index);
         // remove the image in the disk first
@@ -87,6 +93,7 @@ public class ChildManagerUI extends ChildManager
         super.remove(index);
     }
 
+
     public ChildUI getChild(int index){
         Child child = super.getChild(index);
         if(child == null)
@@ -98,6 +105,7 @@ public class ChildManagerUI extends ChildManager
             throw new RuntimeException("child in manager is not instance of ChildUI class");
         }
     }
+
 
     public void loadFromLocal(Context context){
        this.loadFromLocal(context, null);
@@ -133,10 +141,10 @@ public class ChildManagerUI extends ChildManager
                     setImageTask.start();
                 }
 
-
             }
         }
     }
+
 
     public void saveToLocal(Context context){
         StringBuilder childListString = new StringBuilder();

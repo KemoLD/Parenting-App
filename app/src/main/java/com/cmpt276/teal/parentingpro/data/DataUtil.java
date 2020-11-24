@@ -2,13 +2,6 @@ package com.cmpt276.teal.parentingpro.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-
-import com.cmpt276.teal.parentingpro.ChildTab;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

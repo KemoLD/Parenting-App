@@ -11,6 +11,9 @@ import com.cmpt276.teal.parentingpro.R;
 import com.cmpt276.teal.parentingpro.data.History;
 import com.cmpt276.teal.parentingpro.model.Coin;
 
+/**
+ * the class use for the Animation in flip coin activity
+ */
 public class FlipResultListener extends AnimatorListenerAdapter
 {
     private final Context context;
