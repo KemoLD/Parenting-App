@@ -14,6 +14,10 @@ import android.widget.TextView;
 
 import com.cmpt276.teal.parentingpro.R;
 
+
+/**
+ * the class represent the pop up dialog in whose turn activity
+ */
 public class CustomDialog extends Dialog {
 
     public CustomDialog(Context context) {
@@ -38,6 +42,7 @@ public class CustomDialog extends Dialog {
         public Builder(Context context) {
             this.context = context;
         }
+
 
         public Builder setMessage(String message) {
             this.message = message;
@@ -114,12 +119,14 @@ public class CustomDialog extends Dialog {
             return this;
         }
 
+
         public Builder setPositiveButton(String positiveButtonText,
                                          DialogInterface.OnClickListener listener) {
             this.positiveButtonText = positiveButtonText;
             this.positiveButtonClickListener = listener;
             return this;
         }
+
 
         public Builder setNegativeButton(int negativeButtonText,
                                          DialogInterface.OnClickListener listener) {
@@ -129,12 +136,14 @@ public class CustomDialog extends Dialog {
             return this;
         }
 
+
         public Builder setNegativeButton(String negativeButtonText,
                                          DialogInterface.OnClickListener listener) {
             this.negativeButtonText = negativeButtonText;
             this.negativeButtonClickListener = listener;
             return this;
         }
+
 
         public CustomDialog create() {
             LayoutInflater inflater = (LayoutInflater) context
@@ -191,7 +200,8 @@ public class CustomDialog extends Dialog {
                 ((LinearLayout) layout.findViewById(R.id.content))
                         .removeAllViews();
                 ((LinearLayout) layout.findViewById(R.id.content))
-                        .addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT,LayoutParams.FILL_PARENT));
+                        .addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT,
+                                LayoutParams.FILL_PARENT));
             }
 
             // set the child image

@@ -16,6 +16,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+/**
+ * the class represent the child in the app, it support the image for the child
+ */
 public class ChildUI extends Child
 {
     private Bitmap profile;
@@ -24,22 +27,27 @@ public class ChildUI extends Child
         this(name, null);
     }
 
+
     public ChildUI(String name, String imageFileName){
         super(name, imageFileName);
         profile = null;
     }
 
+
     public ChildUI(Child child, Context context){
         this(child.getName(), child.getImageFileName());
     }
+
 
     public void setProfile(Bitmap bitmap){
         profile = bitmap;
     }
 
+
     public Bitmap getProfile(){
         return profile;
     }
+
 
     public String getChildDataString(String seperator){
         return this.getName() + seperator + this.getImageFileName();
@@ -57,6 +65,7 @@ public class ChildUI extends Child
             return null;
         return coverBitmapToBytes(this.profile);
     }
+
 
     public static byte[] coverBitmapToBytes(Bitmap bitmap){
         ByteArrayOutputStream bStream = new ByteArrayOutputStream();

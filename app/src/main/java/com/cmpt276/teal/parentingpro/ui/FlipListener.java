@@ -6,6 +6,10 @@ import android.widget.ImageView;
 import com.cmpt276.teal.parentingpro.R;
 
 // Adapted from: https://stackoverflow.com/a/28430661
+
+/**
+ * the class use for the Animation in the flip coin activity
+ */
 public class FlipListener implements ValueAnimator.AnimatorUpdateListener
 {
     private final ImageView imageViewCoin;

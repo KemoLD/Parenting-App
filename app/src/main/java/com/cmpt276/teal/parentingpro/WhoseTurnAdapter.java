@@ -25,6 +25,9 @@ import com.cmpt276.teal.parentingpro.ui.CustomDialog;
 
 import java.util.List;
 
+/**
+ * the class is the adapter that is used by the list view in whose turn activity
+ */
 public class WhoseTurnAdapter extends BaseAdapter {
 
     private Context mContext;

@@ -24,7 +24,9 @@ import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * the class represent the whose turn page for the app
+ */
 public class WhoseTurnActivity extends AppCompatActivity {
 
      private TurnTaskManager manager = TurnTaskManager.getInstance();
@@ -57,7 +59,8 @@ public class WhoseTurnActivity extends AppCompatActivity {
         }
         choseChildIndex = 0;
         Spinner spinnertext =  findViewById(R.id.spinner);
-        final ArrayAdapter<String> arrAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, childStrs);
+        final ArrayAdapter<String> arrAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, childStrs);
         arrAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnertext.setAdapter(arrAdapter);
         spinnertext.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -71,6 +74,7 @@ public class WhoseTurnActivity extends AppCompatActivity {
 
             }
         });
+
         findViewById(R.id.btn_add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

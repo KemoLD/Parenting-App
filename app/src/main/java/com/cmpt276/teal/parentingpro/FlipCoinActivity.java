@@ -38,6 +38,9 @@ import com.cmpt276.teal.parentingpro.ui.FlipSoundListener;
 
 import java.util.Date;
 
+/**
+ * the class the the flip coin page for the app
+ */
 public class FlipCoinActivity extends AppCompatActivity
 {
     public static Coin coin;
@@ -169,7 +172,8 @@ public class FlipCoinActivity extends AppCompatActivity
         currentChildHistoryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = HistoryActivity.makeLaunchIntent(FlipCoinActivity.this, currentChildIndex);
+                Intent intent = HistoryActivity.makeLaunchIntent(FlipCoinActivity.this,
+                        currentChildIndex);
                 startActivity(intent);
             }
         });
@@ -197,13 +201,15 @@ public class FlipCoinActivity extends AppCompatActivity
                 int hasChildFlip = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
 
                 if (!childManager.isEmpty() && hasChildFlip == HAS_CHILD_CHOOSE) {
-                    HistoryData data = new HistoryData(currentChildFlipping, new Date(), flipChoice, coin.getState());
+                    HistoryData data = new HistoryData(currentChildFlipping, new Date(),
+                            flipChoice, coin.getState());
                     historyList.addHistory(data);
                     historyList.saveToLocal(FlipCoinActivity.this);
 
                     setCurrentChildFlipping(++lastChildFlippedIndex);
                     lastChildFlippedIndex = lastChildFlippedIndex % childManager.length();
-                    DataUtil.writeOneIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
+                    DataUtil.writeOneIntData(FlipCoinActivity.this,
+                            AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
 
                     Button currentChildHistoryButton = findViewById(R.id.current_child_history_button);
                     currentChildHistoryButton.setText(getString(R.string.current_child_history_text, currentChildFlipping.getName()));
@@ -343,15 +349,18 @@ public class FlipCoinActivity extends AppCompatActivity
         chooseView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(FlipCoinActivity.this, FlipCoinActivity.this);
+                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(
+                        FlipCoinActivity.this, FlipCoinActivity.this);
                 popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+                        lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this,
+                                AppDataKey.LAST_CHILD_FLIPPED_INDEX);
                         setCurrentChildFlipping(lastChildFlippedIndex);
                         displayFlipChoice();
 
-                        int hasChildFlip = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
+                        int hasChildFlip = DataUtil.getIntData(
+                                FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
                         if (hasChildFlip == HAS_CHILD_CHOOSE) {
                             setUpHistoryButtons();
                             displayHistoryButtons();

@@ -15,7 +15,7 @@ import android.widget.ListView;
 
 import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 import com.cmpt276.teal.parentingpro.ui.ChildUI;
-import com.cmpt276.teal.parentingpro.ChildrenAdapter;
+import com.cmpt276.teal.parentingpro.ui.ChildrenAdapter;
 
 public class ConfigActivity extends AppCompatActivity {
 
