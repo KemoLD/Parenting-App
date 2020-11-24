@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.view.View;
 
 import com.cmpt276.teal.parentingpro.data.DataUtil;
@@ -19,7 +20,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+//
+//        SharedPreferences.Editor editor = DataUtil.getSharedEditor(this);
+//        editor.clear().commit();
         findViewById(R.id.btn_config).setOnClickListener(this);
         findViewById(R.id.btn_flip).setOnClickListener(this);
         findViewById(R.id.btn_timer).setOnClickListener(this);

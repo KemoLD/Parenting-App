@@ -80,6 +80,8 @@ public class FlipCoinActivity extends AppCompatActivity
         } else {
             setUpHistoryButton();
             displayHistoryButton();
+            hideProfilePic();
+            hideHint();
         }
     }
 
@@ -221,8 +223,6 @@ public class FlipCoinActivity extends AppCompatActivity
                 .setAudioAttributes(attrs)
                 .build();
 
-        //   Sound source: https://freesound.org/people/bone666138/sounds/198877/
-        // & license link: https://creativecommons.org/licenses/by/3.0/
         flipSound = soundPool.load(FlipCoinActivity.this, R.raw.coin_flip_sound, 1);
     }
 
