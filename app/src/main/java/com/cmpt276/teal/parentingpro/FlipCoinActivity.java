@@ -309,6 +309,10 @@ public class FlipCoinActivity extends AppCompatActivity
         changeTurnHint.setVisibility(View.VISIBLE);
     }
 
+    private void hideHint() {
+        TextView changeTurnHint = findViewById(R.id.text_view_change_turn_hint);
+        changeTurnHint.setVisibility(View.INVISIBLE);
+    }
 
 
     private void setupRadioButtonLayout(RadioButton button)
