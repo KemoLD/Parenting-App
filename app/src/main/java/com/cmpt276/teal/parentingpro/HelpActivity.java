@@ -11,6 +11,9 @@ import android.text.util.Linkify;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+/**
+ * the class is the help screen for the app
+ */
 public class HelpActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -35,9 +38,11 @@ public class HelpActivity extends AppCompatActivity {
     private void setUpCopyrightLinks() {
         TextView textView = findViewById(R.id.text_view_copyright_body);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            textView.setText(Html.fromHtml(getString(R.string.copyright_body_text), Html.FROM_HTML_MODE_COMPACT));
+            textView.setText(Html.fromHtml(getString(R.string.copyright_body_text),
+                    Html.FROM_HTML_MODE_COMPACT));
         } else {
-            textView.setText(Html.fromHtml(getString(R.string.copyright_body_text), Html.FROM_HTML_MODE_LEGACY));
+            textView.setText(Html.fromHtml(getString(R.string.copyright_body_text),
+                    Html.FROM_HTML_MODE_LEGACY));
         }
         Linkify.addLinks(textView, Linkify.ALL);
         textView.setMovementMethod(LinkMovementMethod.getInstance());

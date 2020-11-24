@@ -28,6 +28,9 @@ import com.cmpt276.teal.parentingpro.data.DataUtil;
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.ChildManager;
 
+/**
+ * the class represent the pop up window in the flip coin activity
+ */
 public class ChooseChildPopUpWindow extends PopupWindow
 {
     private View windowView;
@@ -37,6 +40,7 @@ public class ChooseChildPopUpWindow extends PopupWindow
     private Button noChildButton;
     private ListView childListView;
     private int lastFlipChildIndex;
+
 
     public ChooseChildPopUpWindow(Activity activity, Context context) {
         super();
@@ -65,6 +69,7 @@ public class ChooseChildPopUpWindow extends PopupWindow
         setUpNoChildButton();
     }
 
+
     private void setUpNoChildButton(){
         noChildButton = this.windowView.findViewById(R.id.pop_no_child_btn);
         noChildButton.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +80,7 @@ public class ChooseChildPopUpWindow extends PopupWindow
             }
         });
     }
+
 
     private class ChildClickListener implements AdapterView.OnItemClickListener
     {
@@ -138,7 +144,8 @@ public class ChooseChildPopUpWindow extends PopupWindow
             View outputView = convertView;
             updateIndex();
             if(outputView == null){
-                outputView = activity.getLayoutInflater().inflate(R.layout.child_order_item, parent, false);
+                outputView = activity.getLayoutInflater().inflate(R.layout.child_order_item,
+                        parent, false);
             }
 
             int listPosition = (position + currentChildFlipIndex) % childManager.length();
@@ -160,8 +167,11 @@ public class ChooseChildPopUpWindow extends PopupWindow
         }
 
         private void updateIndex(){
-            lastFlipChildIndex = DataUtil.getIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
-            currentChildFlipIndex = lastFlipChildIndex != -1 && lastFlipChildIndex < childManager.length() ? lastFlipChildIndex + 1 : 0;
+            lastFlipChildIndex = DataUtil.getIntData(activity,
+                    AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+            currentChildFlipIndex =
+                    lastFlipChildIndex != -1 && lastFlipChildIndex < childManager.length() ?
+                            lastFlipChildIndex + 1 : 0;
         }
     }
 

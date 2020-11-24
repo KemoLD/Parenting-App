@@ -5,19 +5,21 @@ import android.content.Context;
 
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
-import com.cmpt276.teal.parentingpro.data.HistoryData;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * the class represent the manager for child
+ */
 public class ChildManager
 {
     private static ChildManager manager;
     private Gson gson;
-
     private ArrayList<Child> childrenList;
+
 
     public static ChildManager getInstance(){
         if(manager == null){
@@ -32,9 +34,11 @@ public class ChildManager
         this.gson = new Gson();
     }
 
+
     public void addChild(Child child){
         childrenList.add(child);
     }
+
 
     public Child getChild(int i){
         try{
@@ -45,23 +49,29 @@ public class ChildManager
         }
     }
 
+
     public int length(){
         return childrenList.size();
     }
 
+
     public boolean isEmpty() { return childrenList.size() == 0; }
+
 
     public void remove(Child child){
         childrenList.remove(child);
     }
 
+
     public void remove(int index){
         childrenList.remove(index);
     }
 
+
     public void removeAll(){
         childrenList.removeAll(childrenList);
     }
+
 
     public void move(int srcIndex, int desIndex){
         if(srcIndex == desIndex)
@@ -96,6 +106,7 @@ public class ChildManager
         }
     }
 
+
     public List<String> getChilds(){
         List<String> s = new ArrayList<>();
         for(Child c : childrenList){
@@ -103,6 +114,7 @@ public class ChildManager
         }
         return s;
     }
+
 
     public void saveToLocal(Context context){
         String savedDataStr = gson.toJson(childrenList);

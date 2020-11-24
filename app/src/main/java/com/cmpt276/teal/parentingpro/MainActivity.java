@@ -10,6 +10,9 @@ import android.view.View;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
 import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 
+/**
+ * the class is the main activity for the app
+ */
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState)

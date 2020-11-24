@@ -8,6 +8,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 
+/**
+ * the class represent a list of history data
+ */
 public class History
 {
     private ArrayList<HistoryData> historyArray;
@@ -23,12 +26,10 @@ public class History
     }
 
 
-
     private History(){
         this.historyArray = new ArrayList<>();
         this.gson = new Gson();
     }
-
 
 
     public void addHistory(HistoryData data){
@@ -38,11 +39,9 @@ public class History
     }
 
 
-
     public int numOfHistory(){
         return historyArray.size();
     }
-
 
 
     public HistoryData getHistoryData(int index){
@@ -50,11 +49,9 @@ public class History
     }
 
 
-
     public ArrayList getAllHistoryList(){
         return copyList(this.historyArray);
     }
-
 
 
     public ArrayList getHistoryListWithChild(Child child){
@@ -89,7 +86,6 @@ public class History
     }
 
 
-
     public String toString(){
         String output = "";
         for(HistoryData data : historyArray){
@@ -97,7 +93,6 @@ public class History
         }
         return output;
     }
-
 
 
     private ArrayList copyList(ArrayList<HistoryData> dataList){
