@@ -3,27 +3,18 @@ package com.cmpt276.teal.parentingpro;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.cmpt276.teal.parentingpro.model.Child;
-import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 import com.cmpt276.teal.parentingpro.ui.ChildUI;
-
-import java.io.IOException;
-
+import com.cmpt276.teal.parentingpro.ChildrenAdapter;
 
 public class ConfigActivity extends AppCompatActivity {
 
