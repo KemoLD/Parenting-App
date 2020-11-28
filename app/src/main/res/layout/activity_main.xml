@@ -69,6 +69,15 @@
         app:layout_constraintTop_toTopOf="@+id/guideline24"
         app:layout_constraintVertical_bias="0.0" />
 
+
+    <Button
+        android:id="@+id/btn_breath"
+        style="@style/main_page_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Take Breath"
+        tools:ignore="MissingConstraints" />
+
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline13"
         android:layout_width="wrap_content"
