@@ -26,4 +26,7 @@ public class AppDataKey
     public static final String IS_NO_CHILD = "is_no_children_fliping";
 
 
+    public static final String BREATH_INHALE = "breath_inhale";
+
+
 }

@@ -16,6 +16,7 @@
             android:id="@+id/edit_breath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:inputType="number"
             android:hint="Allow user to select between 1 and 10 breaths"/>
         <Button
             android:id="@+id/btn_update"
@@ -25,14 +26,23 @@
 
 
         <TextView
+            android:id="@+id/tv_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Let's take N breaths together"/>
 
         <Button
+            android:id="@+id/btn_breath"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Begin"/>
+
+        <ImageView
+            android:id="@+id/imv_circle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/circle"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
