@@ -84,6 +84,14 @@ public class TakeBreathActivity extends AppCompatActivity {
         tvDesc.setText(String.format("Let's take %d breaths together", N));
         breathBtn.setText("Begin");
 
+        isPress = false;
+        inState = true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isRun = false;
     }
 
     @Override
