@@ -111,8 +111,8 @@ public class FlipCoinActivity extends AppCompatActivity
         flipChoice = Coin.CoinState.HEADS;
 
         // Child manager containing the list of children (if any)
-        childManager = ChildManagerUI.getInstance(this);
-        childManager.loadFromLocal(this);
+        childManager = ChildManagerUI.getCopy(ChildManagerUI.getInstance(this));
+        childManager.loadFromLocal(this, null, childManager);
 
         // History to keep a record of coin flips
         historyList = History.getInstance();
@@ -125,6 +125,7 @@ public class FlipCoinActivity extends AppCompatActivity
         if (!childManager.isEmpty()) {
             lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
             setCurrentChildFlipping(lastChildFlippedIndex);
+            DataUtil.writeOneIntData(this, AppDataKey.TEMP_LAST_FLIPPED_INDEX, lastChildFlippedIndex);
         }
     }
 
@@ -288,18 +289,13 @@ public class FlipCoinActivity extends AppCompatActivity
                     // wait for it
                 }
                 handler.sendEmptyMessage(UPDATA_IMAGE);
-                Log.i("tag", "send message");
-                // profilePic.setImageBitmap(currentChildFlipping.getProfile());
             }
         });
         setImageTask.start();
-        //   }
-        // profilePic.setImageBitmap(currentChildFlipping.getProfile());
         profilePic.setVisibility(View.VISIBLE);
     }
 
     private void hideProfilePic() {
-        // ImageView profilePic = findViewById(R.id.image_view_profile_pic);
         final ImageView profilePic = childImageView;
         profilePic.setVisibility(View.INVISIBLE);
     }
@@ -353,13 +349,13 @@ public class FlipCoinActivity extends AppCompatActivity
         chooseView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(
-                        FlipCoinActivity.this, FlipCoinActivity.this);
+                final ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(
+                        FlipCoinActivity.this, FlipCoinActivity.this, childManager);
+                popUpWindow.setLastChildIndex(lastChildFlippedIndex);
                 popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this,
-                                AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+                        lastChildFlippedIndex = popUpWindow.getLastChildIndex();
                         setCurrentChildFlipping(lastChildFlippedIndex);
                         displayFlipChoice();
 

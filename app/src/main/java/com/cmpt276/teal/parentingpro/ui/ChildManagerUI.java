@@ -113,6 +113,11 @@ public class ChildManagerUI extends ChildManager
 
 
     public void loadFromLocal(Context context, Handler handler){
+        loadFromLocal(context, handler, manager);
+    }
+
+
+    public void loadFromLocal(Context context, Handler handler, ChildManagerUI desManager){
         removeAll();
         String childListData = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
         if(childListData == null || childListData.length() == 0 || childListData.equals(DataUtil.DEFAULT_STRING_VALUE)){
@@ -122,7 +127,7 @@ public class ChildManagerUI extends ChildManager
         for(String childData : childList){
             if(childData != null && !childData.equals(DataUtil.DEFAULT_STRING_VALUE)){
                 ChildUI child = ChildUI.buildChildFromData(context, childData, CHILD_FILE_SEPERATOR);
-                manager.addChild(child);
+                desManager.addChild(child);
                 String imageFileName = child.getImageFileName();
                 if(imageFileName == null || imageFileName.equals("")){
                     child.setProfile(defaultChildImage);
@@ -154,6 +159,15 @@ public class ChildManagerUI extends ChildManager
             childListString.append(CHILD_LIST_SERERATOR);
         }
         DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, childListString.toString());
+    }
+
+
+    public static ChildManagerUI getCopy(ChildManagerUI source){
+        ChildManagerUI copyedManager = new ChildManagerUI(source.context);
+        for(int i = 0; i < source.length(); i++){
+            copyedManager.addChild(source.getChild(i));
+        }
+        return copyedManager;
     }
 
 
