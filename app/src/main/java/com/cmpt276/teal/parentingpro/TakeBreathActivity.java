@@ -34,6 +34,7 @@ public class TakeBreathActivity extends AppCompatActivity {
     private ImageView logo;
     private ScaleAnimation animationIn;
     private ScaleAnimation animationOut;
+    private Button breathBtn;
 
     private SoundPool mSoundPool;
     private int audioIn;
@@ -67,9 +68,22 @@ public class TakeBreathActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            moveTaskToBack(true);
+            this.finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        N = DataUtil.getIntData(this, AppDataKey.BREATH_INHALE);
+        if(N == -1){
+            N = 3;
+            DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, N);
+        }
+        tvDesc.setText(String.format("Let's take %d breaths together", N));
+        breathBtn.setText("Begin");
+
     }
 
     @Override
@@ -93,6 +107,7 @@ public class TakeBreathActivity extends AppCompatActivity {
                 String s = editText.getText().toString();
                 if(!s.isEmpty()){
                     N = Integer.parseInt(s);
+                    tvDesc.setText(String.format("Let's take %d breaths together", N));
                     DataUtil.writeOneIntData(TakeBreathActivity.this, AppDataKey.BREATH_INHALE, N);
                 }
             }
@@ -147,7 +162,7 @@ public class TakeBreathActivity extends AppCompatActivity {
             }
         }).start();
 
-        final Button breathBtn = findViewById(R.id.btn_breath);
+        breathBtn = findViewById(R.id.btn_breath);
         breathBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
