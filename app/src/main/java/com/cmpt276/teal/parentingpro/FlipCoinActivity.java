@@ -111,8 +111,7 @@ public class FlipCoinActivity extends AppCompatActivity
         flipChoice = Coin.CoinState.HEADS;
 
         // Child manager containing the list of children (if any)
-        childManager = ChildManagerUI.getCopy(ChildManagerUI.getInstance(this));
-        childManager.loadFromLocal(this, null, childManager);
+        getChildManager();
 
         // History to keep a record of coin flips
         historyList = History.getInstance();
@@ -358,6 +357,7 @@ public class FlipCoinActivity extends AppCompatActivity
                         lastChildFlippedIndex = popUpWindow.getLastChildIndex();
                         setCurrentChildFlipping(lastChildFlippedIndex);
                         displayFlipChoice();
+                        saveChildManagerWithOrder();
 
                         int hasChildFlip = DataUtil.getIntData(
                                 FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
@@ -380,6 +380,32 @@ public class FlipCoinActivity extends AppCompatActivity
                 return false;
             }
         });
+    }
+
+
+    public void getChildManager(){
+        // not using the gobal one make a new copy
+        childManager = ChildManagerUI.getCopy(ChildManagerUI.getInstance(this));
+        // update data
+        childManager.loadFromLocal(this, null, childManager);
+
+        // get pass order change information
+        String passChangeChildData = DataUtil.getStringData(this, AppDataKey.FLIP_CHILDREN);
+        // if data exist
+        if(!passChangeChildData.equals(DataUtil.DEFAULT_STRING_VALUE)){
+            ChildManagerUI passOrderManager = ChildManagerUI.getBasicFromData(this, passChangeChildData);
+
+            // make the childManager sycro to the right order
+            // take case of new and deleted child
+            ChildManagerUI.reoverManager(childManager, passOrderManager);
+            childManager = passOrderManager;
+        }
+    }
+
+
+    public void saveChildManagerWithOrder(){
+        String childData = ChildManagerUI.getBasicData(childManager);
+        DataUtil.writeOneStringData(this, AppDataKey.FLIP_CHILDREN, childData);
     }
 
 
