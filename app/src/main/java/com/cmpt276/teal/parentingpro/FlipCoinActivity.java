@@ -111,8 +111,7 @@ public class FlipCoinActivity extends AppCompatActivity
         flipChoice = Coin.CoinState.HEADS;
 
         // Child manager containing the list of children (if any)
-        childManager = ChildManagerUI.getInstance(this);
-        childManager.loadFromLocal(this);
+        getChildManager();
 
         // History to keep a record of coin flips
         historyList = History.getInstance();
@@ -125,6 +124,7 @@ public class FlipCoinActivity extends AppCompatActivity
         if (!childManager.isEmpty()) {
             lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
             setCurrentChildFlipping(lastChildFlippedIndex);
+            DataUtil.writeOneIntData(this, AppDataKey.TEMP_LAST_FLIPPED_INDEX, lastChildFlippedIndex);
         }
     }
 
@@ -288,18 +288,13 @@ public class FlipCoinActivity extends AppCompatActivity
                     // wait for it
                 }
                 handler.sendEmptyMessage(UPDATA_IMAGE);
-                Log.i("tag", "send message");
-                // profilePic.setImageBitmap(currentChildFlipping.getProfile());
             }
         });
         setImageTask.start();
-        //   }
-        // profilePic.setImageBitmap(currentChildFlipping.getProfile());
         profilePic.setVisibility(View.VISIBLE);
     }
 
     private void hideProfilePic() {
-        // ImageView profilePic = findViewById(R.id.image_view_profile_pic);
         final ImageView profilePic = childImageView;
         profilePic.setVisibility(View.INVISIBLE);
     }
@@ -353,15 +348,16 @@ public class FlipCoinActivity extends AppCompatActivity
         chooseView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(
-                        FlipCoinActivity.this, FlipCoinActivity.this);
+                final ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(
+                        FlipCoinActivity.this, FlipCoinActivity.this, childManager);
+                popUpWindow.setLastChildIndex(lastChildFlippedIndex);
                 popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this,
-                                AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+                        lastChildFlippedIndex = popUpWindow.getLastChildIndex();
                         setCurrentChildFlipping(lastChildFlippedIndex);
                         displayFlipChoice();
+                        saveChildManagerWithOrder();
 
                         int hasChildFlip = DataUtil.getIntData(
                                 FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
@@ -384,6 +380,32 @@ public class FlipCoinActivity extends AppCompatActivity
                 return false;
             }
         });
+    }
+
+
+    public void getChildManager(){
+        // not using the gobal one make a new copy
+        childManager = ChildManagerUI.getCopy(ChildManagerUI.getInstance(this));
+        // update data
+        childManager.loadFromLocal(this, null, childManager);
+
+        // get pass order change information
+        String passChangeChildData = DataUtil.getStringData(this, AppDataKey.FLIP_CHILDREN);
+        // if data exist
+        if(!passChangeChildData.equals(DataUtil.DEFAULT_STRING_VALUE)){
+            ChildManagerUI passOrderManager = ChildManagerUI.getBasicFromData(this, passChangeChildData);
+
+            // make the childManager sycro to the right order
+            // take case of new and deleted child
+            ChildManagerUI.reoverManager(childManager, passOrderManager);
+            childManager = passOrderManager;
+        }
+    }
+
+
+    public void saveChildManagerWithOrder(){
+        String childData = ChildManagerUI.getBasicData(childManager);
+        DataUtil.writeOneStringData(this, AppDataKey.FLIP_CHILDREN, childData);
     }
 
 
