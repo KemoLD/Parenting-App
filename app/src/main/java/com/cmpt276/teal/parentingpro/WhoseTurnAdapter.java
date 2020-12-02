@@ -12,8 +12,6 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,7 +74,6 @@ public class WhoseTurnAdapter extends BaseAdapter {
             viewHolder.descTv = convertView.findViewById(R.id.tv_desc);
             viewHolder.editBtn = convertView.findViewById(R.id.btn_edit);
             viewHolder.delBtn = convertView.findViewById(R.id.btn_del);
-            viewHolder.profile = convertView.findViewById(R.id.profile);
 
             viewHolder.layout = convertView.findViewById(R.id.item_layer);
 
@@ -106,7 +103,6 @@ public class WhoseTurnAdapter extends BaseAdapter {
         viewHolder.itemEv.setText(task.getDescription());
         viewHolder.descTv.setText(task.getDescription());
        viewHolder.itemTv.setText(childName);
-       viewHolder.profile.setImageBitmap(childImage);
 
         viewHolder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,12 +173,11 @@ public class WhoseTurnAdapter extends BaseAdapter {
 
 
     class ViewHolder {
-        LinearLayout layout;
+        RelativeLayout layout;
         TextView descTv;
         TextView itemTv;
         EditText itemEv;
         Button editBtn;
         Button delBtn;
-        ImageView profile;
     }
 }
