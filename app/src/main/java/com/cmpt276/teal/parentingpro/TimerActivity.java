@@ -1,8 +1,13 @@
 package com.cmpt276.teal.parentingpro;
 
+import android.os.Bundle;
+
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -14,14 +19,14 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.EditText;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,14 +66,13 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         return super.onKeyDown(keyCode, event);
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timer);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        setContentView(R.layout.activity_placeholder);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        enableUpButton();
 
         findViewById(R.id.min1).setOnClickListener(this);
         findViewById(R.id.min2).setOnClickListener(this);
@@ -103,6 +107,31 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
+    private void enableUpButton() {
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_timer, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_timer_speed:
+                return true;
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         if(intent == null)
@@ -120,13 +149,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            moveTaskToBack(true);
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 
 
     public void sendChatMsg(View view) {
