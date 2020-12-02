@@ -8,28 +8,31 @@
     tools:context=".MainActivity">
 
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:textColor="#F4F4F4"
-        android:textSize="40sp"
-        android:typeface="monospace"
-        app:layout_constraintBottom_toTopOf="@+id/guideline16"
-        app:layout_constraintTop_toTopOf="@+id/guideline13"
-        tools:layout_editor_absoluteX="0dp" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="645dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        >
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.3"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textColor="#F4F4F4"
+            android:textSize="40sp"
+            android:typeface="monospace"
+            app:layout_constraintBottom_toTopOf="@+id/guideline16"
+            app:layout_constraintTop_toTopOf="@+id/guideline13"
+            tools:layout_editor_absoluteX="0dp" />
 
 
         <LinearLayout
@@ -46,8 +49,8 @@
                     style="@style/main_item_image"
                     app:srcCompat="@drawable/ic_baseline_child_care_24" />
 
-                <Button
-                    style="@style/main_page_button"
+                <TextView
+                    style="@style/main_page_text"
                     android:text="@string/config_child" />
 
             </LinearLayout>
@@ -63,8 +66,8 @@
                     style="@style/main_item_image"
                     app:srcCompat="@drawable/ic_baseline_flaky_24" />
 
-                <Button
-                    style="@style/main_page_button"
+                <TextView
+                    style="@style/main_page_text"
                     android:text="@string/flip_coin_title" />
             </LinearLayout>
 
@@ -85,8 +88,8 @@
                     style="@style/main_item_image"
                     app:srcCompat="@drawable/ic_baseline_timer_24" />
 
-                <Button
-                    style="@style/main_page_button"
+                <TextView
+                    style="@style/main_page_text"
                     android:text="@string/timer" />
             </LinearLayout>
 
@@ -101,8 +104,8 @@
                     style="@style/main_item_image"
                     app:srcCompat="@drawable/ic_baseline_help_24" />
 
-                <Button
-                    style="@style/main_page_button"
+                <TextView
+                    style="@style/main_page_text"
                     android:text="@string/help" />
             </LinearLayout>
         </LinearLayout>
@@ -121,8 +124,8 @@
                     android:id="@+id/main_tasks_img"
                     style="@style/main_item_image"
                     app:srcCompat="@drawable/ic_baseline_add_task_24" />
-                <Button
-                    style="@style/main_page_button"
+                <TextView
+                    style="@style/main_page_text"
                     android:text="@string/whose_turn" />
             </LinearLayout>
 
@@ -138,8 +141,8 @@
                     style="@style/main_item_image"
                     app:srcCompat="@drawable/ic_round_call_split_24" />
 
-                <Button
-                    style="@style/main_page_button"
+                <TextView
+                    style="@style/main_page_text"
                     android:text="@string/take_breath" />
             </LinearLayout>
         </LinearLayout>

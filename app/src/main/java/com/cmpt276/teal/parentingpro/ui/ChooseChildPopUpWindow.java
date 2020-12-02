@@ -47,17 +47,12 @@ public class ChooseChildPopUpWindow extends PopupWindow
         this.activity = activity;
         this.context = context;
         this.childManager = childManager;
+        this.lastFlipChildIndex = DataUtil.getIntData(context, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
         windowView = activity.getLayoutInflater().from(activity).inflate(R.layout.flip_coin_child_order, null);
         setUpWindow();
     }
 
-    public int getLastChildIndex(){
-        return lastFlipChildIndex;
-    }
 
-    public void setLastChildIndex(int lastFlipChildIndex){
-        this.lastFlipChildIndex = lastFlipChildIndex;
-    }
 
 
     private void setUpWindow(){
@@ -104,11 +99,11 @@ public class ChooseChildPopUpWindow extends PopupWindow
              if(arrayIndex < lastFlipChildIndex){
                  childManager.move(arrayIndex, lastFlipChildIndex);
                  lastFlipChildIndex--;
-                 DataUtil.writeOneIntData(context, AppDataKey.TEMP_LAST_FLIPPED_INDEX, lastFlipChildIndex);
+                 DataUtil.writeOneIntData(context, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
              }
              else if(arrayIndex == lastFlipChildIndex){
                  lastFlipChildIndex = lastFlipChildIndex - 1 < 0 ? childManager.length() - 1 : --lastFlipChildIndex;
-                 DataUtil.writeOneIntData(context, AppDataKey.TEMP_LAST_FLIPPED_INDEX, lastFlipChildIndex);
+                 DataUtil.writeOneIntData(context, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
              }
              else{  // arrayIndex > last flip child index
                  childManager.move(arrayIndex, lastFlipChildIndex + 1);
@@ -177,7 +172,7 @@ public class ChooseChildPopUpWindow extends PopupWindow
 
         private void updateIndex(){
             lastFlipChildIndex = DataUtil.getIntData(activity,
-                    AppDataKey.TEMP_LAST_FLIPPED_INDEX);
+                    AppDataKey.LAST_CHILD_FLIPPED_INDEX);
             currentChildFlipIndex =
                     lastFlipChildIndex != -1 && lastFlipChildIndex < childManager.length() ?
                             lastFlipChildIndex + 1 : 0;

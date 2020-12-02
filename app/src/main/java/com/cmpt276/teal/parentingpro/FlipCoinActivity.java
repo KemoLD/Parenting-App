@@ -124,7 +124,7 @@ public class FlipCoinActivity extends AppCompatActivity
         if (!childManager.isEmpty()) {
             lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
             setCurrentChildFlipping(lastChildFlippedIndex);
-            DataUtil.writeOneIntData(this, AppDataKey.TEMP_LAST_FLIPPED_INDEX, lastChildFlippedIndex);
+            // DataUtil.writeOneIntData(this, AppDataKey.TEMP_LAST_FLIPPED_INDEX, lastChildFlippedIndex);
         }
     }
 
@@ -278,9 +278,6 @@ public class FlipCoinActivity extends AppCompatActivity
         // ImageView profilePic = findViewById(R.id.image_view_profile_pic);
         final ImageView profilePic = childImageView;
         profilePic.setTag(currentChildFlipping.getName());
-        Log.i("tag", "display picture " + currentChildFlipping.getProfile());
-        // if(currentChildFlipping.getProfile() == null){
-        Log.i("tag", "image is null for " + currentChildFlipping.getName());
         Thread setImageTask = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -350,11 +347,10 @@ public class FlipCoinActivity extends AppCompatActivity
             public boolean onLongClick(View view) {
                 final ChooseChildPopUpWindow popUpWindow = new ChooseChildPopUpWindow(
                         FlipCoinActivity.this, FlipCoinActivity.this, childManager);
-                popUpWindow.setLastChildIndex(lastChildFlippedIndex);
                 popUpWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
                     public void onDismiss() {
-                        lastChildFlippedIndex = popUpWindow.getLastChildIndex();
+                        lastChildFlippedIndex = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
                         setCurrentChildFlipping(lastChildFlippedIndex);
                         displayFlipChoice();
                         saveChildManagerWithOrder();
