@@ -1,5 +1,7 @@
 package com.cmpt276.teal.parentingpro;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.appcompat.app.ActionBar;
@@ -53,6 +55,13 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     private String t;
     private String s;
     private final String newintent = "notification";
+
+    private boolean speedChanged = false;
+    private boolean optionClicked;
+    private int currentSpeedIndex = 3;
+    private int tentativeSpeedIndex;
+    private double currentSpeed = 1.00;
+    private double tentativeSpeed;
 
 
 
@@ -123,6 +132,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_timer_speed:
+                showTimerSpeedOptions();
                 return true;
             case android.R.id.home:
                 finish();
@@ -130,6 +140,47 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showTimerSpeedOptions() {
+        final String[] options = {"25%", "50%", "75%", "100%", "200%", "300%", "400%"};
+        final Double[] speeds = {0.25, 0.50, 0.75, 1.00, 2.00, 3.00, 4.00};
+        optionClicked = false;
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Timer Speed")
+                   .setSingleChoiceItems(options, currentSpeedIndex, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            String msg = "Clicked on " + options[i];
+                            Toast.makeText(TimerActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            tentativeSpeedIndex = i;
+                            tentativeSpeed = speeds[i];
+                            optionClicked = true;
+                        }
+                    })
+                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialogInterface, int i) {
+                           if (optionClicked) {
+                               speedChanged = true;
+                               currentSpeedIndex = tentativeSpeedIndex;
+                               currentSpeed = tentativeSpeed;
+                           } else {
+                               speedChanged = false;
+                           }
+                       }
+                   })
+                   .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialogInterface, int i) {
+                           speedChanged = false;
+                       }
+                   });
+
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
     }
 
     @Override
