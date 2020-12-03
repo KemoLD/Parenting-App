@@ -45,20 +45,14 @@ public class TakeBreathActivity extends AppCompatActivity {
         public boolean inState;
         private long pressTime;
 
-        public void startInhale(){
+        public void startInhale() {
             isPress = true;
             pressTime = System.currentTimeMillis();
-            //if(inState) {
             inState = true;
-                breathBtn.setText("In");
+            breathBtn.setText("In");
             tvDesc.setText("Hold Button and breath in");
-                logo.startAnimation(animationIn);
-                streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
-//            }else{
-//                breathBtn.setText("Out");
-//                logo.startAnimation(animationOut);
-//                streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
-//            }
+            logo.startAnimation(animationIn);
+            streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
         }
 
         public void finish(){
@@ -88,24 +82,6 @@ public class TakeBreathActivity extends AppCompatActivity {
         }
 
         public void startExhale(){
-//            if(isPress){
-//                mSoundPool.stop(streamId);
-//            }
-//            isPress = false;
-//            long time = System.currentTimeMillis() - pressTime;
-//            if (time < 3000) {
-//                logo.clearAnimation();
-//                mSoundPool.stop(streamId);
-//            } else {
-//                if (!inState) {
-//                    if(N == 0) {
-//                        breathBtn.setText("Good job");
-//                    }
-//                } else {
-//                    breathBtn.setText("Out");
-//                }
-//                inState = !inState;
-//            }
             isPress = true;
             inState = false;
             pressTime = System.currentTimeMillis();
