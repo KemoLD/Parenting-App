@@ -26,10 +26,7 @@ import java.util.concurrent.TimeUnit;
 
 public class TakeBreathActivity extends AppCompatActivity {
 
-    private long pressTime;
-    private boolean isPress;
     private boolean isRun;
-    private boolean inState;
     private TextView tvDesc;
     private ImageView logo;
     private ScaleAnimation animationIn;
@@ -43,20 +40,79 @@ public class TakeBreathActivity extends AppCompatActivity {
 
     private int N;
 
+    class BreathState{
+        public boolean isPress;
+        public boolean inState;
+        private long pressTime;
+
+        public void startInhale(){
+            isPress = true;
+            pressTime = System.currentTimeMillis();
+            if(inState) {
+                breathBtn.setText("In");
+                logo.startAnimation(animationIn);
+                streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
+            }else{
+                breathBtn.setText("Out");
+                logo.startAnimation(animationOut);
+                streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
+            }
+        }
+
+        public void startExhale(){
+            if(isPress){
+                mSoundPool.stop(streamId);
+            }
+            isPress = false;
+            long time = System.currentTimeMillis() - pressTime;
+            if (time < 3000) {
+                logo.clearAnimation();
+                mSoundPool.stop(streamId);
+            } else {
+                if (!inState) {
+                    N--;
+                    tvDesc.setText(String.format("Let's take %d breaths together", N));
+                    breathBtn.setText("Good job");
+                } else {
+                    breathBtn.setText("Out");
+                }
+                inState = !inState;
+            }
+        }
+
+        public void inBeathing(long time){
+            long cost = time - breathState.pressTime;
+            if(inState) {
+                tvDesc.setText(String.format("Please Breath In for 3s, current Time: %ds", (cost / 1000)));
+            }else{
+                tvDesc.setText(String.format("Please Breath Out for3s, current Time: %ds", (cost / 1000)));
+            }
+            if(cost > 3000){
+                breathBtn.setText("OK");
+            }
+            if(cost > 10000){
+                isPress = false;
+                mSoundPool.stop(streamId);
+            }
+        }
+
+        public void reset(){
+            tvDesc.setText(String.format("Let's take %d breaths together", N));
+            breathBtn.setText("Begin");
+
+            isPress = false;
+            inState = true;
+        }
+    }
+
+    private BreathState breathState = new BreathState();
+
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    long time = System.currentTimeMillis() - pressTime;
-                    if(inState) {
-                        tvDesc.setText(String.format("Please Breath In for 3s, current Time: %ds", (time / 1000)));
-                    }else{
-                        tvDesc.setText(String.format("Please Breath Out for3s, current Time: %ds", (time / 1000)));
-                    }
-                    if(time > 10000){
-                        isPress = false;
-                        mSoundPool.stop(streamId);
-                    }
+                    long time = System.currentTimeMillis();
+                    breathState.inBeathing(time);
                     break;
                 default:
                     break;
@@ -81,11 +137,7 @@ public class TakeBreathActivity extends AppCompatActivity {
             N = 3;
             DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, N);
         }
-        tvDesc.setText(String.format("Let's take %d breaths together", N));
-        breathBtn.setText("Begin");
-
-        isPress = false;
-        inState = true;
+        breathState.reset();
     }
 
     @Override
@@ -115,15 +167,13 @@ public class TakeBreathActivity extends AppCompatActivity {
                 String s = editText.getText().toString();
                 if(!s.isEmpty()){
                     N = Integer.parseInt(s);
-                    tvDesc.setText(String.format("Let's take %d breaths together", N));
                     DataUtil.writeOneIntData(TakeBreathActivity.this, AppDataKey.BREATH_INHALE, N);
                 }
             }
         });
 
-        tvDesc.setText(String.format("Let's take %d breaths together", N));
-
         logo = findViewById(R.id.imv_circle);
+        breathBtn = findViewById(R.id.btn_breath);
 
         animationIn = new ScaleAnimation(1, 3, 1, 3,
                 Animation.RELATIVE_TO_SELF, 0.5f,1, 0.5f);
@@ -150,13 +200,17 @@ public class TakeBreathActivity extends AppCompatActivity {
         audioOut = mSoundPool.load(this, R.raw.breath_out, 1);
 
 
+
+        breathState.reset();
+
+
         isRun = true;
-        inState = true;
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 while (isRun) {
-                    if (isPress) {
+                    if (breathState.isPress) {
                         Message message = new Message();
                         message.what = 1;
                         handler.sendMessage(message);
@@ -170,42 +224,14 @@ public class TakeBreathActivity extends AppCompatActivity {
             }
         }).start();
 
-        breathBtn = findViewById(R.id.btn_breath);
         breathBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d("PRJ", "action：" + event.getAction());
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    isPress = true;
-                    pressTime = System.currentTimeMillis();
-                    if(inState) {
-                        breathBtn.setText("In");
-                        logo.startAnimation(animationIn);
-                        streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
-                    }else{
-                        breathBtn.setText("Out");
-                        logo.startAnimation(animationOut);
-                        streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
-                    }
+                    breathState.startInhale();
                 }else if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(isPress){
-                        mSoundPool.stop(streamId);
-                    }
-                    isPress = false;
-                    long time = System.currentTimeMillis() - pressTime;
-                    if (time < 3000) {
-                        logo.clearAnimation();
-                        mSoundPool.stop(streamId);
-                    } else {
-                        if (!inState) {
-                            N--;
-                            tvDesc.setText(String.format("Let's take %d breaths together", N));
-                            breathBtn.setText("Good job");
-                        } else {
-                            breathBtn.setText("Out");
-                        }
-                        inState = !inState;
-                    }
+                    breathState.startExhale();
                 }
                 return false;
             }
