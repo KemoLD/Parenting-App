@@ -48,51 +48,87 @@ public class TakeBreathActivity extends AppCompatActivity {
         public void startInhale(){
             isPress = true;
             pressTime = System.currentTimeMillis();
-            if(inState) {
+            //if(inState) {
+            inState = true;
                 breathBtn.setText("In");
+            tvDesc.setText("Hold Button and breath in");
                 logo.startAnimation(animationIn);
                 streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
+//            }else{
+//                breathBtn.setText("Out");
+//                logo.startAnimation(animationOut);
+//                streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
+//            }
+        }
+
+        public void finish(){
+            if(inState && !breathState.satifyState()){
+                logo.clearAnimation();
+                mSoundPool.stop(streamId);
+                return;
+            }
+            logo.clearAnimation();
+            mSoundPool.stop(streamId);
+            inState = !inState;
+            isPress = false;
+            if(!inState){
+                startExhale();
             }else{
-                breathBtn.setText("Out");
-                logo.startAnimation(animationOut);
-                streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
+                N--;
+                tvDesc.setText(String.format("Left %d breaths", N));
+                if(N == 0) {
+                    breathBtn.setText("Good job");
+                }
             }
         }
 
+        public boolean satifyState(){
+            long time = System.currentTimeMillis();
+            return time - pressTime > 3000;
+        }
+
         public void startExhale(){
-            if(isPress){
-                mSoundPool.stop(streamId);
-            }
-            isPress = false;
-            long time = System.currentTimeMillis() - pressTime;
-            if (time < 3000) {
-                logo.clearAnimation();
-                mSoundPool.stop(streamId);
-            } else {
-                if (!inState) {
-                    N--;
-                    tvDesc.setText(String.format("Let's take %d breaths together", N));
-                    breathBtn.setText("Good job");
-                } else {
-                    breathBtn.setText("Out");
-                }
-                inState = !inState;
-            }
+//            if(isPress){
+//                mSoundPool.stop(streamId);
+//            }
+//            isPress = false;
+//            long time = System.currentTimeMillis() - pressTime;
+//            if (time < 3000) {
+//                logo.clearAnimation();
+//                mSoundPool.stop(streamId);
+//            } else {
+//                if (!inState) {
+//                    if(N == 0) {
+//                        breathBtn.setText("Good job");
+//                    }
+//                } else {
+//                    breathBtn.setText("Out");
+//                }
+//                inState = !inState;
+//            }
+            isPress = true;
+            inState = false;
+            pressTime = System.currentTimeMillis();
+            breathBtn.setText("Out");
+            tvDesc.setText("Release Button and breath out");
+            logo.startAnimation(animationOut);
+            streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
         }
 
         public void inBeathing(long time){
             long cost = time - breathState.pressTime;
             if(inState) {
-                tvDesc.setText(String.format("Please Breath In for 3s, current Time: %ds", (cost / 1000)));
             }else{
-                tvDesc.setText(String.format("Please Breath Out for3s, current Time: %ds", (cost / 1000)));
             }
             if(cost > 3000){
-                breathBtn.setText("OK");
+                if(inState) {
+                    breathBtn.setText("Out");
+                }else{
+                    breathBtn.setText("In");
+                }
             }
             if(cost > 10000){
-                isPress = false;
-                mSoundPool.stop(streamId);
+                finish();
             }
         }
 
@@ -231,7 +267,9 @@ public class TakeBreathActivity extends AppCompatActivity {
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
                     breathState.startInhale();
                 }else if(event.getAction() == MotionEvent.ACTION_UP) {
-                    breathState.startExhale();
+                    if(breathState.inState) {
+                        breathState.finish();
+                    }
                 }
                 return false;
             }
