@@ -42,14 +42,17 @@ public class ChooseChildPopUpWindow extends PopupWindow
     private int lastFlipChildIndex;
 
 
-    public ChooseChildPopUpWindow(Activity activity, Context context) {
+    public ChooseChildPopUpWindow(Activity activity, Context context, ChildManagerUI childManager) {
         super();
         this.activity = activity;
         this.context = context;
-        this.childManager = ChildManagerUI.getInstance(context);
+        this.childManager = childManager;
+        this.lastFlipChildIndex = DataUtil.getIntData(context, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
         windowView = activity.getLayoutInflater().from(activity).inflate(R.layout.flip_coin_child_order, null);
         setUpWindow();
     }
+
+
 
 
     private void setUpWindow(){
@@ -96,11 +99,11 @@ public class ChooseChildPopUpWindow extends PopupWindow
              if(arrayIndex < lastFlipChildIndex){
                  childManager.move(arrayIndex, lastFlipChildIndex);
                  lastFlipChildIndex--;
-                 DataUtil.writeOneIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
+                 DataUtil.writeOneIntData(context, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
              }
              else if(arrayIndex == lastFlipChildIndex){
                  lastFlipChildIndex = lastFlipChildIndex - 1 < 0 ? childManager.length() - 1 : --lastFlipChildIndex;
-                 DataUtil.writeOneIntData(activity, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
+                 DataUtil.writeOneIntData(context, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastFlipChildIndex);
              }
              else{  // arrayIndex > last flip child index
                  childManager.move(arrayIndex, lastFlipChildIndex + 1);
@@ -122,6 +125,7 @@ public class ChooseChildPopUpWindow extends PopupWindow
             this.manager = childManager;
             updateIndex();
         }
+
 
         @Override
         public int getCount() {
