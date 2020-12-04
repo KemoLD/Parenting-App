@@ -8,16 +8,24 @@ import com.cmpt276.teal.parentingpro.R;
 
 public class Child
 {
+    private int id;
     private String name;
     private String imageFileName;
+    private static int generateId;
 
 
     public Child(String name){
-        this.name = name;
+        this(name, null);
     }
 
 
     public Child(String name, String imageFileName){
+        this(++generateId, name, imageFileName);
+    }
+
+
+    public Child(int id, String name, String imageFileName){
+        this.id = id;
         this.name = name;
         this.imageFileName = imageFileName;
     }
@@ -42,9 +50,30 @@ public class Child
         this.imageFileName = imageFileName;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void updateFromChild(Child child){
+        this.id = child.id;
+        this.name = child.name;
+        this.imageFileName = child.imageFileName;
+    }
+
+    public static void setGenerateId(int generateId) {
+        Child.generateId = generateId;
+    }
+
+    public static int getGenerateId(){
+        return Child.generateId;
+    }
 
     public boolean equals(Child otherChild){
-        if(otherChild.name.equals(this.name))
+        if(otherChild.id == this.id)
             return true;
         return false;
     }
