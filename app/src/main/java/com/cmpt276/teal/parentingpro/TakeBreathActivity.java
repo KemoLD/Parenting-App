@@ -17,6 +17,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
@@ -28,10 +29,16 @@ public class TakeBreathActivity extends AppCompatActivity {
 
     private boolean isRun;
     private TextView tvDesc;
-    private ImageView logo;
     private ScaleAnimation animationIn;
     private ScaleAnimation animationOut;
     private Button breathBtn;
+
+    private SeekBar seekbar;
+    private TextView seekbarText;
+
+    public static final int MIN_BREATH = 1;
+    public static final int MAX_BREATH = 10;
+    public static final int DEFAULT_BREATH = 3;
 
     private SoundPool mSoundPool;
     private int audioIn;
@@ -49,19 +56,22 @@ public class TakeBreathActivity extends AppCompatActivity {
             isPress = true;
             pressTime = System.currentTimeMillis();
             inState = true;
-            breathBtn.setText("In");
-            tvDesc.setText("Hold Button and breath in");
-            logo.startAnimation(animationIn);
+            Log.i("tag", "disable seekbar");
+            disableSeekbar();
+            breathBtn.setText(getText(R.string.in));
+            tvDesc.setText(getText(R.string.hold_breath_in));
+            breathBtn.startAnimation(animationIn);
             streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
         }
 
         public void finish(){
             if(inState && !breathState.satifyState()){
-                logo.clearAnimation();
+                breathBtn.clearAnimation();
                 mSoundPool.stop(streamId);
                 return;
             }
-            logo.clearAnimation();
+
+            breathBtn.clearAnimation();
             mSoundPool.stop(streamId);
             inState = !inState;
             isPress = false;
@@ -69,9 +79,11 @@ public class TakeBreathActivity extends AppCompatActivity {
                 startExhale();
             }else{
                 N--;
-                tvDesc.setText(String.format("Left %d breaths", N));
+                tvDesc.setText(getString(R.string.left_breath, N));
                 if(N == 0) {
-                    breathBtn.setText("Good job");
+                    Log.i("tag", "enable seekbar");
+                    enableSeekbar();
+                    breathBtn.setText(R.string.good_job);
                 }
             }
         }
@@ -85,9 +97,9 @@ public class TakeBreathActivity extends AppCompatActivity {
             isPress = true;
             inState = false;
             pressTime = System.currentTimeMillis();
-            breathBtn.setText("Out");
-            tvDesc.setText("Release Button and breath out");
-            logo.startAnimation(animationOut);
+            breathBtn.setText(R.string.out);
+            tvDesc.setText(R.string.release_breath_out);
+            breathBtn.startAnimation(animationOut);
             streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
         }
 
@@ -98,9 +110,9 @@ public class TakeBreathActivity extends AppCompatActivity {
             }
             if(cost > 3000){
                 if(inState) {
-                    breathBtn.setText("Out");
+                    breathBtn.setText(R.string.out);
                 }else{
-                    breathBtn.setText("In");
+                    breathBtn.setText(R.string.in);
                 }
             }
             if(cost > 10000){
@@ -109,9 +121,8 @@ public class TakeBreathActivity extends AppCompatActivity {
         }
 
         public void reset(){
-            tvDesc.setText(String.format("Let's take %d breaths together", N));
-            breathBtn.setText("Begin");
-
+            tvDesc.setText(getString(R.string.let_take_breath, N));
+            breathBtn.setText(R.string.begin);
             isPress = false;
             inState = true;
         }
@@ -164,6 +175,8 @@ public class TakeBreathActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         setContentView(R.layout.activity_take_breath);
+
+
         tvDesc = findViewById(R.id.tv_desc);
 
         N = DataUtil.getIntData(this, AppDataKey.BREATH_INHALE);
@@ -172,49 +185,16 @@ public class TakeBreathActivity extends AppCompatActivity {
             DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, N);
         }
 
-        final EditText editText = findViewById(R.id.edit_breath);
-        findViewById(R.id.btn_update).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String s = editText.getText().toString();
-                if(!s.isEmpty()){
-                    N = Integer.parseInt(s);
-                    DataUtil.writeOneIntData(TakeBreathActivity.this, AppDataKey.BREATH_INHALE, N);
-                }
-            }
-        });
 
-        logo = findViewById(R.id.imv_circle);
+        seekbar = findViewById(R.id.breath_seekbar);
+        seekbarText = findViewById(R.id.seekbar_text);
         breathBtn = findViewById(R.id.btn_breath);
 
-        animationIn = new ScaleAnimation(1, 3, 1, 3,
-                Animation.RELATIVE_TO_SELF, 0.5f,1, 0.5f);
-        animationIn.setDuration(3000);
-        animationIn.setFillAfter(true);
-        animationIn.setRepeatCount(0);
-
-
-        animationOut = new ScaleAnimation(3, 1, 3, 1,
-                Animation.RELATIVE_TO_SELF, 0.5f,1, 0.5f);
-        animationOut.setDuration(3000);
-        animationOut.setFillAfter(true);
-        animationOut.setRepeatCount(0);
-
-        AudioAttributes.Builder builder = new AudioAttributes.Builder();
-        builder.setLegacyStreamType(AudioManager.STREAM_NOTIFICATION);
-        builder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
-
-        SoundPool.Builder builder2 = new SoundPool.Builder()
-                .setMaxStreams(2)
-                .setAudioAttributes(builder.build());
-        mSoundPool = builder2.build();
-        audioIn = mSoundPool.load(this, R.raw.breath_in, 1);
-        audioOut = mSoundPool.load(this, R.raw.breath_out, 1);
-
-
+        setupSeekbar();
+        setAnimations();
+        setSound();
 
         breathState.reset();
-
 
         isRun = true;
 
@@ -236,6 +216,67 @@ public class TakeBreathActivity extends AppCompatActivity {
             }
         }).start();
 
+
+        setBreathButtonTouch();
+
+
+    }
+
+
+    private void setupSeekbar(){
+        seekbar.setMax(MAX_BREATH - MIN_BREATH);
+        seekbar.setProgress(DEFAULT_BREATH - MIN_BREATH);
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {
+                progress = MIN_BREATH + progress;
+                seekbarText.setText("" + progress);
+                N = progress;
+                DataUtil.writeOneIntData(TakeBreathActivity.this, AppDataKey.BREATH_INHALE, N);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+    }
+
+
+    private void setAnimations(){
+        animationIn = new ScaleAnimation(1, 3, 1, 3,
+                Animation.RELATIVE_TO_SELF, 0.5f,1, 0.5f);
+        animationIn.setDuration(3000);
+        animationIn.setFillAfter(true);
+        animationIn.setRepeatCount(0);
+
+
+        animationOut = new ScaleAnimation(3, 1, 3, 1,
+                Animation.RELATIVE_TO_SELF, 0.5f,1, 0.5f);
+        animationOut.setDuration(3000);
+        animationOut.setFillAfter(true);
+        animationOut.setRepeatCount(0);
+    }
+
+
+    private void setSound(){
+        AudioAttributes.Builder builder = new AudioAttributes.Builder();
+        builder.setLegacyStreamType(AudioManager.STREAM_NOTIFICATION);
+        builder.setContentType(AudioAttributes.CONTENT_TYPE_MUSIC);
+
+        SoundPool.Builder builder2 = new SoundPool.Builder()
+                .setMaxStreams(2)
+                .setAudioAttributes(builder.build());
+        mSoundPool = builder2.build();
+        audioIn = mSoundPool.load(this, R.raw.breath_in, 1);
+        audioOut = mSoundPool.load(this, R.raw.breath_out, 1);
+    }
+
+
+    private void setBreathButtonTouch(){
         breathBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -250,5 +291,20 @@ public class TakeBreathActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+
+    private void disableSeekbar(){
+        seekbar.setEnabled(false);
+        seekbar.setFocusable(false);
+        seekbar.setSelected(false);
+        seekbar.setClickable(false);
+    }
+
+    private void enableSeekbar(){
+        seekbar.setEnabled(true);
+        seekbar.setFocusable(true);
+        seekbar.setSelected(true);
+        seekbar.setClickable(true);
     }
 }

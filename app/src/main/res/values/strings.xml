@@ -85,4 +85,15 @@
         ]]>
     </string>
     <string name="whose_turn">Whose Turn</string>
+
+
+    <!--    take breath-->
+    <string name="in">In</string>
+    <string name="out">Out</string>
+    <string name="hold_breath_in">Hold Button and breath in</string>
+    <string name="left_breath">Left %1d\ breaths</string>
+    <string name="good_job">Good job</string>
+    <string name="release_breath_out">Release Button and breath out</string>
+    <string name="let_take_breath">Let take %1d/ breaths together</string>
+    <string name="begin">Begin</string>
 </resources>
