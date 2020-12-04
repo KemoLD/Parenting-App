@@ -40,9 +40,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ems="10"
-                        android:text="tv"
-                        android:textSize="20dp"
-                        android:visibility="invisible" />
+                        android:text="@string/tv"
+                        android:textSize="20sp"
+                        android:visibility="invisible"
+                        android:inputType="text"
+                        android:importantForAutofill="no" />
 
                     <TextView
                         android:id="@+id/tv_desc"
@@ -51,8 +53,8 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:paddingVertical="5dp"
-                        android:text="nameasdafa"
-                        android:textSize="20dp" />
+                        android:text="@string/nameasdafa"
+                        android:textSize="20sp" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -64,11 +66,10 @@
                         style="@style/text_general"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
                         android:paddingVertical="5dp"
-                        android:paddingLeft="15dp"
-                        android:text="nameasdafa"
-                        android:textSize="15dp" />
+                        android:paddingStart="15dp"
+                        android:text="@string/nameasdafa"
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <LinearLayout

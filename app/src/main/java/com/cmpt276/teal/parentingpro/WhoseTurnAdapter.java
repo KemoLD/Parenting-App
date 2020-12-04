@@ -14,28 +14,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.cmpt276.teal.parentingpro.model.ChildManager;
 import com.cmpt276.teal.parentingpro.model.TurnTask;
 import com.cmpt276.teal.parentingpro.model.TurnTaskManager;
 import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 import com.cmpt276.teal.parentingpro.ui.ChildUI;
 import com.cmpt276.teal.parentingpro.ui.CustomDialog;
 
-import java.util.List;
-
 /**
  * the class is the adapter that is used by the list view in whose turn activity
  */
 public class WhoseTurnAdapter extends BaseAdapter {
 
-    private Context mContext;
+    private final Context mContext;
+    private final TurnTaskManager manager;
+    private final ChildManagerUI childManager;
+    private final int popupWidth = 800;
+    private final int popupHeight = 1200;
 
-    private TurnTaskManager manager;
-    private ChildManagerUI childManager;
 
     public WhoseTurnAdapter(Context context, TurnTaskManager manager, ChildManagerUI childManager) {
         this.mContext = context;
@@ -105,8 +102,8 @@ public class WhoseTurnAdapter extends BaseAdapter {
 
         viewHolder.itemEv.setText(task.getDescription());
         viewHolder.descTv.setText(task.getDescription());
-       viewHolder.itemTv.setText(childName);
-       viewHolder.profile.setImageBitmap(childImage);
+        viewHolder.itemTv.setText(childName);
+        viewHolder.profile.setImageBitmap(childImage);
 
         viewHolder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,8 +131,8 @@ public class WhoseTurnAdapter extends BaseAdapter {
 
                 Dialog dialog = builder.create();
                 WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
-                params.width = 800;
-                params.height = 1200;
+                params.width = popupWidth;
+                params.height = popupHeight;
                 dialog.getWindow().setAttributes(params);
                 dialog.show();
             }
