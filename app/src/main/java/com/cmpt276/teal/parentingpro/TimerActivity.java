@@ -22,6 +22,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -58,7 +59,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     private final String newintent = "notification";
 
     private boolean isSpeedRun = false;
-    private boolean wasPaused = false;
+    private boolean isRestarted = false;
+    private boolean isReset = false;
     private boolean optionClicked;
     private int currentSpeedIndex = 3;
     private long realTime;
@@ -131,7 +133,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
             case R.id.action_timer_speed:
-                if (isRun) {
+                if (isRun && !isPause) {
                     showTimerSpeedOptions();
                 }
                 return true;
@@ -231,8 +233,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                         if (optionClicked && currentSpeedIndex != tentativeSpeedIndex) {
                             currentSpeedIndex = tentativeSpeedIndex;
                             if (isRun) {
-                                wasPaused = false;
-                                changeTimerSpeed();
+                                startChangedSpeedTimer();
                             }
                         }
                     }
@@ -248,30 +249,52 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         alert.show();
     }
 
-    private void changeTimerSpeed() {
+    private void delayBeforeStart() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run(){
+                if (!isRestarted && !isReset && !isPause) {
+                    startChangedSpeedTimer();
+                }
+            }
+        };
+
+        long delayMillis;
+        switch(currentSpeedIndex) {
+            case 0:
+                delayMillis = countDownIntervals[currentSpeedIndex] - 400;
+                break;
+            case 1:
+            case 2:
+                delayMillis = countDownIntervals[currentSpeedIndex] - 500;
+                break;
+            default:
+                delayMillis = 0;
+        }
+
+        Handler handler = new Handler();
+        handler.postDelayed(runnable, delayMillis);
+    }
+
+    private void startChangedSpeedTimer() {
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
 
         isSpeedRun = true;
+        isReset = false;
+        isRestarted = false;
         //realTime = 0;
         setSpeedText();
-
-
-        if (wasPaused && currentSpeedIndex < 3) {
-            wasPaused = false;
-        } else {
-            wasPaused = true;
-        }
 
         long millisInFuture = Math.round(currentTime * scaleFactors[currentSpeedIndex] * 1000);
         countDownTimer = new CountDownTimer(millisInFuture, countDownIntervals[currentSpeedIndex]) {
             @Override
             public void onTick(long millisUntilFinished) {
-                currentTime--;
                 millisUntilFinished = Math.round(millisUntilFinished / scaleFactors[currentSpeedIndex]);
                 updateTimerUI(millisUntilFinished);
                 //realTime += countDownIntervals[currentSpeedIndex];
+                currentTime--;
             }
 
             @Override
@@ -349,75 +372,100 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             case R.id.min1:
                 if (isRun) {
+                    isRestarted = true;
                     isRun = false;
                     isSpeedRun = false;
-                    countDownTimer.cancel();
-                    countDownTimer = null;
+                    currentSpeedIndex = 3;
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
                 }
                 time = 1;
                 t = String.format("%02d", time);
                 s = (t + ":00");
                 timeTv.setText(s);
+                speedTv.setText("");
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
                 break;
             case R.id.min2:
                 if (isRun) {
+                    isRestarted = true;
                     isRun = false;
                     isSpeedRun = false;
-                    countDownTimer.cancel();
-                    countDownTimer = null;
+                    currentSpeedIndex = 3;
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
                 }
                 time = 2;
                 t = String.format("%02d", time);
                 s = (t + ":00");
                 timeTv.setText(s);
+                speedTv.setText("");
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
                 break;
             case R.id.min3:
                 if (isRun) {
+                    isRestarted = true;
                     isRun = false;
                     isSpeedRun = false;
-                    countDownTimer.cancel();
-                    countDownTimer = null;
+                    currentSpeedIndex = 3;
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
                 }
                 time = 3;
                 t = String.format("%02d", time);
                 s = (t + ":00");
                 timeTv.setText(s);
+                speedTv.setText("");
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
                 break;
             case R.id.min5:
                 if (isRun) {
+                    isRestarted = true;
                     isRun = false;
                     isSpeedRun = false;
-                    countDownTimer.cancel();
-                    countDownTimer = null;
+                    currentSpeedIndex = 3;
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
                 }
                 time = 5;
                 t = String.format("%02d", time);
                 s = (t + ":00");
                 timeTv.setText(s);
+                speedTv.setText("");
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
                 break;
             case R.id.min10:
                 if (isRun) {
+                    isRestarted = true;
                     isRun = false;
                     isSpeedRun = false;
-                    countDownTimer.cancel();
-                    countDownTimer = null;
+                    currentSpeedIndex = 3;
+                    if (countDownTimer != null) {
+                        countDownTimer.cancel();
+                        countDownTimer = null;
+                    }
                 }
                 time = 10;
                 t = String.format("%02d", time);
                 s = (t + ":00");
                 timeTv.setText(s);
+                speedTv.setText("");
                 currentTime = time * 60;
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = false;
@@ -426,14 +474,19 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 if (editText.getText().length() != 0 &&
                         Integer.parseInt(editText.getText().toString()) > 0) {
                     if (isRun) {
+                        isRestarted = true;
                         isRun = false;
                         isSpeedRun = false;
-                        countDownTimer.cancel();
-                        countDownTimer = null;
+                        currentSpeedIndex = 3;
+                        if (countDownTimer != null) {
+                            countDownTimer.cancel();
+                            countDownTimer = null;
+                        }
                         pauseImg.setImageResource(R.mipmap.ic_resume);
                     }
                     time = Integer.parseInt(editText.getText().toString());
                     currentTime = time * 60;
+                    speedTv.setText("");
 
                     int days = time / 1440;
                     int hours = (time % 1440) / 60;
@@ -464,6 +517,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.reset:
                 if (isRun) {
+                    isReset = true;
                     isRun = false;
                     isSpeedRun = false;
                     if (countDownTimer != null) {
@@ -473,6 +527,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                     currentTime = time * 60;
                     currentSpeedIndex = 3;
                     timeTv.setText(s);
+                    speedTv.setText("");
                     pauseImg.setImageResource(R.mipmap.ic_resume);
                 } else {
                     return;
@@ -481,14 +536,19 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.pause:
                 if (isRun) {
                     if (!isPause) {
-                        countDownTimer.cancel();
-                        countDownTimer = null;
+                        if (countDownTimer != null) {
+                            countDownTimer.cancel();
+                            countDownTimer = null;
+                        }
                         pauseImg.setImageResource(R.mipmap.ic_resume);
                         isPause = true;
                     } else {
                         if (isSpeedRun) {
-                            wasPaused = true;
-                            changeTimerSpeed();
+                            if (currentSpeedIndex < 3) {
+                                delayBeforeStart();
+                            } else {
+                                startChangedSpeedTimer();
+                            }
                         } else {
                             startTimer();
                         }
