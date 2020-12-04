@@ -42,6 +42,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
     private ImageView pauseImg;
     private TextView timeTv;
+    private TextView speedTv;
     private EditText editText;
 
     private int currentTime;
@@ -56,6 +57,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     private String s;
     private final String newintent = "notification";
 
+    private boolean isSpeedRun = false;
+    private boolean wasPaused = false;
     private boolean optionClicked;
     private int currentSpeedIndex = 3;
     private long realTime;
@@ -96,6 +99,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
         pauseImg = findViewById(R.id.pause);
         timeTv = findViewById(R.id.tv_timer);
+        speedTv = findViewById(R.id.tv_speed);
         editText = findViewById(R.id.edit_timer);
 
         mVibrator = (Vibrator) getApplication().getSystemService(Service.VIBRATOR_SERVICE);
@@ -115,12 +119,6 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             notificationManager.createNotificationChannel(channel);
         }
 
-    }
-
-    private void enableUpButton() {
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -145,86 +143,10 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void changeTimerSpeed() {
-            countDownTimer.cancel();
-            //realTime = 0;
-            long millisInFuture = Math.round(currentTime * scaleFactors[currentSpeedIndex] * 1000);
-            countDownTimer = new CountDownTimer(millisInFuture, countDownIntervals[currentSpeedIndex]) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    millisUntilFinished = Math.round(millisUntilFinished / scaleFactors[currentSpeedIndex]);
-                    updateTimerUI(millisUntilFinished);
-                    currentTime--;
-                    //realTime += countDownIntervals[currentSpeedIndex];
-                }
-
-                @Override
-                public void onFinish() {
-//                    realTime /= 1000;
-//                    String msg = "Real time elapsed is " + realTime + "seconds";
-//                    Toast.makeText(TimerActivity.this, msg, Toast.LENGTH_LONG).show();
-                    setTimerFinishParameters();
-                }
-            };
-            countDownTimer.start();
-    }
-
-    private void setTimerFinishParameters() {
-        timeTv.setText("00:00");
-        isRun = false;
-        currentSpeedIndex = 3;
-        time = 0;
-        pauseImg.setImageResource(R.mipmap.ic_resume);
-        r.play();
-        Thread stopRing = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                r.stop();
-            }
-        });
-        stopRing.start();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            r.setLooping(true);
-        }
-        sendChatMsg(TimerActivity.this.getCurrentFocus());
-    }
-
-    private void showTimerSpeedOptions() {
-        optionClicked = false;
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
-        alertDialog.setTitle("Timer Speed")
-                   .setSingleChoiceItems(options, currentSpeedIndex, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            tentativeSpeedIndex = i;
-                            optionClicked = true;
-                        }
-                    })
-                   .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                       @Override
-                       public void onClick(DialogInterface dialogInterface, int i) {
-                           if (optionClicked && currentSpeedIndex != tentativeSpeedIndex) {
-                               currentSpeedIndex = tentativeSpeedIndex;
-                               if (isRun) {
-                                   changeTimerSpeed();
-                               }
-                           }
-                       }
-                   })
-                   .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-                       @Override
-                       public void onClick(DialogInterface dialogInterface, int i) {
-                       }
-                   });
-
-        AlertDialog alert = alertDialog.create();
-        alert.setCanceledOnTouchOutside(false);
-        alert.show();
+    private void enableUpButton() {
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -273,6 +195,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         if (countDownTimer != null) {
             countDownTimer.cancel();
         }
+
+        setSpeedText();
+
         countDownTimer = new CountDownTimer(currentTime * 1000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
@@ -287,6 +212,82 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             }
         };
         countDownTimer.start();
+    }
+
+    private void showTimerSpeedOptions() {
+        optionClicked = false;
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+        alertDialog.setTitle("Timer Speed")
+                .setSingleChoiceItems(options, currentSpeedIndex, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        tentativeSpeedIndex = i;
+                        optionClicked = true;
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (optionClicked && currentSpeedIndex != tentativeSpeedIndex) {
+                            currentSpeedIndex = tentativeSpeedIndex;
+                            if (isRun) {
+                                wasPaused = false;
+                                changeTimerSpeed();
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+
+        AlertDialog alert = alertDialog.create();
+        alert.setCanceledOnTouchOutside(false);
+        alert.show();
+    }
+
+    private void changeTimerSpeed() {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        isSpeedRun = true;
+        //realTime = 0;
+        setSpeedText();
+
+
+        if (wasPaused && currentSpeedIndex < 3) {
+            wasPaused = false;
+        } else {
+            wasPaused = true;
+        }
+
+        long millisInFuture = Math.round(currentTime * scaleFactors[currentSpeedIndex] * 1000);
+        countDownTimer = new CountDownTimer(millisInFuture, countDownIntervals[currentSpeedIndex]) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                currentTime--;
+                millisUntilFinished = Math.round(millisUntilFinished / scaleFactors[currentSpeedIndex]);
+                updateTimerUI(millisUntilFinished);
+                //realTime += countDownIntervals[currentSpeedIndex];
+            }
+
+            @Override
+            public void onFinish() {
+//                    realTime /= 1000;
+//                    String msg = "Real time elapsed is " + realTime + "seconds";
+//                    Toast.makeText(TimerActivity.this, msg, Toast.LENGTH_LONG).show();
+                setTimerFinishParameters();
+            }
+        };
+        countDownTimer.start();
+    }
+
+    private void setSpeedText() {
+        String text = "Time @" + options[currentSpeedIndex];
+        speedTv.setText(text);
     }
 
     private void updateTimerUI(long millisUntilFinished) {
@@ -316,12 +317,40 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private void setTimerFinishParameters() {
+        timeTv.setText("00:00");
+        speedTv.setText("");
+        isRun = false;
+        isSpeedRun = false;
+        currentSpeedIndex = 3;
+        time = 0;
+        pauseImg.setImageResource(R.mipmap.ic_resume);
+        r.play();
+        Thread stopRing = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                r.stop();
+            }
+        });
+        stopRing.start();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            r.setLooping(true);
+        }
+        sendChatMsg(TimerActivity.this.getCurrentFocus());
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.min1:
                 if (isRun) {
                     isRun = false;
+                    isSpeedRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
@@ -336,6 +365,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.min2:
                 if (isRun) {
                     isRun = false;
+                    isSpeedRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
@@ -350,6 +380,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.min3:
                 if (isRun) {
                     isRun = false;
+                    isSpeedRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
@@ -364,6 +395,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.min5:
                 if (isRun) {
                     isRun = false;
+                    isSpeedRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
@@ -378,6 +410,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.min10:
                 if (isRun) {
                     isRun = false;
+                    isSpeedRun = false;
                     countDownTimer.cancel();
                     countDownTimer = null;
                 }
@@ -394,6 +427,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                         Integer.parseInt(editText.getText().toString()) > 0) {
                     if (isRun) {
                         isRun = false;
+                        isSpeedRun = false;
                         countDownTimer.cancel();
                         countDownTimer = null;
                         pauseImg.setImageResource(R.mipmap.ic_resume);
@@ -431,11 +465,13 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             case R.id.reset:
                 if (isRun) {
                     isRun = false;
+                    isSpeedRun = false;
                     if (countDownTimer != null) {
                         countDownTimer.cancel();
                         countDownTimer = null;
                     }
                     currentTime = time * 60;
+                    currentSpeedIndex = 3;
                     timeTv.setText(s);
                     pauseImg.setImageResource(R.mipmap.ic_resume);
                 } else {
@@ -450,7 +486,12 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                         pauseImg.setImageResource(R.mipmap.ic_resume);
                         isPause = true;
                     } else {
-                        startTimer();
+                        if (isSpeedRun) {
+                            wasPaused = true;
+                            changeTimerSpeed();
+                        } else {
+                            startTimer();
+                        }
                         isPause = false;
                         pauseImg.setImageResource(R.mipmap.ic_pause);
                     }
