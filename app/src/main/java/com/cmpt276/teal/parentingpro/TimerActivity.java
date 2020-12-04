@@ -60,8 +60,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     private boolean optionClicked;
     private int currentSpeedIndex = 3;
     private int tentativeSpeedIndex;
-    private double currentSpeed = 1.00;
-    private double tentativeSpeed;
+    final String[] options = {"25%", "50%", "75%", "100%", "200%", "300%", "400%"};
+    final long[] countDownIntervals = {4000, 2000, 1333, 1000, 500, 333, 250};
+    final double[] scaleFactors = {4.0, 2.0, 1.333, 1.0,  0.5, 0.333, 0.25};
 
 
 
@@ -133,6 +134,9 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         switch(item.getItemId()) {
             case R.id.action_timer_speed:
                 showTimerSpeedOptions();
+                if (speedChanged && isRun) {
+                    updateTimerSpeed();
+                }
                 return true;
             case android.R.id.home:
                 finish();
@@ -142,11 +146,77 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void showTimerSpeedOptions() {
-        final String[] options = {"25%", "50%", "75%", "100%", "200%", "300%", "400%"};
-        final Double[] speeds = {0.25, 0.50, 0.75, 1.00, 2.00, 3.00, 4.00};
-        optionClicked = false;
+    private void updateTimerSpeed() {
+            countDownTimer.cancel();
 
+            long millisInFuture =(long)Math.round(currentTime * scaleFactors[currentSpeedIndex] * 1000);
+            countDownTimer = new CountDownTimer(millisInFuture, countDownIntervals[currentSpeedIndex]) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                    
+
+                    long day = millisUntilFinished / (1000 * 24 * 60 * 60);
+
+                    long hour = (millisUntilFinished - day * (1000 * 24 * 60 * 60)) / (1000 * 60 * 60);
+
+                    long minute = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60)) / (1000 * 60);
+
+                    long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;
+
+                    // calls the time
+
+                    String days = String.format("%02d", day);
+                    String hours = String.format("%02d", hour);
+                    String minutes = String.format("%02d", minute);
+                    String seconds = String.format("%02d", second);
+
+                    if (day != 0) {
+                        timeTv.setText(days + ":" + hours + ":" + minutes + ":" + seconds);
+                    } else {
+                        if (hour != 0) {
+                            timeTv.setText(hours + ":" + minutes + ":" + seconds);
+                        } else {
+                            timeTv.setText(minutes + ":" + seconds);
+                        }
+                    }
+                    currentTime--;
+                }
+
+
+                @Override
+                public void onFinish() {
+                    // call back
+                    timeTv.setText("00:00");
+                    isRun = false;
+                    currentSpeedIndex = 3;
+                    time = 0;
+                    pauseImg.setImageResource(R.mipmap.ic_resume);
+                    r.play();
+                    Thread stopRing = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(5000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            r.stop();
+                        }
+                    });
+                    stopRing.start();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        r.setLooping(true);
+                    }
+                    sendChatMsg(TimerActivity.this.getCurrentFocus());
+
+                }
+            };
+            countDownTimer.start();
+    }
+
+    private void showTimerSpeedOptions() {
+        optionClicked = false;
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
         alertDialog.setTitle("Timer Speed")
                    .setSingleChoiceItems(options, currentSpeedIndex, new DialogInterface.OnClickListener() {
@@ -155,7 +225,6 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                             String msg = "Clicked on " + options[i];
                             Toast.makeText(TimerActivity.this, msg, Toast.LENGTH_SHORT).show();
                             tentativeSpeedIndex = i;
-                            tentativeSpeed = speeds[i];
                             optionClicked = true;
                         }
                     })
@@ -165,7 +234,6 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                            if (optionClicked) {
                                speedChanged = true;
                                currentSpeedIndex = tentativeSpeedIndex;
-                               currentSpeed = tentativeSpeed;
                            } else {
                                speedChanged = false;
                            }
@@ -263,6 +331,8 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 }
                 currentTime--;
             }
+
+
 
             @Override
             public void onFinish() {
