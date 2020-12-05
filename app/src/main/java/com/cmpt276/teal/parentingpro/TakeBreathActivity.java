@@ -40,7 +40,7 @@ public class TakeBreathActivity extends AppCompatActivity {
 
     public static final int MIN_BREATH = 1;
     public static final int MAX_BREATH = 10;
-    public static final int DEFAULT_BREATH = 3;
+    // public static final int DEFAULT_BREATH = 3;
 
     private static final float MIN_BUTTON_SCALE = 1;
     private static final float MAX_BUTTON_SCALE = 4;
@@ -59,8 +59,9 @@ public class TakeBreathActivity extends AppCompatActivity {
         private long pressTime;
 
         public void startInhale() {
+            mSoundPool.stop(streamId);
             if(isPress){
-                finish();
+                finish(true);
             }
             isPress = true;
             pressTime = System.currentTimeMillis();
@@ -72,15 +73,16 @@ public class TakeBreathActivity extends AppCompatActivity {
             streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
         }
 
-        public void finish(){
+        public void finish(boolean cancelSound){
             cancelAnimationIn();
-            mSoundPool.stop(streamId);
             isPress = false;
+            if(cancelSound)
+                mSoundPool.stop(streamId);
         }
 
         public void stopInhale(){
             if(inState) {
-                finish();
+                finish(true);
             }
             if(breathState.satifyState()){
                 startExhale();
@@ -93,12 +95,15 @@ public class TakeBreathActivity extends AppCompatActivity {
         }
 
         public void startExhale(){
+            mSoundPool.stop(streamId);
             isPress = true;
             inState = false;
             pressTime = System.currentTimeMillis();
             breathBtn.setText(R.string.out);
             breathBtn.setEnabled(false);
-            tvDesc.setText(R.string.release_breath_out);
+            N--;
+            String outputText = N == 0 ? getString(R.string.good_job) : getString(R.string.release_breath_out);
+            tvDesc.setText(outputText);
             transFormToScale(animationIn, animationOut, MIN_BUTTON_SCALE);
             streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
         }
@@ -112,19 +117,21 @@ public class TakeBreathActivity extends AppCompatActivity {
                     breathBtn.setText(R.string.in);
                     if(!breathBtn.isEnabled()) {
                         breathBtn.setEnabled(true);
-                        N--;
-                        tvDesc.setText(String.format("Left %d breaths", N));
+                        // N--;
+                        tvDesc.setText(getString(R.string.let_take_breath, N));
                         if (N == 0) {
+                            N = seekbar.getProgress() + MIN_BREATH;
+                            tvDesc.setText(getString(R.string.let_take_breath, N));
                             enableSeekbar();
                             breathBtn.setText(R.string.good_job);
-                            finish();
+                            finish(false);
                         }
                     }
 
                 }
             }
             if(cost > 10000){
-                finish();
+                finish(true);
             }
         }
 
@@ -164,11 +171,7 @@ public class TakeBreathActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        N = DataUtil.getIntData(this, AppDataKey.BREATH_INHALE);
-        if(N <= -1){
-            N = 3;
-            DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, N);
-        }
+        N = getNumberOfBreath();
         breathState.reset();
     }
 
@@ -185,19 +188,15 @@ public class TakeBreathActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         setContentView(R.layout.activity_take_breath);
 
+        N = getNumberOfBreath();
+        System.out.println("N = " + N);
 
         tvDesc = findViewById(R.id.tv_desc);
-
-        N = DataUtil.getIntData(this, AppDataKey.BREATH_INHALE);
-        if(N <= -1){
-            N = 3;
-            DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, N);
-        }
-
-
         seekbar = findViewById(R.id.breath_seekbar);
         seekbarText = findViewById(R.id.seekbar_text);
         breathBtn = findViewById(R.id.btn_breath);
+
+        tvDesc.setText(getString(R.string.let_take_breath, N));
 
         setupSeekbar();
         setAnimations();
@@ -232,9 +231,21 @@ public class TakeBreathActivity extends AppCompatActivity {
     }
 
 
+    private int getNumberOfBreath(){
+        int breathNum = DataUtil.getIntData(this, AppDataKey.BREATH_INHALE);
+        if(breathNum <= -1){
+            breathNum = 3;
+            DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, breathNum);
+        }
+        return breathNum;
+    }
+
+
     private void setupSeekbar(){
         seekbar.setMax(MAX_BREATH - MIN_BREATH);
-        seekbar.setProgress(DEFAULT_BREATH - MIN_BREATH);
+        System.out.println("set progress N = " + N);
+        seekbar.setProgress(N - MIN_BREATH);
+        seekbarText.setText("" + N);
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean b) {

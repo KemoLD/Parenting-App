@@ -55,7 +55,6 @@
                 android:layout_height="wrap_content"
                 android:max="10"
                 android:maxHeight="5sp"
-                android:min="1"
                 android:paddingHorizontal="100dp"
                 android:progressDrawable="@drawable/seekbar"
                 android:thumb="@drawable/seekbar_thumb" />
