@@ -43,8 +43,8 @@ public class TakeBreathActivity extends AppCompatActivity {
     public static final int DEFAULT_BREATH = 3;
 
     private static final float MIN_BUTTON_SCALE = 1;
-    private static final float MAX_BUTTON_SCALE = 5;
-    private static final long SCALE_DURATION = 5000;
+    private static final float MAX_BUTTON_SCALE = 4;
+    private static final long SCALE_DURATION = 10000;
 
     private SoundPool mSoundPool;
     private int audioIn;
@@ -112,7 +112,8 @@ public class TakeBreathActivity extends AppCompatActivity {
                     tvDesc.setText(String.format("Left %d breaths", N));
                     isPress = false;
                     if(N == 0) {
-                        breathBtn.setText("Good job");
+                        enableSeekbar();
+                        breathBtn.setText(R.string.good_job);
                         finish();
                     }
 
@@ -160,7 +161,7 @@ public class TakeBreathActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         N = DataUtil.getIntData(this, AppDataKey.BREATH_INHALE);
-        if(N == -1){
+        if(N <= -1){
             N = 3;
             DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, N);
         }
@@ -184,7 +185,7 @@ public class TakeBreathActivity extends AppCompatActivity {
         tvDesc = findViewById(R.id.tv_desc);
 
         N = DataUtil.getIntData(this, AppDataKey.BREATH_INHALE);
-        if(N == -1){
+        if(N <= -1){
             N = 3;
             DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, N);
         }
@@ -236,6 +237,7 @@ public class TakeBreathActivity extends AppCompatActivity {
                 progress = MIN_BREATH + progress;
                 seekbarText.setText("" + progress);
                 N = progress;
+                tvDesc.setText(getString(R.string.let_take_breath, N));
                 DataUtil.writeOneIntData(TakeBreathActivity.this, AppDataKey.BREATH_INHALE, N);
             }
 
