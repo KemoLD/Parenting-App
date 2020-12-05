@@ -25,8 +25,8 @@ import java.util.List;
 public class ChildManagerUI extends ChildManager
 {
     private Context context;
-    private final String CHILD_FILE_SEPERATOR = "#####";
-    private final String CHILD_LIST_SERERATOR = "@@@@@";
+    private final static String CHILD_FILE_SEPERATOR = "#####";
+    private final static String CHILD_LIST_SERERATOR = "@@@@@";
 
     public static Bitmap defaultChildImage = null;
     private static ChildManagerUI manager;
@@ -106,15 +106,21 @@ public class ChildManagerUI extends ChildManager
         }
     }
 
-
     public void loadFromLocal(Context context){
        this.loadFromLocal(context, null);
     }
 
 
     public void loadFromLocal(Context context, Handler handler){
+        loadFromLocal(context, handler, manager);
+    }
+
+
+    public void loadFromLocal(Context context, Handler handler, ChildManagerUI desManager){
         removeAll();
         String childListData = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
+        int childGenerteId = DataUtil.getIntData(context, AppDataKey.CHILD_GENERATE_ID);
+        Child.setGenerateId(childGenerteId);
         if(childListData == null || childListData.length() == 0 || childListData.equals(DataUtil.DEFAULT_STRING_VALUE)){
             return;
         }
@@ -122,7 +128,7 @@ public class ChildManagerUI extends ChildManager
         for(String childData : childList){
             if(childData != null && !childData.equals(DataUtil.DEFAULT_STRING_VALUE)){
                 ChildUI child = ChildUI.buildChildFromData(context, childData, CHILD_FILE_SEPERATOR);
-                manager.addChild(child);
+                desManager.addChild(child);
                 String imageFileName = child.getImageFileName();
                 if(imageFileName == null || imageFileName.equals("")){
                     child.setProfile(defaultChildImage);
@@ -147,15 +153,80 @@ public class ChildManagerUI extends ChildManager
 
 
     public void saveToLocal(Context context){
+        String childrenString = getBasicData(this);
+        DataUtil.writeOneIntData(context, AppDataKey.CHILD_GENERATE_ID, Child.getGenerateId());
+        DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, childrenString);
+    }
+
+
+
+    public static ChildManagerUI getCopy(ChildManagerUI source){
+        ChildManagerUI copyedManager = new ChildManagerUI(source.context);
+        for(int i = 0; i < source.length(); i++){
+            copyedManager.addChild(source.getChild(i));
+        }
+        return copyedManager;
+    }
+
+
+    public static ChildManagerUI getBasicFromData(Context context, String data){
+        ChildManagerUI manager = new ChildManagerUI(context);
+        String[] childList = data.split(CHILD_LIST_SERERATOR);
+        for(String childData : childList) {
+            ChildUI child = ChildUI.buildChildFromData(context, childData, CHILD_FILE_SEPERATOR);
+            manager.addChild(child);
+        }
+        return manager;
+    }
+
+
+    public static String getBasicData(ChildManagerUI manager){
         StringBuilder childListString = new StringBuilder();
         for(int i = 0; i < manager.length(); i++){
-            ChildUI child = this.getChild(i);
+            ChildUI child = manager.getChild(i);
             childListString.append(child.getChildDataString(CHILD_FILE_SEPERATOR));
             childListString.append(CHILD_LIST_SERERATOR);
         }
-        DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, childListString.toString());
+        return childListString.toString();
     }
 
+    /**
+     * the method update keep the child order in manager and update data according to target
+     * @param target  the data update from
+     * @param source  the data order that to keep
+     */
+    public static void reoverManager(ChildManagerUI target, ChildManagerUI source){
+        // check source child in target if child in source exist in target update information
+        // if not exist delete the child
+        ArrayList<Child>removeList = new ArrayList<>(source.length());
+        for(int i = 0; i < source.length(); i++){
+            ChildUI oldChild = source.getChild(i);
+            int oldChildIndexInTarget = target.indexOf(oldChild);
+            if(oldChildIndexInTarget != -1){    // if target has the child
+                ChildUI newChild = target.getChild(oldChildIndexInTarget);
+                oldChild.updateFromChild(newChild);
+            }
+            else{   // if target do not has the child
+                // source.remove(oldChild);
+                removeList.add(oldChild);
+            }
+        }
+
+        for(Child child : removeList){
+            source.remove(child);
+        }
+
+
+        // check target child exist in source
+        // if not exist add it the source
+        for(int i  = 0; i < target.length(); i++){
+            ChildUI newChild = target.getChild(i);
+            int newChildIndexInSource = source.indexOf(newChild);
+            if(newChildIndexInSource == -1){
+                source.addChild(newChild);
+            }
+        }
+    }
 
 
     private class LoadImageTask implements Runnable

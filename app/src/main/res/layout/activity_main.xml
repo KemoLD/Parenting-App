@@ -7,12 +7,7 @@
     android:background="@drawable/background2"
     tools:context=".MainActivity">
 
-    <!--                <ImageView-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:src="@mipmap/im_flip"/>-->
-
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center"
@@ -170,27 +165,141 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1" />
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline27"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.9" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.4"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textColor="#F4F4F4"
+            android:textSize="40sp"
+            android:typeface="monospace"
+            app:layout_constraintBottom_toTopOf="@+id/guideline16"
+            app:layout_constraintTop_toTopOf="@+id/guideline13"
+            tools:layout_editor_absoluteX="0dp" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline38"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.7" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline43"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
+        <LinearLayout
+            style="@style/main_item_layer">
+
+            <LinearLayout
+                android:id="@+id/btn_config"
+                style="@style/main_item"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:id="@+id/main_cof_img"
+                    style="@style/main_item_image"
+                    app:srcCompat="@drawable/ic_baseline_child_care_24" />
+
+                <TextView
+                    style="@style/main_page_text"
+                    android:text="@string/config_child" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/main_item"
+                android:orientation="vertical"
+                android:id="@+id/btn_flip"
+                >
+
+                <ImageView
+                    android:id="@+id/main_flip_img"
+                    style="@style/main_item_image"
+                    app:srcCompat="@drawable/ic_baseline_flaky_24" />
+
+                <TextView
+                    style="@style/main_page_text"
+                    android:text="@string/flip_coin_title" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            style="@style/main_item_layer">
+            <LinearLayout
+                android:id="@+id/btn_timer"
+                style="@style/main_item"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:id="@+id/main_timer_img"
+                    style="@style/main_item_image"
+                    app:srcCompat="@drawable/ic_baseline_timer_24" />
+
+                <TextView
+                    style="@style/main_page_text"
+                    android:text="@string/timer" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/btn_help"
+                style="@style/main_item"
+                android:orientation="vertical"
+                >
+                <ImageView
+                    android:id="@+id/main_help_img"
+                    style="@style/main_item_image"
+                    app:srcCompat="@drawable/ic_baseline_help_24" />
+
+                <TextView
+                    style="@style/main_page_text"
+                    android:text="@string/help" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+        <LinearLayout
+            style="@style/main_item_layer">
+            <LinearLayout
+                android:id="@+id/btn_turns"
+                style="@style/main_item"
+                android:orientation="vertical"
+                >
+                <ImageView
+                    android:id="@+id/main_tasks_img"
+                    style="@style/main_item_image"
+                    app:srcCompat="@drawable/ic_baseline_add_task_24" />
+                <TextView
+                    style="@style/main_page_text"
+                    android:text="@string/whose_turn" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/btn_take_breath"
+                style="@style/main_item"
+                android:orientation="vertical"
+                >
+
+                <ImageView
+                    android:id="@+id/main_breath_img"
+                    style="@style/main_item_image"
+                    app:srcCompat="@drawable/ic_round_call_split_24" />
+
+                <TextView
+                    style="@style/main_page_text"
+                    android:text="@string/take_breath" />
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
