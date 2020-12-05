@@ -57,7 +57,7 @@ public class HistoryActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        ChildManagerUI childManager = ChildManagerUI.getInstance(this);
+        ChildManagerUI childManager = FlipCoinActivity.getFilpCoinChildManager();
         extractIntentData();
 
         History historyList = History.getInstance();

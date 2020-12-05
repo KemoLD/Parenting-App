@@ -51,7 +51,7 @@ public class FlipCoinActivity extends AppCompatActivity
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
     private History historyList;
-    private ChildManagerUI childManager;
+    private static ChildManagerUI childManager;
     private int lastChildFlippedIndex;
     private int currentChildIndex;
     private ChildUI currentChildFlipping;
@@ -60,6 +60,10 @@ public class FlipCoinActivity extends AppCompatActivity
     private SoundPool soundPool;
     private int flipSound;
     private ImageView childImageView;
+
+    public static ChildManagerUI getFilpCoinChildManager(){
+        return childManager;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
