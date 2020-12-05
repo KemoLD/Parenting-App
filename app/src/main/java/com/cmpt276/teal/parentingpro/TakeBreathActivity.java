@@ -117,7 +117,6 @@ public class TakeBreathActivity extends AppCompatActivity {
                     breathBtn.setText(R.string.in);
                     if(!breathBtn.isEnabled()) {
                         breathBtn.setEnabled(true);
-                        // N--;
                         tvDesc.setText(getString(R.string.let_take_breath, N));
                         if (N == 0) {
                             N = seekbar.getProgress() + MIN_BREATH;
@@ -189,7 +188,6 @@ public class TakeBreathActivity extends AppCompatActivity {
         setContentView(R.layout.activity_take_breath);
 
         N = getNumberOfBreath();
-        System.out.println("N = " + N);
 
         tvDesc = findViewById(R.id.tv_desc);
         seekbar = findViewById(R.id.breath_seekbar);
@@ -243,7 +241,6 @@ public class TakeBreathActivity extends AppCompatActivity {
 
     private void setupSeekbar(){
         seekbar.setMax(MAX_BREATH - MIN_BREATH);
-        System.out.println("set progress N = " + N);
         seekbar.setProgress(N - MIN_BREATH);
         seekbarText.setText("" + N);
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
