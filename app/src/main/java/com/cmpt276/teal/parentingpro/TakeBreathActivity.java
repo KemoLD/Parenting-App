@@ -75,6 +75,7 @@ public class TakeBreathActivity extends AppCompatActivity {
         public void finish(){
             cancelAnimationIn();
             mSoundPool.stop(streamId);
+            isPress = false;
         }
 
         public void stopInhale(){
@@ -96,6 +97,7 @@ public class TakeBreathActivity extends AppCompatActivity {
             inState = false;
             pressTime = System.currentTimeMillis();
             breathBtn.setText(R.string.out);
+            breathBtn.setEnabled(false);
             tvDesc.setText(R.string.release_breath_out);
             transFormToScale(animationIn, animationOut, MIN_BUTTON_SCALE);
             streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
@@ -108,13 +110,15 @@ public class TakeBreathActivity extends AppCompatActivity {
                     breathBtn.setText(R.string.out);
                 }else{
                     breathBtn.setText(R.string.in);
-                    N--;
-                    tvDesc.setText(String.format("Left %d breaths", N));
-                    isPress = false;
-                    if(N == 0) {
-                        enableSeekbar();
-                        breathBtn.setText(R.string.good_job);
-                        finish();
+                    if(!breathBtn.isEnabled()) {
+                        breathBtn.setEnabled(true);
+                        N--;
+                        tvDesc.setText(String.format("Left %d breaths", N));
+                        if (N == 0) {
+                            enableSeekbar();
+                            breathBtn.setText(R.string.good_job);
+                            finish();
+                        }
                     }
 
                 }
@@ -305,7 +309,7 @@ public class TakeBreathActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d("PRJ", "action：" + event.getAction());
-                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                if(event.getAction() == MotionEvent.ACTION_DOWN && N > 0){
                     breathState.startInhale();
                 }else if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(breathState.inState) {
