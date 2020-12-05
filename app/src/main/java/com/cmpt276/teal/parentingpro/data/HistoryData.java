@@ -10,13 +10,13 @@ import java.util.Date;
 
 public class HistoryData
 {
-    private ChildUI child;
+    private Child child;
     private Date date;
     private Coin.CoinState chosenState;
     private Coin.CoinState resultState;
 
 
-    public HistoryData(ChildUI child, Date date, Coin.CoinState chosenState,
+    public HistoryData(Child child, Date date, Coin.CoinState chosenState,
                        Coin.CoinState resultState){
         this.child = child;
         this.date = date;
@@ -25,12 +25,12 @@ public class HistoryData
     }
 
 
-    public ChildUI getChild() {
+    public Child getChild() {
         return child;
     }
 
 
-    public void setChild(ChildUI child) {
+    public void setChild(Child child) {
         this.child = child;
     }
 

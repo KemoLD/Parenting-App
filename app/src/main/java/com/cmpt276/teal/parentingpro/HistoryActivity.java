@@ -34,6 +34,7 @@ public class HistoryActivity extends AppCompatActivity
     private ArrayList<HistoryData> historyArray;
     private int currentChildIndex;
     private static final String EXTRA_CURRENT_CHILD_INDEX = "Index of the child currently flipping";
+    ChildManagerUI childManager;
 
     public static Intent makeLaunchIntent(Context context){
         return new Intent(context, HistoryActivity.class);
@@ -57,7 +58,7 @@ public class HistoryActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        ChildManagerUI childManager = ChildManagerUI.getInstance(this);
+        childManager = ChildManagerUI.getInstance(this);
         extractIntentData();
 
         History historyList = History.getInstance();
@@ -123,7 +124,7 @@ public class HistoryActivity extends AppCompatActivity
             dateText.setText(paredDate);
             nameText.setText(childName);
             chooseText.setText(state);
-            childImage.setImageBitmap(data.getChild().getProfile());
+            childImage.setImageBitmap(childManager.getChild(currentChildIndex).getProfile());
             resultImage.setImageResource(resultImageID);
 
             return itemView;
