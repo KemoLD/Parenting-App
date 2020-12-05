@@ -1,7 +1,10 @@
 package com.cmpt276.teal.parentingpro.data;
 
+import android.graphics.Bitmap;
+
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.Coin;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 
 import java.util.Date;
 
