@@ -44,3 +44,4 @@ public class HelpActivity extends AppCompatActivity {
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
+

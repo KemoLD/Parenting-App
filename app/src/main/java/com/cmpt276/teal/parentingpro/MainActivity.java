@@ -3,13 +3,8 @@ package com.cmpt276.teal.parentingpro;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
-
-import com.cmpt276.teal.parentingpro.data.DataUtil;
-import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 
 /**
  * the class is the main activity for the app
