@@ -1,19 +1,22 @@
 package com.cmpt276.teal.parentingpro.data;
 
+import android.graphics.Bitmap;
+
 import com.cmpt276.teal.parentingpro.model.Child;
 import com.cmpt276.teal.parentingpro.model.Coin;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 
 import java.util.Date;
 
 public class HistoryData
 {
-    private Child child;
+    private ChildUI child;
     private Date date;
     private Coin.CoinState chosenState;
     private Coin.CoinState resultState;
 
 
-    public HistoryData(Child child, Date date, Coin.CoinState chosenState,
+    public HistoryData(ChildUI child, Date date, Coin.CoinState chosenState,
                        Coin.CoinState resultState){
         this.child = child;
         this.date = date;
@@ -22,12 +25,12 @@ public class HistoryData
     }
 
 
-    public Child getChild() {
+    public ChildUI getChild() {
         return child;
     }
 
 
-    public void setChild(Child child) {
+    public void setChild(ChildUI child) {
         this.child = child;
     }
 

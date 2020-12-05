@@ -106,6 +106,7 @@ public class HistoryActivity extends AppCompatActivity
             TextView nameText = itemView.findViewById(R.id.history_content_name);
             TextView chooseText = itemView.findViewById(R.id.history_content_chose);
             ImageView resultImage = itemView.findViewById(R.id.history_content_result);
+            ImageView childImage = itemView.findViewById(R.id.profile);
 
             HistoryData data = historyArray.get(position);
             String paredDate = dateFormat.format(data.getDate());
@@ -122,6 +123,7 @@ public class HistoryActivity extends AppCompatActivity
             dateText.setText(paredDate);
             nameText.setText(childName);
             chooseText.setText(state);
+            childImage.setImageBitmap(data.getChild().getProfile());
             resultImage.setImageResource(resultImageID);
 
             return itemView;
