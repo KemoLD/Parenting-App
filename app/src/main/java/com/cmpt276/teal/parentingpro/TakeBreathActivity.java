@@ -183,6 +183,7 @@ public class TakeBreathActivity extends AppCompatActivity {
                 if(!s.isEmpty()){
                     N = Integer.parseInt(s);
                     DataUtil.writeOneIntData(TakeBreathActivity.this, AppDataKey.BREATH_INHALE, N);
+                    breathState.reset();
                 }
             }
         });
