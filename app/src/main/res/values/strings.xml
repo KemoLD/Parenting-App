@@ -85,7 +85,8 @@
         ]]>
     </string>
     <string name="whose_turn">Whose Turn</string>
-
+    <string name="nameasdafa">nameasdafa</string>
+    <string name="tv">tv</string>
 
     <!--    take breath-->
     <string name="in">In</string>
@@ -96,4 +97,6 @@
     <string name="release_breath_out">Release Button and breath out</string>
     <string name="let_take_breath">Let take %1d/ breaths together</string>
     <string name="begin">Begin</string>
+
+    <string name="take_breath">take breath</string>
 </resources>

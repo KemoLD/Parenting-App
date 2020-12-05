@@ -61,7 +61,10 @@ public class TakeBreathActivity extends AppCompatActivity {
         private long pressTime;
 
         public void startInhale() {
-
+            if(isPress){
+                finish();
+            }
+            isPress = true;
             pressTime = System.currentTimeMillis();
             inState = true;
             disableSeekbar();
@@ -72,27 +75,20 @@ public class TakeBreathActivity extends AppCompatActivity {
         }
 
         public void finish(){
-            // check start instate is less than 3 sec then release
-            if(inState && !breathState.satifyState()){
-                // breathBtn.clearAnimation();
-                cancelAnimationIn();
-                mSoundPool.stop(streamId);
-                return;
-            }
-
-            // button press is more than 3 sec then release
-            // breathBtn.clearAnimation();
+            logo.clearAnimation();
+            cancelAnimationIn();
             mSoundPool.stop(streamId);
-            inState = !inState;
-            if(!inState){
+//            if(!inState){
+//                isPress = false;
+//            }
+        }
+
+        public void stopInhale(){
+            if(inState) {
+                finish();
+            }
+            if(breathState.satifyState()){
                 startExhale();
-            }else{
-                N--;
-                tvDesc.setText(getString(R.string.left_breath, N));
-                if(N == 0) {
-                    enableSeekbar();
-                    breathBtn.setText(R.string.good_job);
-                }
             }
         }
 
@@ -188,6 +184,18 @@ public class TakeBreathActivity extends AppCompatActivity {
             DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, N);
         }
 
+        final EditText editText = findViewById(R.id.edit_breath);
+        findViewById(R.id.btn_update).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String s = editText.getText().toString();
+                if(!s.isEmpty()){
+                    N = Integer.parseInt(s);
+                    DataUtil.writeOneIntData(TakeBreathActivity.this, AppDataKey.BREATH_INHALE, N);
+                    breathState.reset();
+                }
+            }
+        });
 
         seekbar = findViewById(R.id.breath_seekbar);
         seekbarText = findViewById(R.id.seekbar_text);
@@ -211,7 +219,7 @@ public class TakeBreathActivity extends AppCompatActivity {
                         handler.sendMessage(message);
                     }
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(200);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -302,12 +310,10 @@ public class TakeBreathActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d("PRJ", "action：" + event.getAction());
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    breathState.isPress = true;
                     breathState.startInhale();
                 }else if(event.getAction() == MotionEvent.ACTION_UP) {
-                    breathState.isPress = false;
                     if(breathState.inState) {
-                        breathState.finish();
+                        breathState.stopInhale();
                     }
                 }
                 return false;
