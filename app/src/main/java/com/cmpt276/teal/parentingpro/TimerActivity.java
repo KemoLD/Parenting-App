@@ -21,7 +21,6 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Vibrator;
@@ -31,7 +30,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -86,7 +84,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_placeholder);
+        setContentView(R.layout.activity_timer);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         enableUpButton();
@@ -417,10 +415,12 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         if (isRun) {
             stopTimer();
         }
+        progressBar.setProgress(0);
         time = inputTime;
         String t = String.format("%02d", time);
         s = (t + ":00");
         timeTv.setText(s);
+        speedTv.setText("");
         currentTime = time * 60;
         pauseImg.setImageResource(R.mipmap.ic_resume);
         isPause = false;
@@ -477,7 +477,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 pauseImg.setImageResource(R.mipmap.ic_resume);
                 isPause = true;
             } else {
-                progressBar.setProgress(0);
+                //progressBar.setProgress(0);
                 if (isSpeedRun) {
                     if (currentSpeedIndex < 3) {
                         delayBeforeStart();
