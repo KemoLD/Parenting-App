@@ -30,6 +30,10 @@ public class ChildUI extends Child
 
     public ChildUI(String name, String imageFileName){
         super(name, imageFileName);
+    }
+
+    public ChildUI(int id, String name, String imageFileName){
+        super(id, name, imageFileName);
         profile = null;
     }
 
@@ -50,13 +54,19 @@ public class ChildUI extends Child
 
 
     public String getChildDataString(String seperator){
-        return this.getName() + seperator + this.getImageFileName();
+        return "" + this.getId() + seperator + this.getName() + seperator + this.getImageFileName();
+    }
+
+    public void updateFromChild(ChildUI child){
+        super.updateFromChild(child);
+        this.profile = child.profile;
     }
 
 
     public static ChildUI buildChildFromData(Context context, String data, String seperator){
         String[] fields = data.split(seperator);
-        return new ChildUI(fields[0], fields[1]);
+        // passing id, name, imageFileName
+        return new ChildUI(Integer.parseInt(fields[0]), fields[1], fields[2]);
     }
 
 

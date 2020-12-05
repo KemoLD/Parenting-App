@@ -2,95 +2,116 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-   >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
 
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/item_layer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_weight="5"
         android:gravity="center"
         android:paddingHorizontal="5dp"
         android:background="#85000000"
         android:paddingVertical="8dp"
-        android:layout_marginVertical="15dp">
+        android:layout_marginVertical="15dp"
+        android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/edit_name"
-            style="@style/text_general"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:text="tv"
-            android:textSize="20dp"
-            android:visibility="invisible" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tv_desc"
-                    style="@style/text_general"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="nameasdafa"
-                    android:paddingVertical="5dp"
-                    android:textSize="20dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/tv_name"
-                    style="@style/text_general"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:paddingLeft="15dp"
-                    android:paddingVertical="5dp"
-                    android:text="nameasdafa"
-                    android:textSize="15dp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingVertical="5dp">
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_edit"
-                    style="@style/button_general"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:text="@string/edit" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/btn_del"
-                    style="@style/button_general"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:text="@string/delete" />
+                    <EditText
+                        android:id="@+id/edit_name"
+                        style="@style/text_general"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:text="@string/tv"
+                        android:textSize="20sp"
+                        android:visibility="invisible"
+                        android:inputType="text"
+                        android:importantForAutofill="no" />
+
+                    <TextView
+                        android:id="@+id/tv_desc"
+                        style="@style/text_general"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:paddingVertical="5dp"
+                        android:text="@string/nameasdafa"
+                        android:textSize="20sp" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/tv_name"
+                        style="@style/text_general"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="5dp"
+                        android:paddingStart="15dp"
+                        android:text="@string/nameasdafa"
+                        android:textSize="15sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp">
+
+                    <Button
+                        android:id="@+id/btn_edit"
+                        style="@style/button_general"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="@string/edit" />
+
+                    <Button
+                        android:id="@+id/btn_del"
+                        style="@style/button_general"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:text="@string/delete" />
+                </LinearLayout>
+
             </LinearLayout>
+
 
         </LinearLayout>
-    </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/profile"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/profile_picture"
+            app:srcCompat="@drawable/default_profile_pic" />
+
+    </LinearLayout>
 
 </LinearLayout>
+
+
+

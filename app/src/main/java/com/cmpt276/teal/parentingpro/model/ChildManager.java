@@ -72,6 +72,16 @@ public class ChildManager
         childrenList.removeAll(childrenList);
     }
 
+    public int indexOf(Child child){
+        int result = -1;
+        for(int i = 0; i < childrenList.size(); i++){
+            if(childrenList.get(i).equals(child)){
+                return i;
+            }
+        }
+        return result;
+    }
+
 
     public void move(int srcIndex, int desIndex){
         if(srcIndex == desIndex)
