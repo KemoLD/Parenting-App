@@ -24,7 +24,7 @@
     <string name="timer_expire_text">Your timeout timer has expired</string>
     <string name="timeout_title">Timeout Timer Notification</string>
     <string name="timeout_content">Timer Expired</string>
-    <string name="time_invalid">Time is InValid</string>
+    <string name="time_invalid">Time is Invalid</string>
 
     <!--    Flip Coin-->
     <string name="flip_coin_title">Flip Coin</string>
@@ -88,4 +88,12 @@
     <string name="nameasdafa">nameasdafa</string>
     <string name="tv">tv</string>
     <string name="take_breath">take breath</string>
+    <string name="title_activity_timer">TimerActivity</string>
+    <!--<string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>-->
 </resources>
