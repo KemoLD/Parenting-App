@@ -177,6 +177,7 @@ public class TakeBreathActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mSoundPool.release();
         isRun = false;
     }
 
@@ -316,7 +317,6 @@ public class TakeBreathActivity extends AppCompatActivity {
         breathBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d("PRJ", "action：" + event.getAction());
                 if(event.getAction() == MotionEvent.ACTION_DOWN && N > 0){
                     breathState.startInhale();
                 }else if(event.getAction() == MotionEvent.ACTION_UP) {
