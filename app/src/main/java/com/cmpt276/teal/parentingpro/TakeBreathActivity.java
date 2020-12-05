@@ -46,6 +46,9 @@ public class TakeBreathActivity extends AppCompatActivity {
         private long pressTime;
 
         public void startInhale() {
+            if(isPress){
+                finish();
+            }
             isPress = true;
             pressTime = System.currentTimeMillis();
             inState = true;
@@ -56,23 +59,19 @@ public class TakeBreathActivity extends AppCompatActivity {
         }
 
         public void finish(){
-            if(inState && !breathState.satifyState()){
-                logo.clearAnimation();
-                mSoundPool.stop(streamId);
-                return;
-            }
             logo.clearAnimation();
             mSoundPool.stop(streamId);
-            inState = !inState;
-            isPress = false;
-            if(!inState){
+//            if(!inState){
+//                isPress = false;
+//            }
+        }
+
+        public void stopInhale(){
+            if(inState) {
+                finish();
+            }
+            if(breathState.satifyState()){
                 startExhale();
-            }else{
-                N--;
-                tvDesc.setText(String.format("Left %d breaths", N));
-                if(N == 0) {
-                    breathBtn.setText("Good job");
-                }
             }
         }
 
@@ -93,14 +92,18 @@ public class TakeBreathActivity extends AppCompatActivity {
 
         public void inBeathing(long time){
             long cost = time - breathState.pressTime;
-            if(inState) {
-            }else{
-            }
             if(cost > 3000){
                 if(inState) {
                     breathBtn.setText("Out");
                 }else{
                     breathBtn.setText("In");
+                    N--;
+                    tvDesc.setText(String.format("Left %d breaths", N));
+                    isPress = false;
+                    if(N == 0) {
+                        breathBtn.setText("Good job");
+                        finish();
+                    }
                 }
             }
             if(cost > 10000){
@@ -228,7 +231,7 @@ public class TakeBreathActivity extends AppCompatActivity {
                         handler.sendMessage(message);
                     }
                     try {
-                        Thread.sleep(100);
+                        Thread.sleep(200);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -244,7 +247,7 @@ public class TakeBreathActivity extends AppCompatActivity {
                     breathState.startInhale();
                 }else if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(breathState.inState) {
-                        breathState.finish();
+                        breathState.stopInhale();
                     }
                 }
                 return false;
