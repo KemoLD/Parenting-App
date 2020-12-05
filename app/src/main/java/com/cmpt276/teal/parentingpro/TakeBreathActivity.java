@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
+import com.cmpt276.teal.parentingpro.ui.ScaleAnimator;
 
 import java.util.concurrent.TimeUnit;
 
@@ -29,8 +30,11 @@ public class TakeBreathActivity extends AppCompatActivity {
 
     private boolean isRun;
     private TextView tvDesc;
-    private ScaleAnimation animationIn;
-    private ScaleAnimation animationOut;
+    // private ScaleAnimation animationIn;
+    // private ScaleAnimation animationOut;
+    private ScaleAnimator animationIn;
+    private ScaleAnimator animationOut;
+
     private Button breathBtn;
 
     private SeekBar seekbar;
@@ -39,6 +43,10 @@ public class TakeBreathActivity extends AppCompatActivity {
     public static final int MIN_BREATH = 1;
     public static final int MAX_BREATH = 10;
     public static final int DEFAULT_BREATH = 3;
+
+    private static final float MIN_BUTTON_SCALE = 1;
+    private static final float MAX_BUTTON_SCALE = 5;
+    private static final long SCALE_DURATION = 10000;
 
     private SoundPool mSoundPool;
     private int audioIn;
@@ -53,35 +61,35 @@ public class TakeBreathActivity extends AppCompatActivity {
         private long pressTime;
 
         public void startInhale() {
-            isPress = true;
+
             pressTime = System.currentTimeMillis();
             inState = true;
-            Log.i("tag", "disable seekbar");
             disableSeekbar();
             breathBtn.setText(getText(R.string.in));
             tvDesc.setText(getText(R.string.hold_breath_in));
-            breathBtn.startAnimation(animationIn);
+            transFormToScale(animationOut, animationIn, MAX_BUTTON_SCALE);
             streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
         }
 
         public void finish(){
+            // check start instate is less than 3 sec then release
             if(inState && !breathState.satifyState()){
-                breathBtn.clearAnimation();
+                // breathBtn.clearAnimation();
+                cancelAnimationIn();
                 mSoundPool.stop(streamId);
                 return;
             }
 
-            breathBtn.clearAnimation();
+            // button press is more than 3 sec then release
+            // breathBtn.clearAnimation();
             mSoundPool.stop(streamId);
             inState = !inState;
-            isPress = false;
             if(!inState){
                 startExhale();
             }else{
                 N--;
                 tvDesc.setText(getString(R.string.left_breath, N));
                 if(N == 0) {
-                    Log.i("tag", "enable seekbar");
                     enableSeekbar();
                     breathBtn.setText(R.string.good_job);
                 }
@@ -94,20 +102,16 @@ public class TakeBreathActivity extends AppCompatActivity {
         }
 
         public void startExhale(){
-            isPress = true;
             inState = false;
             pressTime = System.currentTimeMillis();
             breathBtn.setText(R.string.out);
             tvDesc.setText(R.string.release_breath_out);
-            breathBtn.startAnimation(animationOut);
+            transFormToScale(animationIn, animationOut, MIN_BUTTON_SCALE);
             streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
         }
 
         public void inBeathing(long time){
             long cost = time - breathState.pressTime;
-            if(inState) {
-            }else{
-            }
             if(cost > 3000){
                 if(inState) {
                     breathBtn.setText(R.string.out);
@@ -123,7 +127,6 @@ public class TakeBreathActivity extends AppCompatActivity {
         public void reset(){
             tvDesc.setText(getString(R.string.let_take_breath, N));
             breathBtn.setText(R.string.begin);
-            isPress = false;
             inState = true;
         }
     }
@@ -247,20 +250,37 @@ public class TakeBreathActivity extends AppCompatActivity {
 
 
     private void setAnimations(){
-        animationIn = new ScaleAnimation(1, 3, 1, 3,
-                Animation.RELATIVE_TO_SELF, 0.5f,1, 0.5f);
-        animationIn.setDuration(3000);
-        animationIn.setFillAfter(true);
+        animationIn = new ScaleAnimator(breathBtn, MIN_BUTTON_SCALE, MAX_BUTTON_SCALE);
+        animationIn.setDuration(SCALE_DURATION);
         animationIn.setRepeatCount(0);
 
-
-        animationOut = new ScaleAnimation(3, 1, 3, 1,
-                Animation.RELATIVE_TO_SELF, 0.5f,1, 0.5f);
-        animationOut.setDuration(3000);
-        animationOut.setFillAfter(true);
+        animationOut = new ScaleAnimator(breathBtn, MAX_BUTTON_SCALE, MIN_BUTTON_SCALE);
+        animationOut.setDuration(SCALE_DURATION);
         animationOut.setRepeatCount(0);
     }
 
+
+    private void transFormToScale(ScaleAnimator from, ScaleAnimator to, float value){
+        float scaleSize = getScaleSizeFromAnimation(from);
+        from.cancel();      // cancel value doest matter this point because to animation is going to be start
+        to.setFloatValues(scaleSize, value);
+        to.start();
+    }
+
+
+    private void cancelAnimationIn(){
+        float scaleSize = getScaleSizeFromAnimation(animationOut);
+        animationIn.setCancelScaleValue(scaleSize);
+        animationIn.cancel();
+    }
+
+
+    private float getScaleSizeFromAnimation(ScaleAnimator animation){
+        float scaleSize = (float)animation.getAnimatedValue();
+        scaleSize = scaleSize > MAX_BUTTON_SCALE ? MAX_BUTTON_SCALE : scaleSize;
+        scaleSize = scaleSize < MIN_BUTTON_SCALE ? MIN_BUTTON_SCALE : scaleSize;
+        return scaleSize;
+    }
 
     private void setSound(){
         AudioAttributes.Builder builder = new AudioAttributes.Builder();
@@ -282,8 +302,10 @@ public class TakeBreathActivity extends AppCompatActivity {
             public boolean onTouch(View v, MotionEvent event) {
                 Log.d("PRJ", "action：" + event.getAction());
                 if(event.getAction() == MotionEvent.ACTION_DOWN){
+                    breathState.isPress = true;
                     breathState.startInhale();
                 }else if(event.getAction() == MotionEvent.ACTION_UP) {
+                    breathState.isPress = false;
                     if(breathState.inState) {
                         breathState.finish();
                     }
