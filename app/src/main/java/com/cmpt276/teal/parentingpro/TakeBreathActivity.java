@@ -2,6 +2,7 @@ package com.cmpt276.teal.parentingpro;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -30,15 +31,12 @@ public class TakeBreathActivity extends AppCompatActivity {
 
     private boolean isRun;
     private TextView tvDesc;
-    // private ScaleAnimation animationIn;
-    // private ScaleAnimation animationOut;
-    private ScaleAnimator animationIn;
-    private ScaleAnimator animationOut;
-
     private Button breathBtn;
-
     private SeekBar seekbar;
     private TextView seekbarText;
+
+    private ScaleAnimator animationIn;
+    private ScaleAnimator animationOut;
 
     public static final int MIN_BREATH = 1;
     public static final int MAX_BREATH = 10;
@@ -46,7 +44,7 @@ public class TakeBreathActivity extends AppCompatActivity {
 
     private static final float MIN_BUTTON_SCALE = 1;
     private static final float MAX_BUTTON_SCALE = 5;
-    private static final long SCALE_DURATION = 10000;
+    private static final long SCALE_DURATION = 5000;
 
     private SoundPool mSoundPool;
     private int audioIn;
@@ -75,12 +73,8 @@ public class TakeBreathActivity extends AppCompatActivity {
         }
 
         public void finish(){
-            logo.clearAnimation();
             cancelAnimationIn();
             mSoundPool.stop(streamId);
-//            if(!inState){
-//                isPress = false;
-//            }
         }
 
         public void stopInhale(){
@@ -98,6 +92,7 @@ public class TakeBreathActivity extends AppCompatActivity {
         }
 
         public void startExhale(){
+            isPress = true;
             inState = false;
             pressTime = System.currentTimeMillis();
             breathBtn.setText(R.string.out);
@@ -113,6 +108,14 @@ public class TakeBreathActivity extends AppCompatActivity {
                     breathBtn.setText(R.string.out);
                 }else{
                     breathBtn.setText(R.string.in);
+                    N--;
+                    tvDesc.setText(String.format("Left %d breaths", N));
+                    isPress = false;
+                    if(N == 0) {
+                        breathBtn.setText("Good job");
+                        finish();
+                    }
+
                 }
             }
             if(cost > 10000){
@@ -123,7 +126,9 @@ public class TakeBreathActivity extends AppCompatActivity {
         public void reset(){
             tvDesc.setText(getString(R.string.let_take_breath, N));
             breathBtn.setText(R.string.begin);
+            enableSeekbar();
             inState = true;
+            isPress = false;
         }
     }
 
@@ -184,18 +189,6 @@ public class TakeBreathActivity extends AppCompatActivity {
             DataUtil.writeOneIntData(this, AppDataKey.BREATH_INHALE, N);
         }
 
-        final EditText editText = findViewById(R.id.edit_breath);
-        findViewById(R.id.btn_update).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String s = editText.getText().toString();
-                if(!s.isEmpty()){
-                    N = Integer.parseInt(s);
-                    DataUtil.writeOneIntData(TakeBreathActivity.this, AppDataKey.BREATH_INHALE, N);
-                    breathState.reset();
-                }
-            }
-        });
 
         seekbar = findViewById(R.id.breath_seekbar);
         seekbarText = findViewById(R.id.seekbar_text);
@@ -304,6 +297,7 @@ public class TakeBreathActivity extends AppCompatActivity {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     private void setBreathButtonTouch(){
         breathBtn.setOnTouchListener(new View.OnTouchListener() {
             @Override
