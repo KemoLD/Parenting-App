@@ -34,6 +34,7 @@ public class HistoryActivity extends AppCompatActivity
     private ArrayList<HistoryData> historyArray;
     private int currentChildIndex;
     private static final String EXTRA_CURRENT_CHILD_INDEX = "Index of the child currently flipping";
+    ChildManagerUI childManager;
 
     public static Intent makeLaunchIntent(Context context){
         return new Intent(context, HistoryActivity.class);
@@ -57,7 +58,7 @@ public class HistoryActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
-        ChildManagerUI childManager = FlipCoinActivity.getFilpCoinChildManager();
+        childManager = FlipCoinActivity.getFilpCoinChildManager();
         extractIntentData();
 
         History historyList = History.getInstance();
@@ -106,10 +107,10 @@ public class HistoryActivity extends AppCompatActivity
             TextView nameText = itemView.findViewById(R.id.history_content_name);
             TextView chooseText = itemView.findViewById(R.id.history_content_chose);
             ImageView resultImage = itemView.findViewById(R.id.history_content_result);
+            ImageView childImage = itemView.findViewById(R.id.profile);
 
             HistoryData data = historyArray.get(position);
             String paredDate = dateFormat.format(data.getDate());
-            String childName = data.getChild().getName();
             Coin.CoinState chosenState = data.getChosenState();
             Coin.CoinState resultState = data.getResultState();
 
@@ -120,9 +121,29 @@ public class HistoryActivity extends AppCompatActivity
             int resultImageID = (chosenState == resultState ? R.drawable.check_mark : R.drawable.cross);
 
             dateText.setText(paredDate);
-            nameText.setText(childName);
             chooseText.setText(state);
             resultImage.setImageResource(resultImageID);
+
+            // set the child inage and name
+            // we need to get the image from child manager because History data do not save the child image
+            Child child = data.getChild();
+            nameText.setText(child.getName());
+            if(currentChildIndex != -1){    // if currentIndex is passed from flip coin
+                // this is for processing data faster
+                ChildUI childUI = childManager.getChild(currentChildIndex);
+                childImage.setImageBitmap(childUI.getProfile());
+            }
+            else{   // if select view all child history
+                ChildUI childUI = childManager.getChildById(child.getId());
+                // if can not find due to child is delete ...
+                if(childUI == null){
+                    childImage.setImageDrawable(getDrawable(R.drawable.default_profile_pic));
+                }
+                else{
+                    childImage.setImageBitmap(childUI.getProfile());
+                }
+            }
+
 
             return itemView;
         }
