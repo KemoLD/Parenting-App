@@ -97,6 +97,7 @@
     <string name="release_breath_out">Release Button and breath out</string>
     <string name="let_take_breath">Let take %1d breaths together</string>
     <string name="begin">Begin</string>
+    <string name="btn_disable">Button disable</string>
 
     <string name="take_breath">take breath</string>
     <string name="title_activity_timer">TimerActivity</string>

@@ -21,6 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:orientation="vertical"
             android:gravity="center">
 
             <TextView
@@ -29,22 +30,35 @@
                 android:textSize="20sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Let's take N breaths together" />
+                android:text="@string/let_take_breath" />
+
+
 
         </LinearLayout>
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:gravity="center"
             android:orientation="vertical"
             android:paddingHorizontal="50dp">
 
             <TextView
+                android:id="@+id/tv_help"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                style="@style/text_general"
+                android:textSize="15sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/hold_breath_in" />
+
+            <TextView
                 android:id="@+id/seekbar_text"
                 style="@style/text_seekbar"
+                android:layout_above="@id/breath_seekbar"
+
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="3" />
@@ -54,11 +68,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:max="10"
+                android:layout_centerInParent="true"
                 android:maxHeight="5sp"
                 android:paddingHorizontal="100dp"
                 android:progressDrawable="@drawable/seekbar"
                 android:thumb="@drawable/seekbar_thumb" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

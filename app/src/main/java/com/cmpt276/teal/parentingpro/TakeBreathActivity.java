@@ -31,6 +31,7 @@ public class TakeBreathActivity extends AppCompatActivity {
 
     private boolean isRun;
     private TextView tvDesc;
+    private TextView tvHelp;
     private Button breathBtn;
     private SeekBar seekbar;
     private TextView seekbarText;
@@ -68,7 +69,7 @@ public class TakeBreathActivity extends AppCompatActivity {
             inState = true;
             disableSeekbar();
             breathBtn.setText(getText(R.string.in));
-            tvDesc.setText(getText(R.string.hold_breath_in));
+            // tvDesc.setText(getText(R.string.hold_breath_in));
             transFormToScale(animationOut, animationIn, MAX_BUTTON_SCALE);
             streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
         }
@@ -102,8 +103,10 @@ public class TakeBreathActivity extends AppCompatActivity {
             breathBtn.setText(R.string.out);
             breathBtn.setEnabled(false);
             N--;
-            String outputText = N == 0 ? getString(R.string.good_job) : getString(R.string.release_breath_out);
+            // tvDesc.setText(getString(R.string.let_take_breath, N));
+            String outputText = N == 0 ? getString(R.string.good_job) : getString(R.string.let_take_breath, N);
             tvDesc.setText(outputText);
+            tvHelp.setText(R.string.btn_disable);
             transFormToScale(animationIn, animationOut, MIN_BUTTON_SCALE);
             streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
         }
@@ -112,12 +115,14 @@ public class TakeBreathActivity extends AppCompatActivity {
             long cost = time - breathState.pressTime;
             if(cost > 3000){
                 if(inState) {
+                    tvHelp.setText(R.string.release_breath_out);
                     breathBtn.setText(R.string.out);
                 }else{
                     breathBtn.setText(R.string.in);
+                    tvHelp.setText(R.string.hold_breath_in);
                     if(!breathBtn.isEnabled()) {
                         breathBtn.setEnabled(true);
-                        tvDesc.setText(getString(R.string.let_take_breath, N));
+                        // tvDesc.setText(getString(R.string.let_take_breath, N));
                         if (N == 0) {
                             N = seekbar.getProgress() + MIN_BREATH;
                             tvDesc.setText(getString(R.string.let_take_breath, N));
@@ -191,11 +196,13 @@ public class TakeBreathActivity extends AppCompatActivity {
         N = getNumberOfBreath();
 
         tvDesc = findViewById(R.id.tv_desc);
+        tvHelp = findViewById(R.id.tv_help);
         seekbar = findViewById(R.id.breath_seekbar);
         seekbarText = findViewById(R.id.seekbar_text);
         breathBtn = findViewById(R.id.btn_breath);
 
         tvDesc.setText(getString(R.string.let_take_breath, N));
+        tvHelp.setText(R.string.hold_breath_in);
 
         setupSeekbar();
         setAnimations();
