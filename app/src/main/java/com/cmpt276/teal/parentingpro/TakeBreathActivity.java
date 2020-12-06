@@ -2,30 +2,29 @@ package com.cmpt276.teal.parentingpro;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.ScaleAnimation;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
+import com.cmpt276.teal.parentingpro.ui.ColorAnimator;
 import com.cmpt276.teal.parentingpro.ui.ScaleAnimator;
 
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
 
 public class TakeBreathActivity extends AppCompatActivity {
 
@@ -36,8 +35,13 @@ public class TakeBreathActivity extends AppCompatActivity {
     private SeekBar seekbar;
     private TextView seekbarText;
 
-    private ScaleAnimator animationIn;
-    private ScaleAnimator animationOut;
+    private ScaleAnimator scaleUpAnimator;
+    private ScaleAnimator scaleDownAnimator;
+    private ColorAnimator breathInColorAnimator;
+    private ColorAnimator breathOutColorAnimator;
+
+    private AnimatorSet animationIn;
+    private AnimatorSet animationOut;
 
     public static final int MIN_BREATH = 1;
     public static final int MAX_BREATH = 10;
@@ -46,6 +50,8 @@ public class TakeBreathActivity extends AppCompatActivity {
     private static final float MIN_BUTTON_SCALE = 1;
     private static final float MAX_BUTTON_SCALE = 4;
     private static final long SCALE_DURATION = 10000;
+    private static final int START_COLOR = Color.parseColor("#00ab09");
+    private static final int END_COLOR = Color.parseColor("#00597d");
 
     private SoundPool mSoundPool;
     private int audioIn;
@@ -69,8 +75,7 @@ public class TakeBreathActivity extends AppCompatActivity {
             inState = true;
             disableSeekbar();
             breathBtn.setText(getText(R.string.in));
-            // tvDesc.setText(getText(R.string.hold_breath_in));
-            transFormToScale(animationOut, animationIn, MAX_BUTTON_SCALE);
+            transFormAnimation(animationOut, animationIn, MAX_BUTTON_SCALE, END_COLOR);
             streamId = mSoundPool.play(audioIn, 1, 1, 8, 0, 1);
         }
 
@@ -103,11 +108,10 @@ public class TakeBreathActivity extends AppCompatActivity {
             breathBtn.setText(R.string.out);
             breathBtn.setEnabled(false);
             N--;
-            // tvDesc.setText(getString(R.string.let_take_breath, N));
             String outputText = N == 0 ? getString(R.string.good_job) : getString(R.string.let_take_breath, N);
             tvDesc.setText(outputText);
             tvHelp.setText(R.string.btn_disable);
-            transFormToScale(animationIn, animationOut, MIN_BUTTON_SCALE);
+            transFormAnimation(animationIn, animationOut, MIN_BUTTON_SCALE, START_COLOR);
             streamId = mSoundPool.play(audioOut, 1, 1, 8, 0, 1);
         }
 
@@ -273,27 +277,46 @@ public class TakeBreathActivity extends AppCompatActivity {
 
 
     private void setAnimations(){
-        animationIn = new ScaleAnimator(breathBtn, MIN_BUTTON_SCALE, MAX_BUTTON_SCALE);
-        animationIn.setDuration(SCALE_DURATION);
-        animationIn.setRepeatCount(0);
 
-        animationOut = new ScaleAnimator(breathBtn, MAX_BUTTON_SCALE, MIN_BUTTON_SCALE);
+        scaleUpAnimator = new ScaleAnimator(breathBtn, MIN_BUTTON_SCALE, MAX_BUTTON_SCALE);
+        scaleDownAnimator = new ScaleAnimator(breathBtn, MAX_BUTTON_SCALE, MIN_BUTTON_SCALE);
+
+        breathInColorAnimator = new ColorAnimator(breathBtn, START_COLOR, END_COLOR);
+        breathOutColorAnimator = new ColorAnimator(breathBtn, END_COLOR, START_COLOR);
+
+        animationIn = new AnimatorSet();
+        animationOut = new AnimatorSet();
+        animationIn.playTogether(scaleUpAnimator, breathInColorAnimator);
+        animationIn.setDuration(SCALE_DURATION);
+
+        animationOut.playTogether(scaleDownAnimator, breathOutColorAnimator);
         animationOut.setDuration(SCALE_DURATION);
-        animationOut.setRepeatCount(0);
     }
 
 
-    private void transFormToScale(ScaleAnimator from, ScaleAnimator to, float value){
-        float scaleSize = getScaleSizeFromAnimation(from);
+    private void transFormAnimation(AnimatorSet from, AnimatorSet to, float scaleValue, int colorValue){
+        ArrayList<Animator> fromAnimatorList = from.getChildAnimations();
+        ArrayList<Animator> toAnimatorList = to.getChildAnimations();
+
+        ScaleAnimator fromScale = (ScaleAnimator) fromAnimatorList.get(0);
+        ScaleAnimator toScale = (ScaleAnimator) toAnimatorList.get(0);
+        ColorAnimator fromColor = (ColorAnimator) fromAnimatorList.get(1);
+        ColorAnimator toColor = (ColorAnimator) toAnimatorList.get(1);
+
+        float scaleSize = getScaleSizeFromAnimation(fromScale);
+        int color = (int)fromColor.getAnimatedValue();
         from.cancel();      // cancel value doest matter this point because to animation is going to be start
-        to.setFloatValues(scaleSize, value);
+        toScale.setFloatValues(scaleSize, scaleValue);
+        toColor.setIntValues(color, colorValue);
         to.start();
     }
 
 
     private void cancelAnimationIn(){
-        float scaleSize = getScaleSizeFromAnimation(animationOut);
-        animationIn.setCancelScaleValue(scaleSize);
+        int color = (int) breathOutColorAnimator.getAnimatedValue();
+        float scaleSize = getScaleSizeFromAnimation(scaleDownAnimator);
+        scaleUpAnimator.setCancelScaleValue(scaleSize);
+        breathInColorAnimator.setCancleColorValue(color);
         animationIn.cancel();
     }
 
@@ -304,6 +327,7 @@ public class TakeBreathActivity extends AppCompatActivity {
         scaleSize = scaleSize < MIN_BUTTON_SCALE ? MIN_BUTTON_SCALE : scaleSize;
         return scaleSize;
     }
+
 
     private void setSound(){
         AudioAttributes.Builder builder = new AudioAttributes.Builder();
