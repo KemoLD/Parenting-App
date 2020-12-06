@@ -106,6 +106,11 @@ public class ChildManagerUI extends ChildManager
         }
     }
 
+
+    public ChildUI getChildById(int id){
+       return (ChildUI) super.getChildById(id);
+    }
+
     public void loadFromLocal(Context context){
        this.loadFromLocal(context, null);
     }
