@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:textColor="#ffffff"
         android:text="@string/whose_turn_title" />
         
@@ -47,7 +47,7 @@
                 android:layout_weight="1"
                 android:background="#83D5CFCF"
                 android:ems="10"
-                android:hint="task description"
+                android:hint="@string/task_description"
                 android:paddingStart="15dp"
                 android:singleLine="true"
                 android:textColor="#000000" />

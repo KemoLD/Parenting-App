@@ -109,8 +109,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="00:00"
-                    android:textSize="70dp" />
+                    android:text="@string/time_zero"
+                    android:textSize="70sp" />
 
                 <ProgressBar
                     android:id="@+id/timer_progress"
