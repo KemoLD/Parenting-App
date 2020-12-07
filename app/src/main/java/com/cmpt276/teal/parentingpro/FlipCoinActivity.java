@@ -47,6 +47,7 @@ public class FlipCoinActivity extends AppCompatActivity
     public static final int NO_CHILD_CHOOSE = 0;
     public static final int HAS_CHILD_CHOOSE = 1;
     public static final int UPDATA_IMAGE = 0x123;
+    public static final int PLAY_ANIMATION = 0x124;
     private Coin.CoinState flipChoice;
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
@@ -127,8 +128,11 @@ public class FlipCoinActivity extends AppCompatActivity
         // If there are children, use the index of the child who flipped last in order to get the current child flipping
         if (!childManager.isEmpty()) {
             lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+            System.out.println("index = " + lastChildFlippedIndex);
+            lastChildFlippedIndex = lastChildFlippedIndex % childManager.length();  // set the index to fit in range
+            System.out.println("index = " + lastChildFlippedIndex);
             setCurrentChildFlipping(lastChildFlippedIndex);
-            // DataUtil.writeOneIntData(this, AppDataKey.TEMP_LAST_FLIPPED_INDEX, lastChildFlippedIndex);
+            DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
         }
     }
 
@@ -201,7 +205,8 @@ public class FlipCoinActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 coin.flipCoin();
-                flipAnimator.start();
+                // flipAnimator.start();
+                handler.sendEmptyMessage(PLAY_ANIMATION);
                 int hasChildFlip = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
 
                 if (!childManager.isEmpty() && hasChildFlip == HAS_CHILD_CHOOSE) {
@@ -423,6 +428,9 @@ public class FlipCoinActivity extends AppCompatActivity
                     }
 
                     break;
+
+                case PLAY_ANIMATION:
+                    flipAnimator.start();
                 default:
                     break;
             }

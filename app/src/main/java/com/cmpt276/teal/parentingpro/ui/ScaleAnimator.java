@@ -5,6 +5,11 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.view.View;
 
+
+/**
+ * the class represent scale animation for an android view
+ * it scale both x and y aix
+ */
 public class ScaleAnimator extends ValueAnimator
 {
     private final View animatedView;

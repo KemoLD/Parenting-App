@@ -2,11 +2,16 @@ package com.cmpt276.teal.parentingpro.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -18,6 +23,8 @@ public class DataUtil
     private final static String APP_SHARE = "parenting_pro";
     public final static String DEFAULT_STRING_VALUE = "NaN";
     public final static int DEFAULT_INT_VALUE = -1;
+    public final static int MAX_BITMAP_WIDTH = 274;     // get from layout
+    public final static int MAx_BITMAP_HEIGHT = 255;    // get from layout
 
 
 
@@ -197,5 +204,77 @@ public class DataUtil
         if(file.exists()){
             file.delete();
         }
+    }
+
+
+    /**
+     * the method get the image from internal storage
+     * @param context  can be any subclass for the context like Activity
+     * @param fileName string represent the file name
+     * @return  the bitmap image
+     */
+    public static Bitmap getInternalImage(Context context, String fileName){
+        if(fileName == null){
+            throw new IllegalArgumentException("file name can not be null");
+        }
+        Bitmap outputImage = null;
+        BitmapFactory.Options option = new BitmapFactory.Options();
+        option.inJustDecodeBounds = true;   // use for just getting with and height of image with out loading in memory
+        FileInputStream input = null;
+        try {
+             input = context.openFileInput(fileName);
+             BitmapFactory.decodeStream(input, null, option);
+             option.inSampleSize = getInSampleSize(option, MAX_BITMAP_WIDTH, MAx_BITMAP_HEIGHT);
+             option.inJustDecodeBounds = false;
+             input.close();
+             input = context.openFileInput(fileName); // open it again
+             outputImage =  BitmapFactory.decodeStream(input, null, option);
+        }
+        catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        catch (OutOfMemoryError e){
+            System.gc();
+            outputImage = null;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+            if(input != null){
+                try {
+                    input.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+       return outputImage;
+    }
+
+
+    /**
+     * get the optimated size of the image
+     * @param option option that run the image first and get the height and width for the image
+     * @param inWidth  the desired size for the image width
+     * @param inHeight  the desired size for the image height
+     * @return the ratio to cover the actual image size to desired image size
+     */
+    public static int getInSampleSize(BitmapFactory.Options option, int inWidth, int inHeight){
+        int originalWidth = option.outWidth;
+        int originalHeight = option.outHeight;
+
+        int inSampleSize = 1;
+
+        if (originalHeight > inWidth || originalWidth > inHeight){
+            // get the width and height ratio
+            final int heightRatio = Math.round((float) originalHeight / (float) inHeight);
+            final int widthRatio = Math.round((float) originalWidth / (float) inWidth);
+            // pick the largest ration
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+
+        }
+        System.out.println(inSampleSize);
+        return inSampleSize;
     }
 }

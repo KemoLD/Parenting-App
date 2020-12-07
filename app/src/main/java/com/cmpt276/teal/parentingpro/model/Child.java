@@ -6,6 +6,10 @@ import android.graphics.BitmapFactory;
 
 import com.cmpt276.teal.parentingpro.R;
 
+
+/**
+ * the class represent a child which have a name and id and image file naeme for it
+ */
 public class Child
 {
     private int id;

@@ -9,6 +9,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 
+/**
+ *  the class represent animation for change a color for a android View
+ */
 public class ColorAnimator extends ValueAnimator
 {
     private final View animatedView;
