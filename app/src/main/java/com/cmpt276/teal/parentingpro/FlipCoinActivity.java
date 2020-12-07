@@ -47,6 +47,7 @@ public class FlipCoinActivity extends AppCompatActivity
     public static final int NO_CHILD_CHOOSE = 0;
     public static final int HAS_CHILD_CHOOSE = 1;
     public static final int UPDATA_IMAGE = 0x123;
+    public static final int PLAY_ANIMATION = 0x124;
     private Coin.CoinState flipChoice;
     private Coin.CoinState[] validFlipChoices = {Coin.CoinState.HEADS, Coin.CoinState.TAILS};
 
@@ -201,7 +202,8 @@ public class FlipCoinActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 coin.flipCoin();
-                flipAnimator.start();
+                // flipAnimator.start();
+                handler.sendEmptyMessage(PLAY_ANIMATION);
                 int hasChildFlip = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
 
                 if (!childManager.isEmpty() && hasChildFlip == HAS_CHILD_CHOOSE) {
@@ -423,6 +425,9 @@ public class FlipCoinActivity extends AppCompatActivity
                     }
 
                     break;
+
+                case PLAY_ANIMATION:
+                    flipAnimator.start();
                 default:
                     break;
             }
