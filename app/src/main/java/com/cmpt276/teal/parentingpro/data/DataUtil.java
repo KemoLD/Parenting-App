@@ -207,8 +207,12 @@ public class DataUtil
     }
 
 
-
-
+    /**
+     * the method get the image from internal storage
+     * @param context  can be any subclass for the context like Activity
+     * @param fileName string represent the file name
+     * @return  the bitmap image
+     */
     public static Bitmap getInternalImage(Context context, String fileName){
         if(fileName == null){
             throw new IllegalArgumentException("file name can not be null");
@@ -218,7 +222,6 @@ public class DataUtil
         option.inJustDecodeBounds = true;   // use for just getting with and height of image with out loading in memory
         FileInputStream input = null;
         try {
-             System.out.println("opening file " + fileName);
              input = context.openFileInput(fileName);
              BitmapFactory.decodeStream(input, null, option);
              option.inSampleSize = getInSampleSize(option, MAX_BITMAP_WIDTH, MAx_BITMAP_HEIGHT);
@@ -250,10 +253,16 @@ public class DataUtil
     }
 
 
+    /**
+     * get the optimated size of the image
+     * @param option option that run the image first and get the height and width for the image
+     * @param inWidth  the desired size for the image width
+     * @param inHeight  the desired size for the image height
+     * @return the ratio to cover the actual image size to desired image size
+     */
     public static int getInSampleSize(BitmapFactory.Options option, int inWidth, int inHeight){
         int originalWidth = option.outWidth;
         int originalHeight = option.outHeight;
-        System.out.println("image width = " + originalWidth + " image height = " + originalHeight);
 
         int inSampleSize = 1;
 

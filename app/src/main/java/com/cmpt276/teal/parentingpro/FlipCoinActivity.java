@@ -128,8 +128,11 @@ public class FlipCoinActivity extends AppCompatActivity
         // If there are children, use the index of the child who flipped last in order to get the current child flipping
         if (!childManager.isEmpty()) {
             lastChildFlippedIndex = DataUtil.getIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX);
+            System.out.println("index = " + lastChildFlippedIndex);
+            lastChildFlippedIndex = lastChildFlippedIndex % childManager.length();  // set the index to fit in range
+            System.out.println("index = " + lastChildFlippedIndex);
             setCurrentChildFlipping(lastChildFlippedIndex);
-            // DataUtil.writeOneIntData(this, AppDataKey.TEMP_LAST_FLIPPED_INDEX, lastChildFlippedIndex);
+            DataUtil.writeOneIntData(this, AppDataKey.LAST_CHILD_FLIPPED_INDEX, lastChildFlippedIndex);
         }
     }
 

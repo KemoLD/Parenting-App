@@ -245,20 +245,6 @@ public class ChildManagerUI extends ChildManager
 
         @Override
         public void run() {
-            /*
-            byte[] imageData = DataUtil.getInteralFileInBytes(context, fileName);
-            BitmapFactory.decodeFile(fileName);
-            if(imageData == null || imageData.length == 0){
-                while (ChildManagerUI.isLoadDefault.equals(false)){
-                    // wait for done
-                }
-                child.setProfile(defaultChildImage);
-            }
-            else{
-                Bitmap image = BitmapFactory.decodeByteArray(imageData, 0, imageData.length);
-                child.setProfile(image);
-            }
-            */
 
             Bitmap image = DataUtil.getInternalImage(context, fileName);
             System.out.println("image = " + image);
