@@ -8,6 +8,10 @@ import com.cmpt276.teal.parentingpro.ui.ChildUI;
 
 import java.util.Date;
 
+/**
+ * the class represent the hisotry for coin fliping
+ * it say Coin data in a list
+ */
 public class HistoryData
 {
     private Child child;

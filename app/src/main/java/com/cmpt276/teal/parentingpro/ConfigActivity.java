@@ -17,6 +17,9 @@ import com.cmpt276.teal.parentingpro.ui.ChildManagerUI;
 import com.cmpt276.teal.parentingpro.ui.ChildUI;
 import com.cmpt276.teal.parentingpro.ui.ChildrenAdapter;
 
+/**
+ * this is an activity page for configing child
+ */
 public class ConfigActivity extends AppCompatActivity {
 
      private ChildManagerUI manager;

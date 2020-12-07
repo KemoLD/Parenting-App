@@ -26,6 +26,9 @@ import com.cmpt276.teal.parentingpro.ui.ScaleAnimator;
 
 import java.util.ArrayList;
 
+/**
+ * the class represent the take breath page in the app
+ */
 public class TakeBreathActivity extends AppCompatActivity {
 
     private boolean isRun;
