@@ -1,4 +1,4 @@
-Scrum Master: Zhu Zhao
-Product Owner: Nyarika Kemo Sonko
-Repo Manager: Hareet Dhillon
-Team Member: Zhilong Gan
+Scrum Master: Zhilong Gan
+Product Owner: Zhu Zhao
+Repo Manager: Nyarika Kemo Sonko
+Team Member: Hareet Dhillon
