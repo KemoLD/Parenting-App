@@ -328,7 +328,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
                 long second = (millisUntilFinished - day * (1000 * 24 * 60 * 60) - hour * (1000 * 60 * 60) - minute * (1000 * 60)) / 1000;
 
                 displayTimeText(day, hour, minute, second, false);
-                int progress = (int) (((double) (millisUntilFinished - 1000) / totalTime) * progressBar.getMax());
+                int progress = (int) (((double) (millisUntilFinished - countDownIntervals[currentSpeedIndex]) / totalTime) * progressBar.getMax());
                 progressBar.setProgress(progressBar.getMax() - progress);
                 currentTime--;
             }
@@ -511,7 +511,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    private void displayTimeText(long days, long hours, long minutes, long seconds, boolean isSetGobalString) {
+    private void displayTimeText(long days, long hours, long minutes, long seconds, boolean isSetGlobalString) {
         String day = String.format("%02d", days);
         String hour = String.format("%02d", hours);
         String minute = String.format("%02d", minutes);
@@ -529,7 +529,7 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
             }
         }
 
-        if (isSetGobalString) {
+        if (isSetGlobalString) {
             s = str;
         }
         timeTv.setText(str);
