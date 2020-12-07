@@ -3,12 +3,16 @@ package com.cmpt276.teal.parentingpro.model;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
+
 import com.cmpt276.teal.parentingpro.data.AppDataKey;
 import com.cmpt276.teal.parentingpro.data.DataUtil;
+import com.cmpt276.teal.parentingpro.ui.ChildUI;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -72,6 +76,15 @@ public class ChildManager
         childrenList.removeAll(childrenList);
     }
 
+    public Child getChildById(int id){
+        for(Child child : childrenList){
+            if(child.getId() == id){
+                return child;
+            }
+        }
+        return null;
+    }
+
     public int indexOf(Child child){
         int result = -1;
         for(int i = 0; i < childrenList.size(); i++){
@@ -130,4 +143,6 @@ public class ChildManager
         String savedDataStr = gson.toJson(childrenList);
         DataUtil.writeOneStringData(context, AppDataKey.CHILDRENS, savedDataStr);
     }
+
+
 }

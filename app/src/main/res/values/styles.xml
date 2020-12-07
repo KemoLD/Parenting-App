@@ -81,6 +81,12 @@
         <item name="android:textColor">#ff666666</item>
     </style>
 
+    <style name="text_seekbar" parent="@style/text_general">
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">3dp</item>
+    </style>
+
     <style name="Dialog" parent="android:style/Theme.Dialog">
         <item name="android:background">#00000000</item>
         <item name="android:windowBackground">@android:color/transparent</item>
