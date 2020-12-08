@@ -61,6 +61,7 @@ public class FlipCoinActivity extends AppCompatActivity
     private SoundPool soundPool;
     private int flipSound;
     private ImageView childImageView;
+    private PlayFlipAnimationTask flipConinAnimationTask;
 
     public static ChildManagerUI getFilpCoinChildManager(){
         return childManager;
@@ -206,7 +207,8 @@ public class FlipCoinActivity extends AppCompatActivity
             public void onClick(View view) {
                 coin.flipCoin();
                 // flipAnimator.start();
-                handler.sendEmptyMessage(PLAY_ANIMATION);
+                handler.post(flipConinAnimationTask);
+                // handler.sendEmptyMessage(PLAY_ANIMATION);
                 int hasChildFlip = DataUtil.getIntData(FlipCoinActivity.this, AppDataKey.IS_NO_CHILD);
 
                 if (!childManager.isEmpty() && hasChildFlip == HAS_CHILD_CHOOSE) {
@@ -247,6 +249,7 @@ public class FlipCoinActivity extends AppCompatActivity
     private void setUpFlipAnimation() {
         ImageView imageViewCoin = findViewById(R.id.image_view_coin);
         int repeatCount = 4;
+        flipConinAnimationTask = new PlayFlipAnimationTask();
 
         flipAnimator = ValueAnimator.ofFloat(0f, 1f);
         flipAnimator.addUpdateListener(new FlipListener(imageViewCoin));
@@ -414,6 +417,12 @@ public class FlipCoinActivity extends AppCompatActivity
     }
 
 
+    class PlayFlipAnimationTask implements Runnable
+    {
+        public void run(){
+            flipAnimator.start();
+        }
+    }
     private final Handler handler = new Handler(){
         @Override
         public void handleMessage(@NonNull Message msg) {
