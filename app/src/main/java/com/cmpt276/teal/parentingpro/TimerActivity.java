@@ -89,8 +89,6 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
         setSupportActionBar(toolbar);
         enableUpButton();
 
-        System.out.println("on create !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
         setClickListener();
         setFindView();
 
@@ -103,23 +101,17 @@ public class TimerActivity extends AppCompatActivity implements View.OnClickList
 
         setNotificationChannel();
         if(r.isPlaying()){
-            System.out.println("on create r is playing !!!!!!!!!!!!!!");
             r.stop();
-        }
-        else{
-            System.out.println("on create r is notnotnot playing !!!!!!!!!!!!!!");
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        System.out.println("on new Intent!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         if (intent == null)
             return;
         super.onNewIntent(intent);
         String intentType = intent.getStringExtra("type");
         if (intentType != null && intentType.equals(newIntent)) {
-            System.out.println("is playing = " + r.isPlaying());
             if (r.isPlaying()) {
                 r.stop();
             }
