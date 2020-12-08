@@ -392,7 +392,7 @@ public class FlipCoinActivity extends AppCompatActivity
         // not using the gobal one make a new copy
         childManager = ChildManagerUI.getCopy(ChildManagerUI.getInstance(this));
         // update data
-        childManager.loadFromLocal(this, null, childManager);
+        childManager.loadFromLocal(this, null, UPDATA_IMAGE, childManager);
 
         // get pass order change information
         String passChangeChildData = DataUtil.getStringData(this, AppDataKey.FLIP_CHILDREN);
