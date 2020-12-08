@@ -66,7 +66,10 @@ public class ChildUI extends Child
     public static ChildUI buildChildFromData(Context context, String data, String seperator){
         String[] fields = data.split(seperator);
         // passing id, name, imageFileName
-        return new ChildUI(Integer.parseInt(fields[0]), fields[1], fields[2]);
+        int id = Integer.parseInt(fields[0]);
+        String name = fields[1];
+        String imageFileName = fields[2].equals("null") ? null : fields[2];
+        return new ChildUI(id, name, imageFileName);
     }
 
 

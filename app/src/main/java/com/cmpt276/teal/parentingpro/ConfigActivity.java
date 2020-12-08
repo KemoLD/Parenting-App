@@ -32,7 +32,7 @@ public class ConfigActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         manager = ChildManagerUI.getInstance(this);
-        manager.loadFromLocal(ConfigActivity.this, handler);
+        manager.loadFromLocal(ConfigActivity.this, handler, ChildManagerUI.UPDATE_LISTVIEW);
         final ListView listView = findViewById(R.id.list);
         adapter = new ChildrenAdapter(this, manager,this);
 

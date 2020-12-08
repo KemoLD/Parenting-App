@@ -42,7 +42,7 @@ public class WhoseTurnActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         childManager = ChildManagerUI.getInstance(this);
-        childManager.loadFromLocal(this, handler);
+        childManager.loadFromLocal(this, handler, ChildManagerUI.UPDATE_LISTVIEW);
         manager.loadFromLocal(WhoseTurnActivity.this, childManager);
         final ListView listView = findViewById(R.id.list);
         adapter = new WhoseTurnAdapter(this, manager, childManager);

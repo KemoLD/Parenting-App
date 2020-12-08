@@ -59,7 +59,7 @@ public class ChildManagerUI extends ChildManager
     }
 
 
-    public void addChild(ChildUI child){
+    public void addChild(final ChildUI child, final Handler handler, final int handlerMessage){
         super.addChild(child);
 
         // check if the image profile already exist if not add one
@@ -67,13 +67,43 @@ public class ChildManagerUI extends ChildManager
             // check if the child set the image name before if not set to default image
             String imageFileName = child.getImageFileName();
             if(imageFileName == null || imageFileName.equals("")){
-                child.setProfile(defaultChildImage);
+                if(handler == null){
+                    child.setProfile(defaultChildImage);
+                }
+                else{
+                    Thread waitLoadDefaultTask = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            while(!isLoadDefault){
+                                // do not thing waid for the default image is loaded
+                            }
+                            child.setProfile(defaultChildImage);
+                            handler.sendEmptyMessage(handlerMessage);
+                        }
+                    });
+                    waitLoadDefaultTask.start();
+                }
+
             }
             else{
-                Thread setImageTask = new Thread(new LoadImageTask(child, imageFileName));
+                // create other thread so to reduce the work load in main thread
+                // also able to load the image while the program is running
+                Thread setImageTask;
+                if(handler == null) {
+                    setImageTask = new Thread(new LoadImageTask(child, imageFileName));
+                }
+                else{
+                    setImageTask = new Thread(new LoadImageAdaptorTask(child, imageFileName, handler, handlerMessage));
+                }
+
                 setImageTask.start();
             }
         }
+    }
+
+
+    public void addChild(ChildUI child){
+        this.addChild(child, null, 0);
     }
 
 
@@ -112,16 +142,16 @@ public class ChildManagerUI extends ChildManager
     }
 
     public void loadFromLocal(Context context){
-       this.loadFromLocal(context, null);
+       this.loadFromLocal(context, null, 0);
     }
 
 
-    public void loadFromLocal(Context context, Handler handler){
-        loadFromLocal(context, handler, manager);
+    public void loadFromLocal(Context context, Handler handler, int handlerMessage){
+        loadFromLocal(context, handler, handlerMessage, manager);
     }
 
 
-    public void loadFromLocal(Context context, Handler handler, ChildManagerUI desManager){
+    public void loadFromLocal(Context context, Handler handler, int handlerMessage, ChildManagerUI desManager){
         removeAll();
         String childListData = DataUtil.getStringData(context, AppDataKey.CHILDRENS);
         int childGenerteId = DataUtil.getIntData(context, AppDataKey.CHILD_GENERATE_ID);
@@ -133,25 +163,7 @@ public class ChildManagerUI extends ChildManager
         for(String childData : childList){
             if(childData != null && !childData.equals(DataUtil.DEFAULT_STRING_VALUE)){
                 ChildUI child = ChildUI.buildChildFromData(context, childData, CHILD_FILE_SEPERATOR);
-                desManager.addChild(child);
-                String imageFileName = child.getImageFileName();
-                if(imageFileName == null || imageFileName.equals("")){
-                    child.setProfile(defaultChildImage);
-                }
-                else{
-                    // create other thread so to reduce the work load in main thread
-                    // also able to load the image while the program is running
-                    Thread setImageTask;
-                    if(handler == null) {
-                        setImageTask = new Thread(new LoadImageTask(child, imageFileName));
-                    }
-                    else{
-                        setImageTask = new Thread(new LoadImageAdaptorTask(child, imageFileName, handler));
-                    }
-
-                    setImageTask.start();
-                }
-
+                desManager.addChild(child, handler, handlerMessage);
             }
         }
     }
@@ -245,7 +257,7 @@ public class ChildManagerUI extends ChildManager
 
         @Override
         public void run() {
-
+            System.out.println("file name = " + fileName);
             Bitmap image = DataUtil.getInternalImage(context, fileName);
             System.out.println("image = " + image);
             if(image == null){
@@ -265,14 +277,16 @@ public class ChildManagerUI extends ChildManager
     private class LoadImageAdaptorTask extends LoadImageTask implements Runnable
     {
         Handler handler;
-        public LoadImageAdaptorTask(ChildUI child, String fileName, Handler handler){
+        int handlerMessage;
+        public LoadImageAdaptorTask(ChildUI child, String fileName, Handler handler, int handlerMessage){
             super(child, fileName);
             this.handler = handler;
+            this.handlerMessage = handlerMessage;
         }
 
         public void run(){
             super.run();
-            handler.sendEmptyMessage(UPDATE_LISTVIEW);
+            handler.sendEmptyMessage(handlerMessage);
         }
     }
 }
